@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Responsive Image</title>
+<style>
+.product-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  margin: 0 auto;
+  width: 80%;
+  padding: 20px;
+}
+
+.product-image {
+  width: 100%;
+  max-width: 500px; /* Adjust as needed */
+}
+
+.product-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.product-text {
+  text-align: left;
+}
+
+.product-name {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.product-price {
+  font-weight: bold;
+}
+
+.add-to-cart {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  background-color: #000;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.add-to-cart:hover {
+  background-color: #ddd;
+  color: #000;
+}
+
+.fa-heart {
+  margin-left: 10px;
+}
+</style>
+</head>
+<body>
+<div class="product-container">
+  <img class="product-image" src="[image of a denim chair]" alt="Denim Chair">
+  <div class="product-info">
+    <div class="product-text">
+      <p class="product-name">Faded SkyBlu Denim Jeans</p>
+      <p class="product-category">Category: Household</p>
+      <p>Availability: In Stock</p>
+    </div>
+    <div class="product-price">
+      <p>$149.99</p>
+    </div>
+  </div>
+  <button class="add-to-cart">
+    <i class="fas fa-shopping-cart"></i> ADD TO CART  <i class="fas fa-heart"></i>
+  </button>
+</div>
+
+<script src="https://kit.fontawesome.com/your-fontawesome-kit-code.js" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<%- include('../layouts/user/header') %>
+
+<section class="login_part">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-6">
+                <div class="login_part_text text-center">
+                    <div class="login_part_text_iner">
+                        <h2>New to our Shop?</h2>
+                        <p>There are advances being made in science and technology
+                            everyday, and a good example of this is the</p>
+                        <!-- <a href="#" class="btn_3">Create an Account</a> -->
+                    </div>
+                </div>
+            </div> 
+            <div class="col-lg-6 col-md-6">
+                <div class="login_part_form">
+                    <div class="login_part_form_iner">
+                        <!-- Please Sign in now</h3> -->
+                        <% if (error) { %>
+                            <p class="text-danger"><%= error %></p>
+                        <% } %>
+                        <form id="signupForm" class="row contact_form" action="/otpsending" method="post" novalidate="novalidate">
+                            <div class="col-md-12 form-group p_star">
+                                <input type="text" class="form-control" id="name" name="name" value=""
+                                    placeholder="Username">
+                                <p id="nameError" class="text-danger"></p>
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <input type="email" class="form-control" id="email" name="email" value=""
+                                    placeholder="Email">
+                                <p id="emailError" class="text-danger"></p>
+                            </div>
+
+                            <div class="col-md-12 form-group p_star">
+                                <input type="password" class="form-control" id="password" name="password" value=""
+                                    placeholder="Password">
+                                <p id="passwordError" class="text-danger"></p>
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <input type="password" class="form-control" id="Confirmpassword" name="confirmpassword" value=""
+                                    placeholder="Confirmpassword">
+                                <p id="confirmPasswordError" class="text-danger"></p>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <!-- <div class="creat_account d-flex align-items-center">
+                                    <input type="checkbox" id="f-option" name="selector">
+                                    <label for="f-option">Remember me</label>
+                                </div> -->
+                                <button type="submit" value="submit" class="btn_3">
+                                    Sign Up
+                                </button>
+                                <button><a href="/auth/google">Login With Google</a></button>
+
+
+                                <div class="d-flex" >
+                                    <a class="lost_pass" href="">already have an account?</a>
+                                    <a href="/login">Login</a> 
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include('../layouts/user/footer') %>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const signupForm = document.getElementById('signupForm');
+
+        signupForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('Confirmpassword').value;
+
+            const nameError = document.getElementById('nameError');
+            const emailError = document.getElementById('emailError');
+            const passwordError = document.getElementById('passwordError');
+            const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+            nameError.textContent = '';
+            emailError.textContent = '';
+            passwordError.textContent = '';
+            confirmPasswordError.textContent = '';
+
+            if (!name) {
+                nameError.textContent = 'Name is required';
+                return;
+            }
+
+            if (!email) {
+                emailError.textContent = 'Email is required';
+                return;
+            }
+
+            // Email validation
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                emailError.textContent = 'Invalid email format';
+                return;
+            }
+
+            if (!password) {
+                passwordError.textContent = 'Password is required';
+                return;
+            }
+
+            const passwordPattern = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+        if (!passwordPattern.test(password)) {
+            passwordError.textContent = 'Password must be minimum eight characters and contain at least one special character (!@#$%^&*)';
+            return;
+        }
+
+            if (!confirmPassword) {
+                confirmPasswordError.textContent = 'Please confirm your password';
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                confirmPasswordError.textContent = 'Passwords do not match';
+                return;
+            }
+
+            // If all fields are valid, submit the form
+            signupForm.submit();
+        });
+    });
+</script>

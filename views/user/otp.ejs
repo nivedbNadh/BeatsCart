@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> OTP </title>
+    <link rel="stylesheet" href="/userAssets/css/otppa.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Enter OTP Code</h1>
+        <p>Enter the OTP sent to your email</p>
+       <!-- otpsending.ejs -->
+      <!-- otpsending.ejs -->
+<% if (messages.error) { %>
+    <div class="alert alert-danger" style="color: red;">
+        <%= messages.error %>
+    </div>
+<% } %>
+
+        
+            <form id="otp-form" action='/verifyOtp' method="POST">
+                <div class="otp-fields">
+                    <input type="text" name="otp1" maxlength="1" required onkeyup="moveFocus(this)">
+                    <input type="text" name="otp2" maxlength="1" required onkeyup="moveFocus(this)">
+                    <input type="text" name="otp3" maxlength="1" required onkeyup="moveFocus(this)">
+                    <input type="text" name="otp4" maxlength="1" required onkeyup="moveFocus(this)">
+                </div>
+                <button type="submit">Verify</button>
+                <a href="#" id="resend-otp">Resend OTP</a>
+            </form>
+            
+        <div class="pop-up" id="pop-up">
+            <p>Verifying...</p>
+            <div class="loader"></div>
+        </div>
+    </div>
+    <script src="/userAssets/js/script.js"></script>
+</body>
+</html>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded",function(){
+        const resendButton=document.getElementById("resend-otp")
+
+        resendButton.addEventListener("click",async function (event){
+            event.preventDefault()
+
+            try {
+                const response=await fetch ("/resend-otp",{
+                    method :"POST",
+                    headers:{
+                        "Content-Type": "application/json"                    }
+
+                })
+
+                if(response.ok){
+                    alert("otp resent successfully")                                                                                                                                                       
+                }else{
+                    throw new Error("Failed to resend otp ")
+                }
+                
+            } catch (error) {
+                console.error("Error resending otp:",error)
+                alert("Failed to resend otp")
+            }
+        
+
+        })
+    })
+</script>

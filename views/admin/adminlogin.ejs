@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/userAssets/css/adminlog.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center align-items-center vh-100">
+            <div class="col-lg-4">
+                <div class="card shadow-lg p-4">
+                    <h2 class="text-center mb-4">Admin Panel</h2>
+                    <form class="row contact_form" action="/adminLogPost" method="post" novalidate="novalidate">
+                        <div class="form-group col-12 text-center">
+                            <label for="username">adminEmail</label>
+                            <input type="email" class="form-control" id="username" name="email"  placeholder="Enter username">
+                            <!-- In your adminlogin.ejs file -->
+                            <% if (messages.error) { %>
+                               <p class="text-danger"><%= messages.error %></p>
+                                    <% } %>
+                        </div>
+                        <div class="form-group col-12 text-center">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password"  name="password" placeholder="Enter password">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+<!-- <script>
+    document.addEventListener('DOMContentLoaded',function(){
+
+    const form=document.getElementById('adminLogin')
+    form.addEventListener('submit',function (event){
+        event.preventDefault()
+
+        const emailInput=document.getElementById('email')
+        const passwordInput=document.getElementById('password')
+
+        //validate email format
+        const emailRegex =/^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if(!emailRegex.test(emailInput.value)){
+            alert('please enter a valid email adress')
+            return 
+        }
+
+        if(passwordInput.value.length < 6){
+            alert('password must be at least 6 characters long ')
+        }
+    })
+})
+
+</script> -->

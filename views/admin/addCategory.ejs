@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Category</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Add Category</h2>
+        <form id="addCategoryForm" action="/addCategory" method="POST">
+            <label for="categoryName">Category Name:</label>
+            <input type="text" id="categoryName" name="categoryName">
+            <br><br>
+            <input type="submit" value="Add">
+        </form>
+    </div>
+</body>
+</html>
+
+<script>
+    const form = document.getElementById('addCategoryForm');
+    form.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const categoryName = document.getElementById('categoryName').value;
+        console.log('categoryName',categoryName);
+        try {
+            const response = await fetch('/adminCategory', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ categoryName })
+            });
+            if (response.ok) {
+                window.location.href = '/categoryList';
+            } else {
+                console.error('Failed to add category:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error adding category:', error);
+        }
+    });
+</script>
+

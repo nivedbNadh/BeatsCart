@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Product</title>
+<style>
+    /* Basic styling */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    form {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    input[type="text"], input[type="number"], textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        float: right;
+    }
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+</style>
+</head>
+<body>
+
+    <form id="addProductForm" action="/adminProduct" method="post" enctype="multipart/form-data" onsubmit="validateForm(event)">
+        <h2>Add Product</h2>
+        
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
+    
+        <label for="description">Description:</label><br>
+        <textarea id="description" name="description" rows="4" required></textarea><br><br>
+    
+        <label for="image">Image:</label><br>
+        <!-- <input type="file" id="image" name="image" accept="image/*" required><br><br> -->
+        <!-- <input type="file" id="images" name="images[]" accept="image/*" multiple required><br><br> -->
+        <input type="file" id="images" name="images" accept="image/*" multiple required>
+
+    
+        <label for="price">Price:</label><br>
+        <input type="number" id="price" name="price" min="0.01" step="0.01" required><br><br>
+    
+        <select id="category" name="category" required>
+            <% category.forEach(Category => { %>
+                <option value="<%= Category.name %>"><%= Category.name %></option>
+            <% }) %>
+        </select><br><br>
+        
+        
+    
+        <label for="quantity">Quantity:</label><br>
+        <input type="number" id="quantity" name="quantity" min="1" required><br><br>
+    
+        <input type="submit" value="Add Product">
+    </form>
+    
+    <div id="errorMessages"></div>
+    
+    </body>
+    
+    <script>
+        function validateForm(event) {
+            const form = document.getElementById('addProductForm');
+            const name = form.elements['name'].value.trim();
+            const description = form.elements['description'].value.trim();
+            const price = form.elements['price'].value.trim();
+            const quantity = form.elements['quantity'].value.trim();
+            const image = form.elements['images'].files[0];            
+            const category = form.elements['category'].value;
+
+            console.log('IMAGE',image);
+    
+            // Clear previous error messages
+            document.getElementById('errorMessages').innerHTML = '';
+    
+            // Validate Name
+            if (name === '') {
+                displayErrorMessage('Product Name is required');
+                event.preventDefault();
+                return;
+            }
+    
+            // Validate Description
+            if (description === '') {
+                displayErrorMessage('Product Description is required');
+                event.preventDefault();
+                return;
+            }
+    
+            // Validate Price
+            if (price === '' || isNaN(price) || parseFloat(price) < 0) {
+                displayErrorMessage('Please enter a valid positive price');
+                event.preventDefault();
+                return;
+            }
+    
+            // Validate Quantity
+            if (quantity === '' || isNaN(quantity) || parseInt(quantity) < 0) {
+                displayErrorMessage('Please enter a valid positive quantity');
+                event.preventDefault();
+                return;
+            }
+    
+            // Validate Image
+            if (!images) {
+                displayErrorMessage('Product Image is required');
+                event.preventDefault();
+                return;
+            }
+    
+            // Validate Category
+            // if (category === '') {
+            //     displayErrorMessage('Product Category is required');
+            //     event.preventDefault();
+            //     return;
+            // }
+        }
+    
+        function displayErrorMessage(message) {
+            const errorDiv = document.getElementById('errorMessages');
+            errorDiv.innerHTML += `<p>${message}</p>`;
+        }
+    </script>
+    
+

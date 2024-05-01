@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Details</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+/* Basic styles */
+body {
+  font-family: Arial, sans-serif;
+}
+
+.product-image img {
+  max-width: 100%;
+  height: 335px;
+  margin-top: 80px;
+}
+
+.other-image-card {
+  display: flex;
+  align-items: center; /* Center the image vertically */
+  margin-top: 30px; /* Add margin top */
+}
+
+.other-image-card img {
+  max-width: 58%;
+  height: auto;
+  max-height: 55px; /* Reducing the maximum height */
+}
+
+.quantity {
+  max-width: 50px; /* Reducing the maximum width */
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .product-image img {
+    margin-top: 0; /* Reset margin for smaller screens */
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-6"> <!-- Column for the first image -->
+      <div class="product-image">
+        <img src="/uploads/1714131129340-131_f04f74fd-45d4-4614-85cf-6ccf69c4cf90 - Copy.jpg" alt="Product Image">
+      </div>
+    </div>
+    <div class="col-md-6"> <!-- Column for the product info -->
+      <div class="product-info">
+        <h1 class="product-title">Product Title</h1>
+        <p class="product-price">$99.99</p>
+        <p class="product-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar euismod mi, ut lacinia sapien tempus a. Sed fermentum lacus nec ligula facilisis, sit amet tincidunt justo cursus. Vestibulum in eros justo. Duis euismod quam eget nisl tempor, at ultrices magna sollicitudin. Vivamus eget dolor libero. </p>
+        <div class="quantity-controls">
+          <button class="btn btn-outline-secondary" id="decreaseQuantity">-</button>
+          <input type="text" class="form-control quantity" value="1">
+          <button class="btn btn-outline-secondary" id="increaseQuantity">+</button>
+          <button class="btn btn-primary ml-3 add-to-cart-btn">Add to Cart</button>
+          <a href="#"><i class="fas fa-heart wishlist-icon"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Small card section -->
+  <div class="row other-images">
+    <div class="col-md-2"> <!-- Column for the second image -->
+      <div class="other-image-card">
+        <img src="/uploads/1714131129340-131_f04f74fd-45d4-4614-85cf-6ccf69c4cf90 - Copy.jpg" class="card-img-top" alt="Other Image 1">
+      </div>
+    </div>
+    <div class="col-md-10"> <!-- Column for the description and other elements -->
+      <!-- Leave this empty if you want the description to remain in the right column -->
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const decreaseBtn = document.getElementById('decreaseQuantity');
+  const increaseBtn = document.getElementById('increaseQuantity');
+  const quantityInput = document.querySelector('.quantity');
+
+  decreaseBtn.addEventListener('click', function() {
+    let currentValue = parseInt(quantityInput.value);
+    if (currentValue > 1) {
+      quantityInput.value = currentValue - 1;
+    }
+  });
+
+  increaseBtn.addEventListener('click', function() {
+    let currentValue = parseInt(quantityInput.value);
+    quantityInput.value = currentValue + 1;
+  });
+});
+</script>
+
+</body>
+</html>
