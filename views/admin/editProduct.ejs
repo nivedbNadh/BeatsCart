@@ -1,6 +1,7 @@
 <!-- views/editProduct.ejs -->
 
-<!-- <!DOCTYPE html>
+Copy code
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -19,7 +20,7 @@
         }
 
         h1 {
-            color: #4CAF50;
+            color: #3498db; /* Changed color to blue */
             text-transform: uppercase;
             font-size: 24px;
             margin-bottom: 20px;
@@ -72,7 +73,7 @@
         }
 
         button {
-            background-color: #4CAF50;
+            background-color: #3498db; /* Changed button color to blue */
             color: #fff;
             padding: 12px 20px;
             border: none;
@@ -84,11 +85,11 @@
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #2980b9; /* Darker blue on hover */
         }
 
         a {
-            color: #4CAF50;
+            color: #3498db; /* Changed link color to blue */
             text-decoration: none;
             display: block;
             margin-top: 15px;
@@ -101,9 +102,8 @@
 
 <h1>Edit Product</h1>
 
-<form action="/updateproduct/<%= product._id %>" method="post" enctype="multipart/form-data">
+<form action="/updateproduct/ <%= product._id %>" method="post" enctype="multipart/form-data">
     <label for="name">Product Name:</label>
-    console.log("productid",product._id)
     <input type="text" id="name" name="name" value="<%= product.name %>" required>
     
     <label for="description">Product Description:</label>
@@ -112,62 +112,44 @@
     <label for="price">Product Price:</label>
     <input type="number" id="price" name="price" value="<%= product.price %>" required min="0">
     <label for="quantity">Product Quantity:</label>
-<input type="number" id="quantity" name="quantity" value="<%= product.quantity || 0 %>" required min="0">
-
-
-
-    
+    <input type="number" id="quantity" name="quantity" value="<%= product.quantity || 0 %>" required min="0">
 
     <div class="checkbox-group">
-    <label for="updateImage">Update Image:</label>
-    <input type="checkbox" id="updateImage" name="updateImage">
-</div>
-
-
-
-
-
-    
-<div class="checkbox-group">
-    <label for="existingImage">Existing Image:</label>
-    <% if (product.images && product.images.length > 0) { %>
-        <% product.images.forEach((image, index) => { %>
-            <div style="border: 1px solid rgb(11, 130, 88); margin-inline: 15px; background-color: #45a049;">
-                <img src="/uploads/ image %>" alt="<%= product.name %>">
-                <br>
-                <label><i class="fa fa-trash-o"></i>
-                </label>
-                <input type="checkbox" name="deleteExistingImage<%= index %>" value="<%= image %>">
-            </div>
-        <% }); %>
-    <% } else { %>
-        No image available
-    <% } %>
-</div>
-
-
-
-
-    
+        <label for="updateImage">Update Image:</label>
+        <input type="checkbox" id="updateImage" name="updateImage">
+    </div>
+    <div class="checkbox-group">
+        <label for="existingImage">Existing Image:</label>
+        <% if (product.image && product.image.length > 0) { %>
+            <% product.image.forEach((image, index) => { %>
+                <div style="border: 1px solid rgb(11, 130, 88); margin-inline: 15px; background-color: #45a049;">
+                    <img src="/uploads/<%=image %>" alt="<%= product.name %>">
+                    <br>
+                    <label><i class="fa fa-trash-o"></i>
+                    </label>
+                    <input type="checkbox" name="deleteExistingImage<%= index %>" value="<%= image %>">
+                </div>
+            <% }); %>
+        <% } else { %>
+            No image available
+        <% } %>
+    </div>
 
     <div id="newImageSection">
         <label for="newImage">Upload New Image:</label>
         <input type="file" id="newImage" name="image" multiple>
     </div>
-    
-
     <label for="category">Product Category:</label>
     <select id="category" name="category" required>
         <% categories.forEach(category => { %>
-            <option value="<%= category._id %>" <% if (product.category && product.category._id.equals(category._id)) { %>selected<% } %>><%= category.name %></option>
+            <option value="<%= category.name %>" <% if (product.category && product.category._id && product.category._id.equals(category._id)) { %>selected<% } %>><%= category.name %></option>
         <% }); %>
     </select>
-
- 
+    
+    
 
     <button type="submit">Update Product</button>
 </form>
-
 <a href="/productList">Back to Products</a>
 
 
@@ -183,31 +165,30 @@
 </script>
 
 
-<script>
-// Checkbox Change Listener
+<!-- <script>
 $('.checkbox-group input[type="checkbox"]').on('change', function() {
     var selectedImages = [];
     $('.checkbox-group input[type="checkbox"]:checked').each(function() {
         selectedImages.push($(this).val());
     });
+    console.log("selectedImages",selectedImages)
 
     $.ajax({
-        url: '/deleteproduct', // Corrected URL
-        method: 'POST', // Corrected Method
+        url: '/deleteproduct', 
+        method: 'POST', 
         data: { images: selectedImages },
         success: function(response) {
             console.log('Images deleted successfully');
-            // Optionally, you may want to update UI here after successful deletion
         },
         error: function(xhr, status, error) {
             console.error('Error deleting images:', error);
         }
     });
 });
-</script>
+</script> 
 
-
-
+ -->
+ 
  
 </body>
-</html> -->
+</html>

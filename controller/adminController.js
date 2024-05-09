@@ -150,14 +150,25 @@ const addAdminProduct = async (req, res) => {
     try {
         const { name, description, price, category, quantity } = req.body;
         console.log('req.file this  is image', req.files);
+        let img=[]
 
         // const imagePath = req.file.path; 
         // const imageFilename = req.file.filename; 
 
         // console.log('imagePath', imagePath);
         // console.log('imageFilename', imageFilename);
-        let img=[req.files[0].filename,req.files[1].filename,req.files[2].filename,req.files[3].filename]
-
+        if (req.files.length >= 4) {
+            
+                img = [
+                req.files[0].filename,
+                req.files[1].filename,
+                req.files[2].filename,
+                req.files[3].filename
+            ];
+        } else {
+            console.error("Not enough files uploaded");
+            res.status(400).send("Not enough files uploaded");
+        }
         const product = new Products({
             name,
             description,
@@ -183,7 +194,7 @@ const categoryList = async(req,res)=>{
     try{
 
         const category = await Category.find()
-        console.log('category',category);
+        // console.log('category',category);
 
         res.render('categoryList',{category})
 
@@ -251,7 +262,18 @@ const deleteProducts=async (req,res)=>{
 
 const loadEditProduct= async (req,res)=>{
     try {
-        res.render('editProduct')
+        const productId=req.params.id.trim()
+
+        console.log("productId",productId)
+        Promise.all([
+
+          Products.findById(productId),
+          Category.find({})
+        ])
+        .then(([product,categories])=>{
+            res.render('editProduct',{product,categories})
+        })
+        
     } catch (error) {
         console.error(error)
         res.status(500).send("Internal server error")
@@ -283,6 +305,85 @@ const categoryDelete= async (req,res)=>{
 
 
 
+
+const editCategory=async (req,res)=>{
+    try{
+    const categoryId = req.body.categoryId;
+    const categoryName = req.body.categoryName;
+
+    console.log('categoryId',categoryId);
+    console.log('categoryName',categoryName);
+
+    const category = await Category.findById(categoryId);
+    category.name = categoryName;
+    await category.save();
+    res.status(200).json({ message: "Category updated successfully", category: category });
+
+    }catch (error){
+        console.error('Error updating category',error)
+        res.status(500).json({error:"internal server error"})
+
+    }
+}
+
+
+
+const productUpdate = async function (req, res) {
+    const productId = req.params.id.trim()
+    const { name, description, category, price, quantity } = req.body;
+    console.log("name, description, category, price, quantity",name, description, category, price, quantity)
+    const deleteExistingImages = req.body;
+    console.log("deleteExistingImages",deleteExistingImages)
+    const newImages = req.files;
+
+    try {
+        const currentProduct = await Products.findById(productId);
+        if (!currentProduct) {
+            console.log("!currentProduct",currentProduct)
+            return res.status(404).send('Product not found');
+        }
+        for (const key in deleteExistingImages) {
+            if (key.startsWith('deleteExistingImage')) {
+                const index = parseInt(key.replace('deleteExistingImage', ''));
+                const imageFilename = deleteExistingImages[key];
+                const imagePath = path.join(__dirname, '../public/uploads', imageFilename);
+                
+                await FS.promises.unlink(imagePath);
+                console.log('Image Deleted Successfully:', imageFilename);
+                
+                currentProduct.image.splice(index, 1);
+                
+                await Products.deleteOne({ filename: imageFilename });
+                console.log('Image deleted from the database:', imageFilename);
+            }
+        }
+
+        if (newImages && newImages.length > 0) {
+            newImages.forEach(async (image) => {
+                const imageFilename = image.filename;
+                currentProduct.image.push(imageFilename);
+                console.log('New image added:', imageFilename);
+            });
+        }
+        currentProduct.name = name;
+        currentProduct.description = description;
+        currentProduct.category = category;
+        currentProduct.price = price;
+        currentProduct.quantity = quantity;
+
+        await currentProduct.save();
+        res.redirect('/productList');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+
+
+
+
+
 module.exports={
     adminLoging,
     adminLogingPost,
@@ -299,9 +400,9 @@ module.exports={
     deleteProducts,
     loadEditProduct,
     categoryDelete,
-    // editCategory
-    // productUpdate,
-    // editform
+    editCategory,
+    productUpdate,
+    // deleteProduct
 
 }
 

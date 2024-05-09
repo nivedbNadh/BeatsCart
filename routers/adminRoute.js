@@ -21,19 +21,19 @@ adminRoute.post('/block',adminController.blockUser)
 adminRoute.post('/unBlock',adminController.userUnBlock)
 adminRoute.get('/productList',adminController.productList)
 adminRoute.get('/addProduct',adminController.addProduct)
-// adminRoute.post('/adminProduct', upload.single,adminController.addAdminProduct);
 adminRoute.post('/adminProduct',upload.array('images', 4),  adminController.addAdminProduct);
 
 adminRoute.get('/categoryList',adminController.categoryList)
 adminRoute.get('/addCategory',adminController.addCategory)
 adminRoute.post('/adminCategory', adminController.addAdminCategory);
 adminRoute.delete('/products/:id',adminController.deleteProducts)
-adminRoute.get('/editProduct',adminController.loadEditProduct)
+adminRoute.get('/editProduct/:id',adminController.loadEditProduct)
 adminRoute.delete('/deleteCategory/:id',adminController.categoryDelete)
-// adminRoute.post('/edit',adminController.editCategory)
+adminRoute.post('/updateCategory',adminController.editCategory)
 
 
-// adminRoute.post('/updateproduct', adminController.productUpdate);
+adminRoute.post('/updateproduct/:id', upload.array('image'), adminController.productUpdate);
+// adminRoute.post('/deleteproduct',adminController.deleteProduct)
 
 
 

@@ -60,7 +60,7 @@
     
     <%- include('../layouts/user/footer') %>
     
-    <% if (successMessage && successMessage.length > 0 && passwordChanged) { %>
+    <!-- % if (successMessage && successMessage.length > 0 && passwordChanged) { %>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
        
@@ -69,10 +69,10 @@
             Swal.fire({
                 icon: 'success',
                 title: 'Success',
-                text: '<%= successMessage[0] %>',
+                text: '%= successMessage[0] %>',
             });
         </script>
-    <% } %>
+    % } %> -->
     
     
     

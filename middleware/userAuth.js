@@ -15,6 +15,7 @@ const userExit=(req,res,next)=>{
     if(req.session.logged){
         return res.redirect('/')
     }else{
+        next()
     }
 }
 

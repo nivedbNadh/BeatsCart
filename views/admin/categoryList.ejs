@@ -111,8 +111,8 @@
                         <th><%=Category._id%></th>
                         <th><%=Category.name%></th>
                         <th>
-                            <button type="button" class="btn btn-primary  edit-category"  data-bs-toggle="modal" data-bs-target="#exampleModal"   data-category-id="<%= Category._id%>"  data-category-name="<%=Category.name%>">Edit</button>
-                                &nbsp;
+                            <button type="button" class="btn btn-primary edit-category" data-bs-toggle="modal" data-bs-target="#exampleModal" data-category-id="<%= Category._id%>" data-category-name="<%=Category.name%>">Edit</button>
+                            &nbsp;
                             <button class="btn btn-danger" onclick="deleteCategory('<%=Category._id%>')">Delete</button>
                         </th>
                             </tr>
@@ -131,7 +131,8 @@
   </button> -->
   
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+ <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -139,16 +140,19 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-                <input type="text" id="categoryName" value="" name="categoryName">
-
+          <!-- Add input field for category ID -->
+          <input type="hidden" id="categoryId">
+          <input type="text" id="categoryName" value="" name="categoryName">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <!-- Update button to trigger Save Changes -->
+          <button type="button" class="btn btn-primary" id="saveChanges">Save changes</button>
         </div>
       </div>
     </div>
   </div>
+  
 
 
 
@@ -218,43 +222,66 @@
 
 
 <script>
-    $('#exampleModal').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget);
-        var categoryId = button.data('category-id');
-        var categoryName = button.data('category-name');
+ // Function to handle opening modal and pre-filling input fields
+$('#usersTable').on('click', '.edit-category', function() {
+    var categoryId = $(this).data('category-id');
+    var categoryName = $(this).data('category-name');
 
-        var modal = $(this);
-        modal.find('#categoryId').val(categoryId);
-        modal.find('#categoryName').val(categoryName);
-    });
+    // Set the category ID and name in the modal inputs
+    $('#categoryId').val(categoryId);
+    $('#categoryName').val(categoryName);
 
+    // Open the modal
+    $('#exampleModal').modal('show');
+});
+
+  </script>
+
+  
+<script>
     $('#saveChanges').on('click', function() {
         var categoryId = $('#categoryId').val();
         var categoryName = $('#categoryName').val();
-
-        fetch('/adminRoute/edit', {
+    
+        console.log('categoryId',categoryId);
+        console.log('categoryName',categoryName);
+    
+        // Data to be sent to the backend
+        var data = {
+            categoryId: categoryId,
+            categoryName: categoryName
+        };
+    
+        // AJAX request to the backend
+        fetch('/updateCategory', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                categoryId: categoryId,
-                categoryName: categoryName
-            })
+            body: JSON.stringify(data)
         })
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            if (response.ok) {
+                // Category updated successfully
+                console.log('Category updated successfully');
+                location.reload();
+            } else {
+                // Error handling
+                console.error('Failed to update category');
+                alert('Failed to update category. Please try again.');
             }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Category updated successfully:', data);
-            window.location.reload();
         })
         .catch(error => {
-            console.error('Error updating category:', error);
-            alert('Error updating category. Please try again.');
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
         });
     });
-</script>
+    
+      </script>
+  
+
+
+
+
+
+

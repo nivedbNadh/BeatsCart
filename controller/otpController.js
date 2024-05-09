@@ -80,6 +80,8 @@ const otpVeify = async (req, res) => {
                 password: hashedPassword
             });
 
+            console.log("newUser",newUser)
+
             await newUser.save();
             res.redirect('/login');
         } else {

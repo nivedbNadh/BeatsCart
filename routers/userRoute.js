@@ -2,7 +2,7 @@ const express=require('express')
 const path=require('path')
 const userRoute = express();
 const passport=require('passport')
-// const {userExit} = require("../middleware/userAuth")
+const {userExit} = require("../middleware/userAuth")
 require('../passport')
 
 
@@ -24,7 +24,7 @@ userRoute.use(express.json())
 userRoute.use(express.urlencoded({extended:true}))
 
 
-userRoute.get('/',userController.loadHome)
+userRoute.get('/',userExit,userController.loadHome)
 userRoute.get('/login',userController.loadLogin)
 userRoute.get('/signup',userController.signup)
 userRoute.post('/signup',userController.createUser)
@@ -35,8 +35,8 @@ userRoute.post('/verifyOtp',otpController.otpVeify)
 userRoute.post('/resend-otp',otpController.resendOTP)
 userRoute.get('/logout',userController.userLogout)
 // userRoute.get('/productDetails',userController.loadProductDetails)
-userRoute.get('/products',userController.products)
-userRoute.get('/productDetails/:productId', userController.productDetails);
+userRoute.get('/products',userExit,userController.products)
+userRoute.get('/productDetails/:productId',userExit, userController.productDetails);
 
 
 //forgot password 

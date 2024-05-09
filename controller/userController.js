@@ -8,38 +8,64 @@ const bcrypt = require('bcrypt')
 
 
 
-const loadHome = async (req, res) => {
+
+const createUser = async (req, res) => {
+    const { name, email, password, confirmpassword } = req.body;
+    console.log(req.body);
+    console.log("Received data:", name, email, password, confirmpassword);
+
     try {
-        const user = req.session.user;
-        console.log('useruser',user);
-        if (!req.session.userlogged) {
-            // Redirect to login page if user is not logged in
+        // Check if user with same email already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
             return res.redirect('/login');
         }
-        const products = await Product.find();
-        res.render('home', { error: null, user, products });
+        console.log(existingUser,'eeeeeeeeeeeeeeeeeeeeeeeeeekkkkkkkkkkkkkkkkkkkkkkkkkk');
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+        // Create a new user with hashed password
+        const newUser = new User({ name, email, password: hashedPassword });
+        console.log(newUser,'neneneneneenenenneneneenen');
+        req.session.user=newUser
+
+        console.log(req.session.user,'uuuuuuuuuuuuuuuu1111111111111111111111');
+       
+
+        // Redirect to otp function page after signup
+        return res.redirect('/otpsending');
     } catch (error) {
-        console.log("error occurred", error);
+        console.log(error)
+        return res.status(500).json({ error: "Failed to create user", details: error });
+
     }
 }
 
 
+const loadHome=async(req,res)=>{
+
+    try {
+    
+        const email=req.session.curUser
+        console.log(req.session.curUser,'uuuuuuuuuuuuuuuuuuuu');
+        const products = await Product.find()
+        const user = await User.find({email : email})
+
+        res.render('home',{error:null,user,products})
+        
+    } catch (error) {
+        console.log("error occured");
+    }
+    }
 
 
 const loadLogin=async (req,res)=>{
     try{
-        const successMessage=req.flash('success')
-
-        req.flash('success','')
+        
 
 
-        const email=req.session.email || null
+        const email=req.session.email
         res.render('login',{
-            error:null,
-            successMessage:successMessage,
-            email:email,
-            passwordChanged:req.session.passwordChanged || false
-
+            error:null,email
         })
     } catch (error){
         console.log("Error occured:",error)
@@ -75,36 +101,6 @@ const loadOtp=async (req,res)=>{
 
 
 
-const createUser = async (req, res) => {
-    const { name, email, password, confirmpassword } = req.body;
-    console.log(req.body);
-    console.log("Received data:", name, email, password, confirmpassword);
-
-    try {
-        // Check if user with same email already exists
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.redirect('/login');
-        }
-        console.log(existingUser,'eeeeeeeeeeeeeeeeeeeeeeeeee');
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
-        // Create a new user with hashed password
-        const newUser = new User({ name, email, password: hashedPassword });
-        console.log(newUser,'neneneneneenenenneneneenen');
-        req.session.user=newUser
-
-        console.log(req.session.user,'uuuuuuuuuuuuuuuu1111111111111111111111');
-       
-
-        // Redirect to otp function page after signup
-        return res.redirect('/otpsending');
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({ error: "Failed to create user", details: error });
-
-    }
-}
 
 
 const createLogin = async (req, res) => {
@@ -112,7 +108,7 @@ const createLogin = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const userLog = await User.findOne({ email });
+        const userLog = await User.findOne({ email : email });
         console.log('userlog',userLog);
         
 
@@ -129,6 +125,7 @@ const createLogin = async (req, res) => {
             return res.render('login', { error: 'Invalid email or password' });
         }
         req.session.userlogged = true;
+        req.session.curUser = email;
 
         res.redirect('/');
     } catch (error) {
@@ -211,7 +208,7 @@ const userLoginGoogleFailed_get =(req,res)=>{
     const getProductDetails = async (productId) => {
         try {
             console.log('Fetching product details for productId:', productId);
-            const product = await Product.findById(productId); // Assuming productId is the MongoDB ObjectId
+            const product = await Product.findById(productId); 
             console.log('Product details fetched successfully:', product);
             return product;
         } catch (error) {
@@ -221,13 +218,14 @@ const userLoginGoogleFailed_get =(req,res)=>{
     }
     
     
-    // Controller function to handle productDetails route
     const productDetails = async (req, res) => {
         try {
             const productId = req.params.productId;
-            // Call getProductDetails function to fetch product details
-            const product = await getProductDetails(productId);
-            res.render('productDetails', { product });
+            const product = await Product.findById(productId);
+            console.log('pppppppppp',product); 
+
+
+            res.render('productDetails', { product: [product] });
         } catch (error) {
             console.error("Error occurred:", error);
             res.render('error', { message: "Error occurred while fetching product details." });
@@ -252,15 +250,15 @@ const products = async (req, res)=>{
 
 
 
-const userLogout= (req,res)=>{
-    req.session.destroy(err=>{
-        if(err){
-        console.error("Error destroying session",err)
-        }else{
-            res.redirect('/')
+const userLogout = (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            console.error("Error destroying session:", err);
+            return res.status(500).send("Internal server error");
         }
-    })
-}
+        res.redirect('/'); 
+    });
+};
 
 
 

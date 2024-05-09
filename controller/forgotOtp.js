@@ -124,46 +124,40 @@ const resendForgotOtp = (req, res) => {
 
 
 
-const resetPassword=async(req,res)=>{
+const resetPassword = async (req, res) => {
     try {
-        const {password,confirmPassword}=req.body
-        console.log("password,confirmPassword",password,confirmPassword)
+        const { password, confirmPassword } = req.body;
         const email = req.session.mail;
-        console.log("email",email)
 
-        if(!email){
-            return res.status(404).json({error:"email not found in the session"})
+        if (!email) {
+            return res.status(404).json({ error: "Email not found in the session" });
         }
 
-        const resetUser = await User.findOne({email :email});
-        console.log("email......................",resetUser)
-        if(!resetUser){
-          return res.staus(404).json({error:"user not found"})
+        const resetUser = await User.findOne({ email: email });
 
-
+        if (!resetUser) {
+            return res.status(404).json({ error: "User not found" });
         }
 
-        if(password!==confirmPassword){
-            return res.status(400).json({error:"password do not match "})
+        if (password !== confirmPassword) {
+            return res.status(400).json({ error: "Passwords do not match" });
         }
 
-        const restHashedPassword =await bcrypt.hash(password,10)
+        const resetHashedPassword = await bcrypt.hash(password, 10);
 
+        resetUser.password = resetHashedPassword;
+        await resetUser.save();
 
-        resetUser.password=restHashedPassword
-        await resetUser.save()
+        // Set success message for password reset
         req.flash('success', 'Password changed successfully');
-        req.session.passwordChanged=true
-        return res.redirect('/login')
 
-
+        // Redirect to login page
+        return res.redirect('/login');
     } catch (error) {
-        console.error("error reset password",error)
-       return   res.status(500).json({error:"internal server error"})
-        
+        console.error("Error resetting password:", error);
+        return res.status(500).json({ error: "Internal server error" });
     }
-
-}
+};
 
 
 

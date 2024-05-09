@@ -6,37 +6,77 @@
 <title>Product Details</title>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <style>
-/* Basic styles */
+/* Custom styles */
 body {
   font-family: Arial, sans-serif;
+  background-color: #f8f9fa; /* Light gray background */
+  padding-top: 20px;
 }
 
 .product-image img {
-  max-width: 100%;
-  height: 335px;
-  margin-top: 80px;
+  max-width: 60%;
+  /* max-height: 60%; */
+  margin-left: 20%;
+  border: 1px solid #dee2e6; /* Light border */
+  border-radius: 5px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
 }
 
-.other-image-card {
-  display: flex;
-  align-items: center; /* Center the image vertically */
-  margin-top: 30px; /* Add margin top */
+.product-info {
+  background-color: #fff; /* White background */
+  border: 1px solid #dee2e6; /* Light border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 20px;
+}
+
+.product-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.product-price {
+  font-size: 18px;
+  color: #007bff; /* Blue color for price */
+}
+
+.product-description {
+  margin-top: 10px;
+  color: #495057; /* Dark text color */
+}
+
+.quantity-controls {
+  margin-top: 20px;
 }
 
 .other-image-card img {
-  max-width: 58%;
-  height: auto;
-  max-height: 55px; /* Reducing the maximum height */
+  /* max-width: 30%;
+  border-radius: 5px; */
 }
 
-.quantity {
-  max-width: 50px; /* Reducing the maximum width */
+@media (min-width: 768px) {
+    .col-md-3 {
+      margin-left: 112px;
+        -ms-flex: 0 0 25%;
+        flex: 0 0 25%;
+        max-width: 10%;
+    }
+}
+
+.other-images .col-md-3 {
+    margin-right: -111px;
+    margin-bottom: 0;
+}
+
+/* Remove spacing between images */
+.other-images .col-md-3 {
+  margin-bottom: 0;
 }
 
 /* Responsive styles */
 @media screen and (max-width: 768px) {
-  .product-image img {
-    margin-top: 0; /* Reset margin for smaller screens */
+  .product-info,
+  .quantity-controls {
+    margin-top: 30px;
   }
 }
 </style>
@@ -47,14 +87,15 @@ body {
   <div class="row">
     <div class="col-md-6"> <!-- Column for the first image -->
       <div class="product-image">
-        <img src="/uploads/1714131129340-131_f04f74fd-45d4-4614-85cf-6ccf69c4cf90 - Copy.jpg" alt="Product Image">
+        <!-- Big image -->
+        <img src="/uploads/<%= product[0].image[0] %>" alt="Product Image">
       </div>
     </div>
     <div class="col-md-6"> <!-- Column for the product info -->
       <div class="product-info">
-        <h1 class="product-title">Product Title</h1>
-        <p class="product-price">$99.99</p>
-        <p class="product-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar euismod mi, ut lacinia sapien tempus a. Sed fermentum lacus nec ligula facilisis, sit amet tincidunt justo cursus. Vestibulum in eros justo. Duis euismod quam eget nisl tempor, at ultrices magna sollicitudin. Vivamus eget dolor libero. </p>
+        <h1 class="product-title"><%= product[0].name %></h1>
+        <p class="product-price">$<%= product[0].price %></p>
+        <p class="product-description"><%= product[0].description %></p>
         <div class="quantity-controls">
           <button class="btn btn-outline-secondary" id="decreaseQuantity">-</button>
           <input type="text" class="form-control quantity" value="1">
@@ -68,19 +109,19 @@ body {
   
   <!-- Small card section -->
   <div class="row other-images">
-    <div class="col-md-2"> <!-- Column for the second image -->
-      <div class="other-image-card">
-        <img src="/uploads/1714131129340-131_f04f74fd-45d4-4614-85cf-6ccf69c4cf90 - Copy.jpg" class="card-img-top" alt="Other Image 1">
+    <% for (let i = 1; i < product[0].image.length; i++) { %>
+      <div class="col-md-3 col-sm-6"> 
+        <div class="other-image-card">
+          <img src="/uploads/<%= product[0].image[i] %>" class="card-img-top" alt="Other Image">
+        </div>
       </div>
-    </div>
-    <div class="col-md-10"> <!-- Column for the description and other elements -->
-      <!-- Leave this empty if you want the description to remain in the right column -->
-    </div>
+    <% } %>
   </div>
 </div>
 
 </body>
 </html>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   const decreaseBtn = document.getElementById('decreaseQuantity');
@@ -100,6 +141,3 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 </script>
-
-</body>
-</html>

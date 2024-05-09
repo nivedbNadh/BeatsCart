@@ -98,7 +98,7 @@
                                     <i class="fas fa-cart-plus"></i>
                                 </a>
 
-                                <%if(user){%>
+                                <%if(!user){%>
                                 <a href="/login" class="btn btn-login">Login</a>
                                 <a href="/signup" class="btn btn-signup">Sign Up</a>
                                 <%}else{%>
@@ -146,10 +146,9 @@
                             <div class="col-lg-3 col-sm-6 " id="product">
                                 <div class="single_product_item">
                                     <a href="/productDetails/<%= data._id %>"> 
-                                        <button class="badge">Buy Now</button>
-                                    </a>
-                                    <div class="product-card">
-                                        
+                                        <button class="badge" onclick="getProductDetails('<%= data._id %>')">Buy Now</button>
+                                        <div class="product-card">
+                                            
                                          <div class="product-tumb">
                                             <img src="/uploads/<%= data.image[0]%>" alt="Headphone">
                                         </div>
@@ -162,11 +161,12 @@
                                                 <div class="product-links">
                                                     <a href="#"><i class="fa fa-heart"></i></a>
                                                     <a href="#"><i class="fa fa-shopping-cart"></i></a>
-
+                                                    
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                </a>
                                     
                                     <style>
                                         @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
@@ -423,26 +423,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.addEventListener('click', function(event) {
-                if (event.target && event.target.matches('.badge')) {
-                    const productCard = event.target.closest('.single_product_item');
-                    const productId = productCard.dataset.productId;
-                    fetch(`/productDetails/${productId}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    })
-                    .then(response => {
-                        console.log('Product ID sent to backend:', productId);
-                        // Handle the response as needed
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-                }
+        function getProductDetails(productId){
+            fetch(`/productDetails/${productId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                console.log('Product ID sent to backend:', productId);
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
-        });
-        </script>
+        }
+    </script>
         
