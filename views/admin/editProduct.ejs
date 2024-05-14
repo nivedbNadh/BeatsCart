@@ -1,6 +1,5 @@
 <!-- views/editProduct.ejs -->
 
-Copy code
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -102,21 +101,28 @@ Copy code
 
 <h1>Edit Product</h1>
 
-<form action="/updateproduct/ <%= product._id %>" method="post" enctype="multipart/form-data">
+<form id="editProductForm"  action="/updateproduct/ <%= product._id %>" method="post" enctype="multipart/form-data" novalidate>
     <label for="name">Product Name:</label>
     <input type="text" id="name" name="name" value="<%= product.name %>" required>
+    <span class="error-message"  id="name-error"></span><br>
+
     
     <label for="description">Product Description:</label>
     <textarea id="description" name="description" required><%= product.description %></textarea>
+    <span class="error-message" id="description-error"></span><br>
     
     <label for="price">Product Price:</label>
     <input type="number" id="price" name="price" value="<%= product.price %>" required min="0">
+    <span class="error-message" id="price-error"></span><br>
+
     <label for="quantity">Product Quantity:</label>
     <input type="number" id="quantity" name="quantity" value="<%= product.quantity || 0 %>" required min="0">
+    <span class="error-message" id="quantity-error"></span><br>
 
     <div class="checkbox-group">
         <label for="updateImage">Update Image:</label>
         <input type="checkbox" id="updateImage" name="updateImage">
+        <span class="error-message" id="updateImage-error"></span><br>
     </div>
     <div class="checkbox-group">
         <label for="existingImage">Existing Image:</label>
@@ -141,6 +147,7 @@ Copy code
     </div>
     <label for="category">Product Category:</label>
     <select id="category" name="category" required>
+        <span class="error-message" id="category"></span><br>
         <% categories.forEach(category => { %>
             <option value="<%= category.name %>" <% if (product.category && product.category._id && product.category._id.equals(category._id)) { %>selected<% } %>><%= category.name %></option>
         <% }); %>
@@ -164,31 +171,74 @@ Copy code
     });
 </script>
 
+ <script>
 
-<!-- <script>
-$('.checkbox-group input[type="checkbox"]').on('change', function() {
-    var selectedImages = [];
-    $('.checkbox-group input[type="checkbox"]:checked').each(function() {
-        selectedImages.push($(this).val());
-    });
-    console.log("selectedImages",selectedImages)
+document.addEventListener("DOMContentLoaded",function (){
+    const editProductForm=document.getElementById("editProductForm")
 
-    $.ajax({
-        url: '/deleteproduct', 
-        method: 'POST', 
-        data: { images: selectedImages },
-        success: function(response) {
-            console.log('Images deleted successfully');
-        },
-        error: function(xhr, status, error) {
-            console.error('Error deleting images:', error);
-        }
-    });
-});
-</script> 
 
- -->
- 
- 
+    editProductForm.addEventListener('submit',function (evnet){
+        event.preventDefault()
+        validateForm()
+    })
+})
+function validateForm() {
+    const form = document.getElementById('editProductForm');
+    const name = form.elements['name'].value.trim();
+    const description = form.elements['description'].value.trim();
+    const price = form.elements['price'].value.trim();
+    const quantity = form.elements['quantity'].value.trim();
+    const updateImageChecked = form.elements['updateImage'].checked; // Check if the checkbox is checked
+    const images = form.elements['image'].files; // Use 'image' instead of 'updateImage' for file input
+    const category = form.elements['category'].value;
+
+    const errorMessages = document.querySelectorAll('.error-message');
+    errorMessages.forEach(error => error.textContent = '');
+
+    let isValid = true;
+
+    if (name === '') {
+        displayErrorMessage('Product Name is required', 'name-error');
+        isValid = false;
+    }
+
+    if (description === '') {
+        displayErrorMessage('Product Description is required', 'description-error');
+        isValid = false;
+    }
+
+    if (price === '' || isNaN(price) || parseFloat(price) < 0) {
+        displayErrorMessage('Please enter a valid positive price', 'price-error');
+        isValid = false;
+    }
+
+    if (quantity === '' || isNaN(quantity) || parseFloat(quantity) < 0) {
+        displayErrorMessage('Please enter a valid positive quantity', 'quantity-error');
+        isValid = false;
+    }
+
+    if (updateImageChecked && (!images || images.length === 0)) { 
+        displayErrorMessage('Product Image is required', 'updateImage-error');
+        isValid = false;
+    }
+
+    if (category === '') {
+        displayErrorMessage('Category is required', 'category-error');
+        isValid = false;
+    }
+
+    if (isValid) {
+        form.submit();
+    }
+}
+
+  
+function displayErrorMessage(message, elementId) {
+        const errorSpan = document.getElementById(elementId);
+        errorSpan.textContent = message;
+        errorSpan.style.color = 'red';
+    }
+
+</script>
 </body>
 </html>

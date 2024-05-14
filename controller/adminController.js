@@ -39,14 +39,13 @@ const adminDashBoard=async (req,res)=>{
 const adminLogingPost = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const adminEmail = process.env.ADMIN_EMAIL;
-        const adminPassword = process.env.ADMIN_PASSWORD;
+ 
         console.log(adminEmail, adminPassword);
 
         if (adminEmail === email && adminPassword === password) {
             res.redirect('/adminDash');
             const hashedPassword=await bcrypt.hash(password,10)
-            console.log();
+            console.log("hashedPassword",hashedPassword);
         } else {
             req.flash('error', 'Invalid email or password');
             res.redirect('/adminlogin');
@@ -78,15 +77,22 @@ const adminLogingPost = async (req, res) => {
         const userId=req.body.userId
         
         const user = await User.findById(userId)
-        console.log(userId)
+       
         if(!user)
-      return res.status(404).json({error:"user not found"})
+       return res.status(404).json({error:"user not found"})
+     let  flag = false;
+        if(user.status === true){
+            user.status = false;
+            flag = true;
+        }else{
+            user.status = true;
+        }
 
-
-      user. status=false
       await user.save()
-
-      res.redirect('/userdetails?success+=blocked')
+      if(flag){
+      return  res.redirect('/userdetails?success+=blocked')
+      }
+     return res.redirect('/userdetails?success+=unblock')
 
     } catch (error) {
         console.log("error unblocking user",error)
@@ -96,29 +102,12 @@ const adminLogingPost = async (req, res) => {
 
 
 
-const userUnBlock = async (req, res) => {
-    try {
-        const { userId } = req.body;
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-        user.status = true; // Set user status to active
-        await user.save();
-        res.redirect('/userdetails?unblock successfully')
-
-    } catch (error) {
-        console.error('Error unblocking user:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-};
-
 
 
 const productList = async(req,res)=>{
     try{
 
-        const products = await Products.find()
+        const products = await Products.find({is_deleted : false})
         // console.log('products',products);
 
         res.render('productList',{products})
@@ -137,7 +126,7 @@ const addProduct = async(req,res)=>{
         const category = await Category.find()
         console.log('category',category);
 
-        res.render('addProduct',{category})
+        res.render('addProduct', {category})
 
     }catch(error){
         console.error('Error adding products:', error);
@@ -220,43 +209,52 @@ const addCategory = async(req,res)=>{
 }
 
 
-const addAdminCategory = async(req,res)=>{
-    try{
-        const {categoryName} = req.body;
-        // const newcategory=await category.find()
-        // if(newcategory===)
-    
-        console.log('categoryName',categoryName);
+const addAdminCategory = async (req, res) => {
+    try {
+        const { categoryName } = req.body;
+        const existingCategory = await Category.findOne({ name: categoryName }); 
+        if (existingCategory) {
+            return res.status(400).send('Category already exists');
+        }
+
+        console.log('categoryName', categoryName);
         const category = new Category({
-            name:categoryName
+            name: categoryName
         });
         await category.save();
-        res.redirect('categoryList'); 
-    }catch (error) {
+        res.redirect('categoryList');
+    } catch (error) {
         console.error(error);
         res.status(500).send('Server Error');
     }
 }
 
 
-
-
-
-const deleteProducts=async (req,res)=>{
-    try {
+const deleteProducts= async (req,res)=>{
+    try{
         const productId=req.params.id
         console.log("productId",productId)
-        await Products.findByIdAndDelete(productId)
-        console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",productId);
+        const product=await Products.findByIdAndUpdate(productId)
+        console.log("productnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn",product)
+        if(!product) {
+            console.log("product not found")
+            return res.status(404).json({message:'Product not found'})
+        }
 
-        res.sendStatus(200)
+        console.log("product permenently soft deleted successfully")
+        res.json({message:'Product permenently soft deleted '})
 
-    } catch (error) {
-        console.error("Error deleting product:",error)
-        res.status(500).send("error deleting product")
+        product.is_deleted=true
+        await product.save()
+        // console.log("Product soft deleted successfully","Product soft deleted successfully")
+        // res.json({message:'Product soft deleted successfully'})
+
         
+    } catch (error) {
+        res.status(500).json({message:error.message})
     }
 }
+
 
 
 
@@ -389,7 +387,6 @@ module.exports={
     adminLogingPost,
     adminDashBoard,
     loadUserDetails,
-    userUnBlock,
     blockUser,
     productList,
     addProduct,
@@ -402,7 +399,6 @@ module.exports={
     categoryDelete,
     editCategory,
     productUpdate,
-    // deleteProduct
 
 }
 

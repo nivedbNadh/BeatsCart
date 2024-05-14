@@ -4,6 +4,9 @@
 <head>
     <meta charset="utf-8">
     <title>AdminDashBoared</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -162,50 +165,55 @@
         $('#usersTable').DataTable();
     });
 
-    document.addEventListener("DOMContentLoaded", function () {
-    const deleteButtons = document.querySelectorAll(".delete-btn");
+    
+   document.querySelectorAll('.delete-btn').forEach(button => {
+    console.log("Adding event listener to delete button");
+    button.addEventListener('click', async () => {
+        const productId = button.getAttribute('data-product-id');
+        
+        try {
 
-    deleteButtons.forEach(function (button) {
-        button.addEventListener("click", function (event) {
-            const row = event.target.closest("tr");
-            const confirmation = window.confirm("Are you sure you want to delete?");
+            const confirmed = await Swal.fire({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover this product!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Yes, delete it!",
+                        cancelButtonText: "No, keep it"
+                    });
+
+                    if(confirmed.isConfirmed===true) {
+        
+
+
             
-            if (confirmation) {
-                console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",confirmation)
-                // const productId=products.productId
-                // console.log("deleting product with id:",products.productId)
-                newDoc=document.getElementById('button')
-                let productId=newDoc.getAttribute('data-product-id')
-                console.log(productId);
+            const response = await fetch(`/products/${productId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ is_deleted: true })
+            });
 
-                //send delete request to backend using fetch 
 
-                fetch(`/products/${productId}`,{
-                    method: "DELETE"
-                })
-
-                .then(response=>{
-                    if(response.ok){
-                        console.log("product success fully deleted")
-                        row.style.display="none"
-                    }else{
-                        console.error("failed to delete products")
-                    }                           
-                    return response
-                })
-                .catch(error=>{
-                    console.error("Error:",error)
-                })
-            
-              
-                
+            if (response.ok) {
+                const productRow=button.closest('tr')
+                if(productRow){
+                    productRow.remove()
+                }else{
+                    console.error('Product row not found')
+                    alert(error)
+                }
+            } else {
+                console.error('Failed to delete product');
             }
-        });
-    });
-
+        }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     
     });
-
+});
 
 </script>
 

@@ -35,6 +35,7 @@ function isOTPExpired(otp){
 const postEmail=(req,res)=>{
 try{
     req.session.mail=req.body.email
+    
     console.log("userrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",req.session.mail)
     const {otp,timestamp}=generateOtp()
     req.session.otp={value:otp,expiry:timestamp + 2*60*1000}
@@ -149,7 +150,7 @@ const resetPassword = async (req, res) => {
         await resetUser.save();
 
         // Set success message for password reset
-        req.flash('success', 'Password changed successfully');
+        // req.flash('success', 'Password changed successfully');
 
         // Redirect to login page
         return res.redirect('/login');

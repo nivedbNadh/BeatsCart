@@ -81,8 +81,9 @@ const otpVeify = async (req, res) => {
             });
 
             console.log("newUser",newUser)
-
             await newUser.save();
+            
+            req.session.userlogged = true;
             res.redirect('/login');
         } else {
             req.flash('error', 'Invalid OTP');

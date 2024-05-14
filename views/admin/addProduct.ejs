@@ -43,104 +43,136 @@
 </head>
 <body>
 
-    <form id="addProductForm" action="/adminProduct" method="post" enctype="multipart/form-data" onsubmit="validateForm(event)">
+    <form id="addProductForm" action="/adminProduct" method="post" enctype="multipart/form-data" novalidate>
         <h2>Add Product</h2>
         
         <label for="name">Name:</label><br>
-        <input type="text" id="name" name="name" required><br><br>
+        <input type="text" id="name" name="name" required><br>
+        <span class="error-message" id="name-error"></span><br>
     
         <label for="description">Description:</label><br>
-        <textarea id="description" name="description" rows="4" required></textarea><br><br>
+        <textarea id="description" name="description" rows="4" required></textarea><br>
+        <span class="error-message" id="description-error"></span><br>
     
         <label for="image">Image:</label><br>
-        <!-- <input type="file" id="image" name="image" accept="image/*" required><br><br> -->
-        <!-- <input type="file" id="images" name="images[]" accept="image/*" multiple required><br><br> -->
-        <input type="file" id="images" name="images" accept="image/*" multiple required>
-
+        <input type="file" id="images" name="images" accept="image/*" multiple onchange="displaySelectedImages(this)">
+        <div class="selected-images-container" id="selectedImagesContainer"></div>
+        <span class="error-message" id="images-error"></span><br>
     
         <label for="price">Price:</label><br>
-        <input type="number" id="price" name="price" min="0.01" step="0.01" required><br><br>
+        <input type="number" id="price" name="price" min="0.01" step="0.01" required><br>
+        <span class="error-message" id="price-error"></span><br>
     
         <select id="category" name="category" required>
             <% category.forEach(Category => { %>
                 <option value="<%= Category.name %>"><%= Category.name %></option>
             <% }) %>
-        </select><br><br>
-        
-        
+        </select><br>
+        <span class="error-message" id="category-error"></span><br>
     
         <label for="quantity">Quantity:</label><br>
-        <input type="number" id="quantity" name="quantity" min="1" required><br><br>
+        <input type="number" id="quantity" name="quantity" min="1" required><br>
+        <span class="error-message" id="quantity-error"></span><br>
     
         <input type="submit" value="Add Product">
     </form>
     
     <div id="errorMessages"></div>
     
-    </body>
-    
     <script>
-        function validateForm(event) {
-            const form = document.getElementById('addProductForm');
-            const name = form.elements['name'].value.trim();
-            const description = form.elements['description'].value.trim();
-            const price = form.elements['price'].value.trim();
-            const quantity = form.elements['quantity'].value.trim();
-            const image = form.elements['images'].files[0];            
-            const category = form.elements['category'].value;
-
-            console.log('IMAGE',image);
+    document.addEventListener('DOMContentLoaded', function() {
+        const addProductForm = document.getElementById('addProductForm');
     
-            // Clear previous error messages
-            document.getElementById('errorMessages').innerHTML = '';
+        addProductForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            validateForm();
+        });
+    });
     
-            // Validate Name
-            if (name === '') {
-                displayErrorMessage('Product Name is required');
-                event.preventDefault();
-                return;
-            }
+    function validateForm() {
+        const form = document.getElementById('addProductForm');
+        const name = form.elements['name'].value.trim();
+        const description = form.elements['description'].value.trim();
+        const price = form.elements['price'].value.trim();
+        const quantity = form.elements['quantity'].value.trim();
+        const images = form.elements['images'].files;
+        const category = form.elements['category'].value;
     
-            // Validate Description
-            if (description === '') {
-                displayErrorMessage('Product Description is required');
-                event.preventDefault();
-                return;
-            }
+        // Clear previous error messages
+        const errorMessages = document.querySelectorAll('.error-message');
+        errorMessages.forEach(error => error.textContent = '');
     
-            // Validate Price
-            if (price === '' || isNaN(price) || parseFloat(price) < 0) {
-                displayErrorMessage('Please enter a valid positive price');
-                event.preventDefault();
-                return;
-            }
+        let isValid = true;
     
-            // Validate Quantity
-            if (quantity === '' || isNaN(quantity) || parseInt(quantity) < 0) {
-                displayErrorMessage('Please enter a valid positive quantity');
-                event.preventDefault();
-                return;
-            }
-    
-            // Validate Image
-            if (!images) {
-                displayErrorMessage('Product Image is required');
-                event.preventDefault();
-                return;
-            }
-    
-            // Validate Category
-            // if (category === '') {
-            //     displayErrorMessage('Product Category is required');
-            //     event.preventDefault();
-            //     return;
-            // }
+        // Validate Name
+        if (name === '') {
+            displayErrorMessage('Product Name is required', 'name-error');
+            isValid = false;
         }
     
-        function displayErrorMessage(message) {
-            const errorDiv = document.getElementById('errorMessages');
-            errorDiv.innerHTML += `<p>${message}</p>`;
+        // Validate Description
+        if (description === '') {
+            displayErrorMessage('Product Description is required', 'description-error');
+            isValid = false;
         }
+    
+        // Validate Price
+        if (price === '' || isNaN(price) || parseFloat(price) < 0) {
+            displayErrorMessage('Please enter a valid positive price', 'price-error');
+            isValid = false;
+        }
+    
+        // Validate Quantity
+        if (quantity === '' || isNaN(quantity) || parseInt(quantity) < 0) {
+            displayErrorMessage('Please enter a valid positive quantity', 'quantity-error');
+            isValid = false;
+        }
+    
+        // Validate Image
+        if (!images || images.length === 0) {
+            displayErrorMessage('Product Image is required', 'images-error');
+            isValid = false;
+        }
+    
+        // Validate Category
+        if (category === '') {
+            displayErrorMessage('Product Category is required', 'category-error');
+            isValid = false;
+        }
+    
+        if (isValid) {
+            form.submit();
+        }
+    }
+    
+    function displayErrorMessage(message, elementId) {
+        const errorSpan = document.getElementById(elementId);
+        errorSpan.textContent = message;
+        errorSpan.style.color = 'red';
+    }
+    
+    function displaySelectedImages(input) {
+        const selectedImagesContainer = document.getElementById('selectedImagesContainer');
+        selectedImagesContainer.innerHTML = '';
+    
+        for (let i = 0; i < input.files.length; i++) {
+            const image = input.files[i];
+            const imageURL = URL.createObjectURL(image);
+            const imageElement = document.createElement('img');
+    
+            // set maximum size for the preview image
+            const maxWidth = 60;
+            const maxHeight = 60;
+            imageElement.style.maxWidth = maxWidth + 'px';
+            imageElement.style.maxHeight = maxHeight + 'px';
+    
+            const margin = 30;
+            imageElement.style.marginRight = margin + 'px';
+    
+            imageElement.src = imageURL;
+            imageElement.classList.add('selected-image');
+            selectedImagesContainer.appendChild(imageElement);
+        }
+    }
     </script>
     
-

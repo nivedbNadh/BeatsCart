@@ -106,15 +106,19 @@
                                                 </td>
                                                 <td>
                                                    <!-- Block Form -->
-                                        <form action="/block" method="post" class="d-inline">
+                                        <form action="/blockAndUnblock" method="post" class="d-inline">
                                             <input type="hidden" name="userId" value="<%= user._id %>">
-                                            <button type="submit" class="btn btn-danger m-2">Block</button>
+                                            <% if (user.status) { %>
+                                                <button type="submit" class="btn btn-success m-2">Unblock</button>
+                                            <% } else { %>
+                                                <button type="submit" class="btn btn-danger m-2">Block</button>
+                                                <% } %>
                                         </form>
                                         <!-- Unblock Form -->
-                                        <form action="/unblock" method="post" class="d-inline">
+                                        <!-- <form action="/unblock" method="post" class="d-inline">
                                             <input type="hidden" name="userId" value="<%= user._id %>">
                                             <button type="submit" class="btn btn-success m-2">Unblock</button>
-                                        </form></button>
+                                        </form></button> -->
                                                 </td>
                                             </tr>
                                         <% }); %>

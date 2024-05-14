@@ -42,6 +42,12 @@ status:{
     default:true,
     type:Boolean
 
+},
+
+is_deleted:{
+    default:false,
+    type:Boolean
+
 }
 
 
