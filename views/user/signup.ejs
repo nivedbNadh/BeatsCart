@@ -23,10 +23,12 @@
                         <form id="signupForm" class="row contact_form" action="/otpsending" method="post" novalidate="novalidate">
                             <div class="col-md-12 form-group p_star">
                                 <input type="text" class="form-control" id="name" name="name" value=""
-                                    placeholder="Username">
+                                    placeholder="Name">
                                 <p id="nameError" class="text-danger"></p>
                             </div>
                             <div class="col-md-12 form-group p_star">
+                                <div id="error-message"   style="color : red"></div>
+                                
                                 <input type="email" class="form-control" id="email" name="email" value=""
                                     placeholder="Email">
                                 <p id="emailError" class="text-danger"></p>
@@ -68,68 +70,93 @@
 
 <%- include('../layouts/user/footer') %>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const signupForm = document.getElementById('signupForm');
+<script>document.addEventListener('DOMContentLoaded', function() {
+    const signupForm = document.getElementById('signupForm');
 
-        signupForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form submission
-            
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('Confirmpassword').value;
+    signupForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission
+        
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const confirmPassword = document.getElementById('Confirmpassword').value.trim();
 
-            const nameError = document.getElementById('nameError');
-            const emailError = document.getElementById('emailError');
-            const passwordError = document.getElementById('passwordError');
-            const confirmPasswordError = document.getElementById('confirmPasswordError');
+        const nameError = document.getElementById('nameError');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
+        const confirmPasswordError = document.getElementById('confirmPasswordError');
 
-            nameError.textContent = '';
-            emailError.textContent = '';
-            passwordError.textContent = '';
-            confirmPasswordError.textContent = '';
+        nameError.textContent = '';
+        emailError.textContent = '';
+        passwordError.textContent = '';
+        confirmPasswordError.textContent = '';
 
-            if (!name) {
-                nameError.textContent = 'Name is required';
-                return;
-            }
+        let isValid = true;
 
-            if (!email) {
-                emailError.textContent = 'Email is required';
-                return;
-            }
 
-            // Email validation
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailPattern.test(email)) {
-                emailError.textContent = 'Invalid email format';
-                return;
-            }
-
-            if (!password) {
-                passwordError.textContent = 'Password is required';
-                return;
-            }
-
-            const passwordPattern = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
-        if (!passwordPattern.test(password)) {
-            passwordError.textContent = 'Password must be minimum eight characters and contain at least one special character (!@#$%^&*)';
-            return;
+        // Check if name is empty or contains only spaces
+        if (!name) {
+            nameError.textContent = 'Name is required';
+            isValid = false;
+        } else if (!/^[a-zA-Z]+$/.test(name)) {
+            nameError.textContent = 'Name must contain only letters';
+            isValid = false;
         }
 
-            if (!confirmPassword) {
-                confirmPasswordError.textContent = 'Please confirm your password';
-                return;
-            }
 
-            if (password !== confirmPassword) {
-                confirmPasswordError.textContent = 'Passwords do not match';
-                return;
+        if (!email) {
+            emailError.textContent = 'Email is required';
+            isValid = false;
+        } else {
+            const emailPattern = /^[^\s@]+@gmail\.com$/; 
+            if (!emailPattern.test(email)) {
+                emailError.textContent = 'Invalid email format. Only @gmail.com addresses are allowed';
+                isValid = false;
             }
+        }
 
-            // If all fields are valid, submit the form
+        if (!password) {
+            passwordError.textContent = 'Password is required';
+            isValid = false;
+        }
+
+        const passwordPattern = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+        if (password && !passwordPattern.test(password)) {
+            passwordError.textContent = 'Password must be minimum eight characters and contain at least one special character (!@#$%^&*)';
+            isValid = false;
+        }
+
+        if (!confirmPassword) {
+            confirmPasswordError.textContent = 'Please confirm your password';
+            isValid = false;
+        }
+
+        if (password && confirmPassword && password !== confirmPassword) {
+            confirmPasswordError.textContent = 'Passwords do not match';
+            isValid = false;
+        }
+
+        if (isValid) {
             signupForm.submit();
-        });
+        }
     });
+});
+
+</script>
+
+
+<script>
+    window.onload=function() {
+        const urlParams=new URLSearchParams(window.location.search)
+        const error=urlParams.get('error')
+        if(error) {
+            const errorMessageElement=document.getElementById('error-message')
+            errorMessageElement.textContent=error
+            setTimeout(function(){
+                errorMessageElement.textContent=''
+                window.location.href='/login'
+            },3000)
+
+        }
+    }
 </script>

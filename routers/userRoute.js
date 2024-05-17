@@ -21,8 +21,8 @@ userRoute.use(express.urlencoded({ extended: true }));
 
 userRoute.get("/",userAuth.userExist, userController.loadHome);
 userRoute.get("/home", userAuth.userBlock,userController.loadHome);
-userRoute.get("/login", userAuth.authentication, userController.loadLogin);
-userRoute.get("/signup", userController.signup);
+userRoute.get("/login", userAuth.userExist, userController.loadLogin);
+userRoute.get("/signup", userAuth.userExist, userController.signup);
 userRoute.post("/signup", userController.createUser);
 userRoute.post("/login", userController.createLogin);
 userRoute.get("/otp", userController.loadOtp);
@@ -34,7 +34,7 @@ userRoute.get("/logout", userController.userLogout);
 userRoute.get("/products", userAuth.authentication, userController.products);
 userRoute.get(
   "/productDetails/:productId",
-  userAuth.userExist,
+  userAuth.authentication,
   userController.productDetails
 );
 
@@ -47,6 +47,14 @@ userRoute.get("/resetPassword", userController.loadResetPassword);
 userRoute.post("/otp-verifying", forgotOtp.postVerify);
 userRoute.post("/resend-Otp", forgotOtp.resendForgotOtp);
 userRoute.post("/reset-password", forgotOtp.resetPassword);
+
+
+// errorr page
+
+userRoute.get('/error',userController.loadError)
+userRoute.get('/errorfive',userController.errorfivehundred)
+
+
 
 //google auth
 userRoute.get("/auth", userController.loadAuth);

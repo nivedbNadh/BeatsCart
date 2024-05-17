@@ -113,7 +113,8 @@
                         <th>
                             <button type="button" class="btn btn-primary edit-category" data-bs-toggle="modal" data-bs-target="#exampleModal" data-category-id="<%= Category._id%>" data-category-name="<%=Category.name%>">Edit</button>
                             &nbsp;
-                            <button class="btn btn-danger" onclick="deleteCategory('<%=Category._id%>')">Delete</button>
+                            <button class="btn btn-danger delete-button" data-category-id="<%= Category._id %>">Delete</button>
+
                         </th>
                             </tr>
                     <%})%>
@@ -199,25 +200,42 @@
 
 <script>
 
-    function deleteCategory(categoryId){
-        if(confirm("Are you sure want to delete this category?"))
-        $.ajax({
-    url:'/deleteCategory/'+categoryId,
-    type:'Delete',
-    success:function(result){
-        console.log("category deleted successfully")
-        location.reload()
-    },
-    error:function(erro){
+document.querySelectorAll('.delete-button').forEach(button => {
+    console.log("Adding event listener to delete button");
+    button.addEventListener('click', async () => {
+        const categoryId = button.getAttribute('data-category-id');
+        alert(categoryId);
 
-        console.log("error deleting category:",err)
-        alert("error deleting category please try again later")
+        try {
+            const response = await fetch(`/category/${categoryId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ is_deleted: true })
+            });
 
-    }
-    })
-    }
+            const responseData = await response.json(); // Extract JSON response
 
+            alert("Response:", responseData);
 
+            if (response.ok) {
+                const categoryRow = button.closest('tr');
+                alert(categoryRow);
+                if (categoryRow) {
+                    categoryRow.remove();
+                } else {
+                    console.error('Category row not found');
+                }
+            } else {
+                console.error('Failed to delete category');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+});
+                                                                    
 </script>
 
 

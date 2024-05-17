@@ -12,6 +12,7 @@ const FS = require('fs');
 
 const Products=require('../models/productModel')
 const Category=require('../models/categoryModel')
+const Admin=require('../models/adminModel')
 
 
 
@@ -37,25 +38,31 @@ const adminDashBoard=async (req,res)=>{
 
 
 const adminLogingPost = async (req, res) => {
-    try {
-        const { email, password } = req.body;
- 
-        console.log(adminEmail, adminPassword);
+    const { email, password } = req.body;
+    console.log(" email, password", email, password)
 
-        if (adminEmail === email && adminPassword === password) {
-            res.redirect('/adminDash');
-            const hashedPassword=await bcrypt.hash(password,10)
-            console.log("hashedPassword",hashedPassword);
-        } else {
-            req.flash('error', 'Invalid email or password');
-            res.redirect('/adminlogin');
+    try {
+        const adminLog=await Admin.findOne({email:email})
+        console.log("adminLogadminLogadminLog",adminLog)
+        if(!adminLog) {
+            return res.status(400).json({message:'Invalid email or password'})
         }
+
+        if(adminLog.email !== email || adminLog.password !== password) {
+            return res.status(400).json({message:'Invalid email or password'})
+        }
+        req.session.adminLogId=adminLog._id
+        return res.redirect('/adminDash')
+
+ 
+
     } catch (error) {
-        console.error('An error occurred:', error);
-        req.flash('error', 'An error occurred. Please try again later.');
+        res.status(500).json({message:'Server error'})
         res.redirect('/adminlogin');
     }
+
 }
+
 
   const loadUserDetails= async (req,res)=>{
     try {
@@ -182,7 +189,7 @@ const addAdminProduct = async (req, res) => {
 const categoryList = async(req,res)=>{
     try{
 
-        const category = await Category.find()
+        const category = await Category.find({is_deleted:false})
         // console.log('category',category);
 
         res.render('categoryList',{category})
@@ -281,28 +288,28 @@ const loadEditProduct= async (req,res)=>{
 
 
 
-
-const categoryDelete= async (req,res)=>{
+const categoryDelete = async (req, res) => {
     try {
-        categoryId=req.params.id
-        const deleteCategory=await Category.findByIdAndDelete(categoryId)
-        if(!deleteCategory){
-            return res.status(400).json({message:"category not found "})
-
-        }
-        res.status(200).json({message:"category deleted successfully "})
-    } catch (error) {
-        console.error("error deleting category :",error)
-        res.status(500).json({message:"internal server error"})
+        const categoryId = req.params.id;
+        console.log("categoryId", categoryId);
         
+        const category = await Category.findByIdAndUpdate(categoryId);
+        console.log("category", category);
+        
+        if (!category) {
+            console.log("Category not found");
+            return res.status(404).json({ message: 'Category not found' });
+        }
+
+        res.json({ message: 'Category deleted successfully' });
+        category.is_deleted=true
+        await category.save()
+
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: error.message });
     }
-
 }
-
-
-
-
-
 
 const editCategory=async (req,res)=>{
     try{

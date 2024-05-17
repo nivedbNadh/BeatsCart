@@ -2,13 +2,13 @@ const { json } = require("body-parser");
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
 const GoogleUser = require("../models/GoogleUser");
+const mongoose=require('mongoose')
 
 const bcrypt = require("bcrypt");
 
 const createUser = async (req, res) => {
   const { name, email, password, confirmpassword } = req.body;
   // console.log(req.body);
-  // console.log("Received data:", name, email, password, confirmpassword);
 
   try {
     // Check if user with same email already exists
@@ -16,15 +16,12 @@ const createUser = async (req, res) => {
     if (existingUser) {
       return res.redirect("/login");
     }
-    // console.log(existingUser,"eeeeeeeeeeeeeeeeeeeeeeeeeekkkkkkkkkkkkkkkkkkkkkkkkkk");
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
     // Create a new user with hashed password
     const newUser = new User({ name, email, password: hashedPassword });
-    // console.log(newUser, "neneneneneenenenneneneenen");
     req.session.user = newUser;
 
-    // console.log(req.session.curUser, "uuuuuuuuuuuuuuuu1111111111111111111111");
 
     // Redirect to otp function page after signup
     return res.redirect("/otpsending");
@@ -53,6 +50,9 @@ const loadHome = async (req, res) => {
 // userMail
 
 const loadLogin = async (req, res) => {
+  if(req.session.userlogged){
+    return res.redirect("/home")
+  }
   try {
       // Render the login page
       res.render("login", { error: null });
@@ -188,10 +188,15 @@ const getProductDetails = async (productId) => {
 const productDetails = async (req, res) => {
   try {
     const productId = req.params.productId;
-    const product = await Product.findById(productId);
-    console.log("pppppppppp", product);
-
-    res.render("productDetails", { product: [product] });
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return res.redirect('/error')
+    } else {
+      const product = await Product.findById(productId);
+      console.log("pppppppppp", product);
+  
+     return res.render("productDetails", { product: [product] });
+    }
+  
   } catch (error) {
     console.error("Error occurred:", error);
     res.render("error", {
@@ -203,7 +208,7 @@ const productDetails = async (req, res) => {
 const products = async (req, res) => {
   try {
     const user = req.session.user;
-    const products = await Product.find({is_deleted:true});
+    const products = await Product.find({is_deleted:false});
     res.render("products", { error: null, user, products});
   } catch (error) {
     console.error("error occured");
@@ -221,6 +226,31 @@ const userLogout = (req, res) => {
 res.redirect("/login");
 };
 
+
+
+const loadError = async (req,res)=>{
+  try {
+    res.render('error')
+    
+  } catch (error) {
+    console.error("error occured")
+    
+  }
+}
+
+
+
+const errorfivehundred = async (req,res)=>{
+  try {
+    res.render('errorfive')
+    
+  } catch (error) {
+    console.error("error occured")
+  }
+}
+
+
+
 module.exports = {
   loadHome,
   loadLogin,
@@ -237,4 +267,6 @@ module.exports = {
   productDetails,
   products,
   userLogout,
+  loadError,
+  errorfivehundred
 };

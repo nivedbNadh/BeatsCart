@@ -28,7 +28,7 @@ const otp1 = async function (req, res) {
             email: { $regex: new RegExp("^" + req.body.email, "i") }
         });
         if (existingUser) {
-            return res.render(302, "/login", { error: "User already exists" });
+            return res.redirect("/signup?error=User%20already%20exists");
         }
 
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -82,9 +82,8 @@ const otpVeify = async (req, res) => {
 
             console.log("newUser",newUser)
             await newUser.save();
-            
-            req.session.userlogged = true;
-            res.redirect('/login');
+
+          return res.redirect('/login');
         } else {
             req.flash('error', 'Invalid OTP');
             return res.redirect('/otp');        }

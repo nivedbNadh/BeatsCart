@@ -28,7 +28,7 @@ adminRoute.get('/addCategory',adminController.addCategory)
 adminRoute.post('/adminCategory', adminController.addAdminCategory);
 adminRoute.put('/products/:id',adminController.deleteProducts)
 adminRoute.get('/editProduct/:id',adminController.loadEditProduct)
-adminRoute.delete('/deleteCategory/:id',adminController.categoryDelete)
+adminRoute.put('/category/:id',adminController.categoryDelete)
 adminRoute.post('/updateCategory',adminController.editCategory)
 
 
