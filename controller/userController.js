@@ -6,36 +6,37 @@ const mongoose=require('mongoose')
 
 const bcrypt = require("bcrypt");
 
-const createUser = async (req, res) => {
-  const { name, email, password, confirmpassword } = req.body;
-  // console.log(req.body);
+// const createUser = async (req, res) => {
+//   const { name, email, password, confirmpassword } = req.body;
+//   // console.log(req.body);
 
-  try {
-    // Check if user with same email already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.redirect("/login");
-    }
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-    // Create a new user with hashed password
-    const newUser = new User({ name, email, password: hashedPassword });
-    req.session.user = newUser;
+//   try {
+//     // Check if user with same email already exists
+//     const existingUser = await User.findOne({ email });
+//     if (existingUser) {
+//       return res.redirect("/login");
+//     }
+//     // Hash password
+//     const hashedPassword = await bcrypt.hash(password, 10);
+//     // Create a new user with hashed password
+//     const newUser = new User({ name, email, password: hashedPassword });
+//     req.session.tempUser = newUser;
 
 
-    // Redirect to otp function page after signup
-    return res.redirect("/otpsending");
-  } catch (error) {
-    console.log(error);
-    return res
-      .status(500)
-      .json({ error: "Failed to create user", details: error });
-  }
-};
+//     // Redirect to otp function page after signup
+//     return res.redirect("/otpsending");
+//   } catch (error) {
+//     console.log(error);
+//     return res
+//       .status(500)
+//       .json({ error: "Failed to create user", details: error });
+//   }
+// };
 
 const loadHome = async (req, res) => {
   try {
     const email = req.session.curUser;
+    // console.log("emailUserController", req.session.curUser )
     // console.log(req.session.curUser, "uuuuuuuuuvvvvvvvvvv uuuuuuuuuuu");
     const products = await Product.find({is_deleted:false});
     const user = await User.findOne({ email: email });
@@ -50,6 +51,8 @@ const loadHome = async (req, res) => {
 // userMail
 
 const loadLogin = async (req, res) => {
+  // console.log("req.session.userloggedreq.session.userloggedreq.session.userlogged",req.session.userlogged)
+
   if(req.session.userlogged){
     return res.redirect("/home")
   }
@@ -107,9 +110,10 @@ const createLogin = async (req, res) => {
     if (!passwordValid) {
       return res.render("login", { error: "Invalid email or password" });
     }
-    req.session.userlogged = true;
-    console.log("req.sessionnnnnnnnnnnnnnnnnnnnnnnnnnnnn",req.session)
+    req.session.userlogged= true;
+    // console.log("req.sessionnnnnnnnnnnnnnnnnnnnnnnnnnnnn",req.session.userlogged)
     req.session.curUser = email;
+    // console.log(req.session.curUser,"req.session.curUserreq.session.curUserreq.session.curUser")
 
     res.redirect("/home");
   } catch (error) {
@@ -255,7 +259,7 @@ module.exports = {
   loadHome,
   loadLogin,
   signup,
-  createUser,
+  // createUser,
   createLogin,
   loadOtp,
   loadForgot,

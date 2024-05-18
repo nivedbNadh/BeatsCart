@@ -44,14 +44,12 @@ const adminLogingPost = async (req, res) => {
     try {
         const adminLog=await Admin.findOne({email:email})
         console.log("adminLogadminLogadminLog",adminLog)
-        if(!adminLog) {
+        if(!adminLog || adminLog.password !==password) {
             return res.status(400).json({message:'Invalid email or password'})
         }
 
-        if(adminLog.email !== email || adminLog.password !== password) {
-            return res.status(400).json({message:'Invalid email or password'})
-        }
         req.session.adminLogId=adminLog._id
+        req.session.adminlogged=true
         return res.redirect('/adminDash')
 
  
@@ -62,6 +60,7 @@ const adminLogingPost = async (req, res) => {
     }
 
 }
+
 
 
   const loadUserDetails= async (req,res)=>{

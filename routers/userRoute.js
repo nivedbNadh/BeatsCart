@@ -23,7 +23,7 @@ userRoute.get("/",userAuth.userExist, userController.loadHome);
 userRoute.get("/home", userAuth.userBlock,userController.loadHome);
 userRoute.get("/login", userAuth.userExist, userController.loadLogin);
 userRoute.get("/signup", userAuth.userExist, userController.signup);
-userRoute.post("/signup", userController.createUser);
+// userRoute.post("/signup", userController.createUser);
 userRoute.post("/login", userController.createLogin);
 userRoute.get("/otp", userController.loadOtp);
 userRoute.post("/otpsending", otpController.otp1);

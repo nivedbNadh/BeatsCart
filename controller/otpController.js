@@ -39,8 +39,11 @@ const otp1 = async function (req, res) {
             password: hashedPassword
         };
 
+        console.log("otp...............user",req.session.user)
+
         const { otp, timestamp } = generateOTP();
         req.session.otp = { value: otp, expiry: timestamp + 2 * 60 * 1000 };
+        // console.log("req.session.otpreq.session.otpreq.session.otpreq.session.otp",req.session.otp)
 
         const mailOptions = {
             to: email,
@@ -83,6 +86,19 @@ const otpVeify = async (req, res) => {
             console.log("newUser",newUser)
             await newUser.save();
 
+            // Set userlogged and curUser session data
+            req.session.userlogged = true;
+            // console.log("req.session.userloggedreq.session.userloggedreq.session.userloggedreq.session.userloggedreq.session.userlogged",req.session.userlogged)
+            req.session.curUser = email;
+            // console.log(" req.session.curUser req.session.curUser req.session.curUser req.session.curUser", req.session.curUser)
+
+
+
+            //Clean up tempUser and otp from session
+            //   delete req.session.tempUser;
+                delete req.session.otp;
+                // console.log(" req.session.otp; req.session.otp; req.session.otp;", req.session.otp)
+
           return res.redirect('/login');
         } else {
             req.flash('error', 'Invalid OTP');
@@ -102,11 +118,13 @@ const resendOTP = async (req, res) => {
         }
 
         const email = req.session.user.email;
+        console.log("email",req.session.user.email)
 
         if (!req.session.otp || isOTPExpired(req.session.otp)) {
             const { otp, timestamp } = generateOTP();
-            console.log("reeeeeeeeeeeeeeeeeeeeeeeesenddddddddddddddddddddddotp",otp,timestamp)
+            // console.log("reeeeeeeeeeeeeeeeeeeeeeeesenddddddddddddddddddddddotp",otp,timestamp)
             req.session.otp = { value: otp, expiry: timestamp + 2 * 60 * 1000 };
+            console.log(" req.session.otpResendcode", req.session.otp)
         }
 
         const mailOptions = {

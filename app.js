@@ -3,7 +3,6 @@ const express = require('express');
 const app = express();
 // const morgan=require('morgan')
 const userAuth=require('./middleware/userAuth')
-const bodyparser=require('body-parser')
 const { v4: uuidv4 } = require('uuid');
 const dotenv=require('dotenv').config()
 const multer=require('multer')
@@ -39,6 +38,14 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
+
+//clear cache
+app.use((req, res, next) => {
+  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); 
+  res.setHeader("Pragma", "no-cache"); 
+  res.setHeader("Expires", "0");
+  next(); 
+});
 
 app.use(flash());
 

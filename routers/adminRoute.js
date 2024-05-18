@@ -5,6 +5,7 @@ const adminRoute = express();
 const upload = require('../middleware/multer'); 
 const adminController=require('../controller/adminController');
 const userRoute = require('./userRoute');
+const {adminAuth,adminExist}=require('../middleware/adminAouth')
 
 
 adminRoute.set("views",path.join(__dirname,'..',"views","admin"));
@@ -13,26 +14,26 @@ adminRoute.use(express.json())
 adminRoute.use(express.urlencoded({extended:true}))
 
 
-adminRoute.get('/adminlogin',adminController.adminLoging)
-adminRoute.get('/adminDash',adminController.adminDashBoard)
+adminRoute.get('/adminlogin',adminExist,adminController.adminLoging)
+adminRoute.get('/adminDash',adminAuth,adminController.adminDashBoard)
 adminRoute.post('/adminLogPost',adminController.adminLogingPost)
-adminRoute.get('/userdetails',adminController.loadUserDetails)
-adminRoute.post('/blockAndUnblock',adminController.blockUser)
+adminRoute.get('/userdetails',adminAuth,adminController.loadUserDetails)
+adminRoute.post('/blockAndUnblock',adminAuth,adminController.blockUser)
 // adminRoute.post('/unBlock',adminController.userUnBlock)
-adminRoute.get('/productList',adminController.productList)
-adminRoute.get('/addProduct',adminController.addProduct)
-adminRoute.post('/adminProduct',upload.array('images', 4),  adminController.addAdminProduct);
+adminRoute.get('/productList',adminAuth,adminController.productList)
+adminRoute.get('/addProduct',adminAuth,adminController.addProduct)
+adminRoute.post('/adminProduct',adminAuth,upload.array('images', 4),  adminController.addAdminProduct);
 
-adminRoute.get('/categoryList',adminController.categoryList)
-adminRoute.get('/addCategory',adminController.addCategory)
-adminRoute.post('/adminCategory', adminController.addAdminCategory);
-adminRoute.put('/products/:id',adminController.deleteProducts)
-adminRoute.get('/editProduct/:id',adminController.loadEditProduct)
-adminRoute.put('/category/:id',adminController.categoryDelete)
-adminRoute.post('/updateCategory',adminController.editCategory)
+adminRoute.get('/categoryList',adminAuth,adminController.categoryList)
+adminRoute.get('/addCategory',adminAuth,adminController.addCategory)
+adminRoute.post('/adminCategory',adminAuth, adminController.addAdminCategory);
+adminRoute.put('/products/:id',adminAuth,adminController.deleteProducts)
+adminRoute.get('/editProduct/:id',adminAuth,adminController.loadEditProduct)
+adminRoute.put('/category/:id',adminAuth,adminController.categoryDelete)
+adminRoute.post('/updateCategory',adminAuth,adminController.editCategory)
 
 
-adminRoute.post('/updateproduct/:id', upload.array('image'), adminController.productUpdate);
+adminRoute.post('/updateproduct/:id',adminAuth, upload.array('image'), adminController.productUpdate);
 // adminRoute.post('/deleteproduct',adminController.deleteProduct)
 
 
