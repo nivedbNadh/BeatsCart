@@ -87,7 +87,7 @@ const otpVeify = async (req, res) => {
             await newUser.save();
 
             // Set userlogged and curUser session data
-            req.session.userlogged = true;
+            // req.session.userlogged = true;
             // console.log("req.session.userloggedreq.session.userloggedreq.session.userloggedreq.session.userloggedreq.session.userlogged",req.session.userlogged)
             req.session.curUser = email;
             // console.log(" req.session.curUser req.session.curUser req.session.curUser req.session.curUser", req.session.curUser)
@@ -96,7 +96,7 @@ const otpVeify = async (req, res) => {
 
             //Clean up tempUser and otp from session
             //   delete req.session.tempUser;
-                delete req.session.otp;
+                // delete req.session.otp;
                 // console.log(" req.session.otp; req.session.otp; req.session.otp;", req.session.otp)
 
           return res.redirect('/login');

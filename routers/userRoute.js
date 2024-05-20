@@ -19,10 +19,10 @@ userRoute.set("views", path.join(__dirname, "..", "views", "user"));
 userRoute.use(express.json());
 userRoute.use(express.urlencoded({ extended: true }));
 
-userRoute.get("/",userAuth.userExist, userController.loadHome);
-userRoute.get("/home", userAuth.userBlock,userController.loadHome);
-userRoute.get("/login", userAuth.userExist, userController.loadLogin);
-userRoute.get("/signup", userAuth.userExist, userController.signup);
+userRoute.get("/", userController.loadHome);
+userRoute.get("/home",userController.loadHome);
+userRoute.get("/login", userController.loadLogin);
+userRoute.get("/signup",  userController.signup);
 // userRoute.post("/signup", userController.createUser);
 userRoute.post("/login", userController.createLogin);
 userRoute.get("/otp", userController.loadOtp);
@@ -57,15 +57,15 @@ userRoute.get('/errorfive',userController.errorfivehundred)
 
 
 //google auth
-userRoute.get("/auth", userController.loadAuth);
+// userRoute.get("/auth", userController.loadAuth);
 
 //Auth
-userRoute.get(
-  "/auth/google",
-  passport.authenticate("google", {
-    scope: ["email", "profile"],
-  })
-);
+// userRoute.get(
+//   "/auth/google",
+//   passport.authenticate("google", {
+//     scope: ["email", "profile"],
+//   })
+// );
 
 //Auth Callback
 
@@ -79,10 +79,10 @@ userRoute.get(
 
 //on success authentication
 
-userRoute.get("/auth/success", userController.userLoginGoogleSuccess_get);
+// userRoute.get("/auth/success", userController.userLoginGoogleSuccess_get);
 
 // on failed authentication
 
-userRoute.get("/auth/failure", userController.userLoginGoogleFailed_get);
+// userRoute.get("/auth/failure", userController.userLoginGoogleFailed_get);
 
 module.exports = userRoute;

@@ -1,7 +1,7 @@
 const { json } = require("body-parser");
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
-const GoogleUser = require("../models/GoogleUser");
+// const GoogleUser = require("../models/GoogleUser");
 const mongoose=require('mongoose')
 
 const bcrypt = require("bcrypt");
@@ -36,8 +36,6 @@ const bcrypt = require("bcrypt");
 const loadHome = async (req, res) => {
   try {
     const email = req.session.curUser;
-    // console.log("emailUserController", req.session.curUser )
-    // console.log(req.session.curUser, "uuuuuuuuuvvvvvvvvvv uuuuuuuuuuu");
     const products = await Product.find({is_deleted:false});
     const user = await User.findOne({ email: email });
 
@@ -51,11 +49,10 @@ const loadHome = async (req, res) => {
 // userMail
 
 const loadLogin = async (req, res) => {
-  // console.log("req.session.userloggedreq.session.userloggedreq.session.userlogged",req.session.userlogged)
 
-  if(req.session.userlogged){
-    return res.redirect("/home")
-  }
+  // if(req.session.userlogged){
+  //   return res.redirect("/home")
+  // }
   try {
       // Render the login page
       res.render("login", { error: null });
@@ -91,29 +88,22 @@ const loadOtp = async (req, res) => {
 };
 
 const createLogin = async (req, res) => {
-  // console.log("req.body login", req.body);
   const { email, password } = req.body;
 
   try {
-    // console.log(email, "newnwmw  sdfsd");
     const userLog = await User.findOne({ email: email });
-    // console.log("userlog", userLog);
+    console.log(userLog,"................................login")
 
     if (!userLog) {
       return res.render("login", { error: "Invalid email or password" });
     }
-    // console.log("password", password);
-    // console.log("userLog.password", userLog.password);
 
     const passwordValid = await bcrypt.compare(password, userLog.password);
-    // console.log("passwordValid", passwordValid);
     if (!passwordValid) {
       return res.render("login", { error: "Invalid email or password" });
     }
     req.session.userlogged= true;
-    // console.log("req.sessionnnnnnnnnnnnnnnnnnnnnnnnnnnnn",req.session.userlogged)
     req.session.curUser = email;
-    // console.log(req.session.curUser,"req.session.curUserreq.session.curUserreq.session.curUser")
 
     res.redirect("/home");
   } catch (error) {
@@ -150,32 +140,54 @@ const loadAuth = (req, res) => {
   res.render("auth");
 };
 
-const userLoginGoogleSuccess_get = async (req, res) => {
-  try {
-    const googleId = req.user.sub;
-    const displayName = req.user.displayName;
-    const email = req.user.email;
 
-    let googleUser = await GoogleUser.findOne({ googleId });
+// googele Auth
 
-    if (!googleUser) {
-      googleUser = await GoogleUser.create({
-        googleId,
-        displayName,
-        email,
-      });
-    }
+// const userLoginGoogleFailed_get = (req, res) => {
+//   return res.redirect('/user-login?message=Google authentication failed');
+// };
 
-    res.redirect("/");
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).send("Internal Server Error");
-  }
-};
+// const userLoginGoogleSuccess_get = async (req, res) => {
+//   try {
+//     console.log('req.user:', req.user); 
 
-const userLoginGoogleFailed_get = (req, res) => {
-  return res.redirect("/login?message=Google, authentication failed");
-};
+//     const givenName = req.user.name.givenName;
+//     const email = req.user.email;
+//     const name = givenName; 
+//     const existingUser = await User.findOne({ email });
+
+//     if (existingUser) {
+//       req.session.userGoogleLogged = true;
+//       req.session.name = name;
+//       req.session.email = email;
+//       req.session.userId = existingUser._id;
+//       return res.redirect('/');
+//     } else {
+//       // Generate a secure random password
+//       const randomPassword = Math.random().toString(36).slice(-8); 
+//       const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+//       const createNewUser = await User.create({
+//         name: name,
+//         email: email,
+//         password: hashedPassword, 
+//         status: true
+//       });
+
+//       req.session.userGoogleLogged = true;
+//       req.session.name = name;
+//       req.session.email = email;
+//       req.session.userId = createNewUser._id;
+//       return res.redirect('/');
+//     }
+//   } catch (error) {
+//     console.error('Error during Google authentication success handling:', error);
+//     return res.redirect('/user-login?message=Google authentication failed');
+//   }
+// };
+
+
+
 
 const getProductDetails = async (productId) => {
   try {
@@ -208,6 +220,8 @@ const productDetails = async (req, res) => {
     });
   }
 };
+
+
 
 const products = async (req, res) => {
   try {
@@ -265,8 +279,8 @@ module.exports = {
   loadForgot,
   loadForgotOtp,
   loadResetPassword,
-  userLoginGoogleSuccess_get,
-  userLoginGoogleFailed_get,
+  // userLoginGoogleSuccess_get,
+  // userLoginGoogleFailed_get,
   loadAuth,
   productDetails,
   products,

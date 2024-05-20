@@ -11,7 +11,7 @@ const {adminAuth,adminExist}=require('../middleware/adminAouth')
 adminRoute.set("views",path.join(__dirname,'..',"views","admin"));
 
 adminRoute.use(express.json())
-adminRoute.use(express.urlencoded({extended:true}))
+adminRoute.use(express.urlencoded({extended:true})) 
 
 
 adminRoute.get('/adminlogin',adminExist,adminController.adminLoging)
