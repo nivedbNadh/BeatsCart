@@ -17,10 +17,10 @@
                         <div class="form-group col-12 text-center">
                             <label for="username">adminEmail</label>
                             <input type="email" class="form-control" id="username" name="email"  placeholder="Enter username">
-                            <!-- In your adminlogin.ejs file -->
-                            <% if (messages.error) { %>
-                               <p class="text-danger"><%= messages.error %></p>
-                                    <% } %>
+                            <!--  adminlogin.ejs file -->
+                            <% if (error) { %>
+                                <p class="text-danger"><%= error %></p>
+                            <% } %>
                         </div>
                         <div class="form-group col-12 text-center">
                             <label for="password">Password</label>

@@ -10,7 +10,6 @@
     <div class="container">
         <h1>Enter OTP Code</h1>
         <p>Enter the OTP sent to your email</p>
-       <!-- otpsending.ejs -->
       <!-- otpsending.ejs -->
 <% if (messages.error) { %>
     <div class="alert alert-danger" style="color: red;">
@@ -34,6 +33,9 @@
             <p>Verifying...</p>
             <div class="loader"></div>
         </div>
+
+
+        <p id="countdown">2:00</p>
     </div>
     <script src="/userAssets/js/script.js"></script>
 </body>
@@ -43,6 +45,29 @@
 <script>
     document.addEventListener("DOMContentLoaded",function(){
         const resendButton=document.getElementById("resend-otp")
+        const countdownElement=document.getElementById("countdown")
+        let timeLeft=120
+
+        function updateCountdown() {
+            const minutes=Math.floor(timeLeft/60)
+            let seconds=timeLeft % 60
+            seconds=seconds < 10 ? "0" + seconds : seconds
+            countdownElement.textContent=minutes + ":" + seconds
+        }
+        updateCountdown() 
+
+        function startCountdown() {
+            const countdownInterval=setInterval(function () {
+                if(timeLeft > 0) {
+                    timeLeft--
+                    updateCountdown()
+                } else{
+                    clearInterval(countdownInterval)
+                }
+            },1000)
+        }
+
+        startCountdown()
 
         resendButton.addEventListener("click",async function (event){
             event.preventDefault()
@@ -56,7 +81,9 @@
                 })
 
                 if(response.ok){
-                    alert("otp resent successfully")                                                                                                                                                       
+                    alert("otp resent successfully")          
+                    timeLeft=120
+                    startCountdown()                                                                                                                                             
                 }else{
                     throw new Error("Failed to resend otp ")
                 }

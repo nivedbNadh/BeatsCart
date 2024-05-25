@@ -12,7 +12,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: #007bff; /* Blue background color */
+        background-color: #007bff; 
     }
     .container {
         max-width: 400px;
@@ -28,7 +28,7 @@
         margin-bottom: 20px;
     }
     .input-group input[type="email"] {
-        width: calc(100% - 22px); /* Adjusted width */
+        width: calc(100% - 22px); 
         padding: 10px;
         font-size: 16px;
         border: 1px solid #ccc;
@@ -69,10 +69,7 @@
     document.getElementById('emailForm').addEventListener('submit', function(event) {
         event.preventDefault();
         var email = document.getElementById('email').value;
-        // Here you can implement your logic to handle the email submission
         console.log('Email submitted:', email);
-        // For demonstration, let's just clear the input field
-        // document.getElementById('email').value = '';
     });
 </script>
 

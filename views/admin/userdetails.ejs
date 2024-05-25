@@ -20,6 +20,8 @@
     <link href="/userAssets/css/adminbootstrap.min.css" rel="stylesheet">
     <!-- Template Stylesheet -->
     <link href="/userAssets/css/adminDash.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
@@ -106,12 +108,12 @@
                                                 </td>
                                                 <td>
                                                    <!-- Block Form -->
-                                        <form action="/blockAndUnblock" method="post" class="d-inline">
+                                        <form  id="blockForm-<%= user._id %>"  action="/blockAndUnblock"  method="post"  class="d-inline">
                                             <input type="hidden" name="userId" value="<%= user._id %>">
                                             <% if (user.status) { %>
-                                                <button type="submit" class="btn btn-success m-2">Unblock</button>
+                                                <button type="button" class="btn btn-success m-2"  onclick="confirmAction('<%= user._id %>','block')">Block</button>
                                             <% } else { %>
-                                                <button type="submit" class="btn btn-danger m-2">Block</button>
+                                                <button type="button" class="btn btn-danger m-2"  onclick="confirmAction('<%= user._id %>','unblock')">Unblock</button>
                                                 <% } %>
                                         </form>
                                         <!-- Unblock Form -->
@@ -145,6 +147,27 @@
     <script src="/userAssets/js/tempusdominus-bootstrap-4.min.js"></script>
     <!-- Template Javascript -->
     <script src="userAssets/js/admindash.js"></script>
+
+
+
+    <script>
+        function confirmAction(userId, action) {
+            let actionText = action === 'block' ? 'block' : 'unblock';
+            Swal.fire({
+                title: `Are you sure you want to ${actionText} this user?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`blockForm-${userId}`).submit();
+                }
+            });
+        }
+    </script>
+
+
 </body>
 
 </html>

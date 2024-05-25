@@ -51,43 +51,53 @@
         input[type="submit"]:hover {
             background-color: #45a049;
         }
+        .text-danger {
+            color: red;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Add Category</h2>
-        <form id="addCategoryForm" action="/addCategory" method="POST">
+        <form id="addCategoryForm" method="post">
+            <p id="errorMessage" class="text-danger" style="display: none;"></p>
             <label for="categoryName">Category Name:</label>
             <input type="text" id="categoryName" name="categoryName">
             <br><br>
             <input type="submit" value="Add">
         </form>
     </div>
+
+    <script>
+        const form = document.getElementById('addCategoryForm');
+        const errorMessage = document.getElementById('errorMessage');
+
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const categoryName = document.getElementById('categoryName').value;
+            console.log('categoryName', categoryName);
+            try {
+                const response = await fetch('/adminCategory', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ categoryName })
+                });
+
+                if (response.ok) {
+                    window.location.href = '/categoryList';
+                } else {
+                    const data = await response.json();
+                    errorMessage.textContent = data.error;
+                    errorMessage.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error adding category:', error);
+                errorMessage.textContent = 'An unexpected error occurred';
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
 </body>
 </html>
-
-<script>
-    const form = document.getElementById('addCategoryForm');
-    form.addEventListener('submit', async function(event) {
-        event.preventDefault();
-        const categoryName = document.getElementById('categoryName').value;
-        console.log('categoryName',categoryName);
-        try {
-            const response = await fetch('/adminCategory', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ categoryName })
-            });
-            if (response.ok) {
-                window.location.href = '/categoryList';
-            } else {
-                console.error('Failed to add category:', response.statusText);
-            }
-        } catch (error) {
-            console.error('Error adding category:', error);
-        }
-    });
-</script>
-

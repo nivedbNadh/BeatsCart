@@ -188,8 +188,8 @@ function validateForm() {
     const description = form.elements['description'].value.trim();
     const price = form.elements['price'].value.trim();
     const quantity = form.elements['quantity'].value.trim();
-    const updateImageChecked = form.elements['updateImage'].checked; // Check if the checkbox is checked
-    const images = form.elements['image'].files; // Use 'image' instead of 'updateImage' for file input
+    const updateImageChecked = form.elements['updateImage'].checked; 
+    const images = form.elements['image'].files; 
     const category = form.elements['category'].value;
 
     const errorMessages = document.querySelectorAll('.error-message');

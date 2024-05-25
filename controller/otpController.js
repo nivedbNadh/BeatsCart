@@ -122,7 +122,6 @@ const resendOTP = async (req, res) => {
 
         if (!req.session.otp || isOTPExpired(req.session.otp)) {
             const { otp, timestamp } = generateOTP();
-            // console.log("reeeeeeeeeeeeeeeeeeeeeeeesenddddddddddddddddddddddotp",otp,timestamp)
             req.session.otp = { value: otp, expiry: timestamp + 2 * 60 * 1000 };
             console.log(" req.session.otpResendcode", req.session.otp)
         }

@@ -19,7 +19,7 @@ const Admin=require('../models/adminModel')
 
 const adminLoging=async (req,res)=>{
     try {
-        res.render('adminlogin')
+        res.render('adminlogin',{error:null})
         
     } catch (error) {
         console.log("error ocured",error);
@@ -45,7 +45,7 @@ const adminLogingPost = async (req, res) => {
         const adminLog=await Admin.findOne({email:email})
         console.log("adminLogadminLogadminLog",adminLog)
         if(!adminLog || adminLog.password !==password) {
-            return res.status(400).json({message:'Invalid email or password'})
+            return res.render('adminlogin',{error:'Invalid email or password'})
         }
 
         req.session.adminLogId=adminLog._id
@@ -55,8 +55,7 @@ const adminLogingPost = async (req, res) => {
  
 
     } catch (error) {
-        res.status(500).json({message:'Server error'})
-        res.redirect('/adminlogin');
+        res.render('adminlogin',{error:'Server error'})
     }
 
 }
@@ -129,7 +128,7 @@ const productList = async(req,res)=>{
 const addProduct = async(req,res)=>{
     try{
 
-        const category = await Category.find()
+        const category = await Category.find({is_deleted:false})
         console.log('category',category);
 
         res.render('addProduct', {category})
@@ -144,26 +143,21 @@ const addProduct = async(req,res)=>{
 const addAdminProduct = async (req, res) => {
     try {
         const { name, description, price, category, quantity } = req.body;
-        console.log('req.file this  is image', req.files);
-        let img=[]
-
+        // console.log('req.file this  is image', req.files);
+        if(req.files.length<1) {
+            console.error("Not enough files uploaded");
+            res.status(400).send("Not enough files uploaded");
+            return 
+        }
+        
+        const img = req.files.map((file) => file.filename); 
+        console.log(img)
+            
         // const imagePath = req.file.path; 
         // const imageFilename = req.file.filename; 
 
         // console.log('imagePath', imagePath);
         // console.log('imageFilename', imageFilename);
-        if (req.files.length >= 4) {
-            
-                img = [
-                req.files[0].filename,
-                req.files[1].filename,
-                req.files[2].filename,
-                req.files[3].filename
-            ];
-        } else {
-            console.error("Not enough files uploaded");
-            res.status(400).send("Not enough files uploaded");
-        }
         const product = new Products({
             name,
             description,
@@ -206,7 +200,7 @@ const addCategory = async(req,res)=>{
         
         
 
-        res.render('addCategory')
+      return res.render('addCategory',{error:null})
 
     }catch (error) {
         console.error(error);
@@ -218,22 +212,26 @@ const addCategory = async(req,res)=>{
 const addAdminCategory = async (req, res) => {
     try {
         const { categoryName } = req.body;
-        const existingCategory = await Category.findOne({ name: categoryName }); 
+        console.log('categoryName', categoryName);
+
+        if (typeof categoryName !== 'string') {
+            return res.status(400).json({ error: 'Invalid category name' });
+        }
+        const existingCategory = await Category.findOne({ name: categoryName });
         if (existingCategory) {
-            return res.status(400).send('Category already exists');
+            console.log(existingCategory, "existingCategory");
+            return res.status(400).json({ error: 'Category already exists' });
         }
 
-        console.log('categoryName', categoryName);
-        const category = new Category({
-            name: categoryName
-        });
+        const category = new Category({ name: categoryName });
         await category.save();
-        res.redirect('categoryList');
+
+        res.status(200).json({ message: 'Category added successfully' });
     } catch (error) {
         console.error(error);
-        res.status(500).send('Server Error');
+        res.status(500).json({ error: 'Server Error' });
     }
-}
+};
 
 
 const deleteProducts= async (req,res)=>{
@@ -339,6 +337,7 @@ const productUpdate = async function (req, res) {
     const deleteExistingImages = req.body;
     console.log("deleteExistingImages",deleteExistingImages)
     const newImages = req.files;
+    
 
     try {
         const currentProduct = await Products.findById(productId);

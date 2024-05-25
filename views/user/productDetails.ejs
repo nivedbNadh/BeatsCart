@@ -108,23 +108,33 @@
     
   </header>
   <!-- Header part end-->
-
+ 
 
 <section class="product_list section_padding">
   <div class="container">
-
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+          <% breadcrumbs.forEach(function(breadcrumb, index) { %>
+              <% if (index === breadcrumbs.length - 1) { %>
+                  <li class="breadcrumb-item active" aria-current="page"><%= breadcrumb.name %></li>
+              <% } else { %>
+                  <li class="breadcrumb-item"><a href="<%= breadcrumb.url %>"><%= breadcrumb.name %></a></li>
+              <% } %>
+          <% }); %>
+      </ol>
+  </nav>
 <style>
 /* Custom styles */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f8f9fa; /* Light gray background */
+  background-color: #f8f9fa; 
   padding-top: 20px;
 }
 
 .product-image {
-  max-width: 300px; /* Adjust the width to your desired size */
-  margin: 0 auto; /* Center the container horizontally */
-  overflow: hidden; /* Hide any overflow if the image is larger */
+  max-width: 300px; 
+  margin: 0 auto; 
+  overflow: hidden; 
 }
 
 .product-image img {
@@ -151,12 +161,12 @@ body {
 
 .product-price {
   font-size: 18px;
-  color: #007bff; /* Blue color for price */
+  color: #007bff;
 }
 
 .product-description {
   margin-top: 10px;
-  color: #495057; /* Dark text color */
+  color: #495057; 
 }
 
 .image_zoom{
@@ -217,23 +227,61 @@ body {
     margin-top: 30px;
   }
 }
+.breadcrumb {
+    background-color: transparent; 
+    padding: 0; 
+    margin: 0; 
+}
+
+.breadcrumb .breadcrumb-item {
+    font-size: 16px; 
+    color: #555; 
+}
+
+.breadcrumb .breadcrumb-item a {
+    color: #007bff; 
+    text-decoration: none; 
+    transition: color 0.3s;
+}
+
+.breadcrumb .breadcrumb-item a:hover {
+    color: #0056b3;
+}
+
+.breadcrumb .breadcrumb-item.active {
+    color: #000; 
+          }
 </style>
 </head>
 <body>
-
+  
+<!--breadcrumbs-->
+ 
   <div class="container">
     <div class="row">
-      <div class="col-md-6"> <!-- Column for the first image -->
+      <div class="col-md-6">
         <div class="product-image image_zoom">
-          <!-- Big image -->
+
           <img id="mainProductImage" src="/uploads/<%= product[0].image[0] %>" alt="Product Image">
         </div>
       </div>
-      <div class="col-md-6"> <!-- Column for the product info -->
+      <div class="col-md-6"> 
         <div class="product-info">
           <h1 class="product-title">Product Name: <%= product[0].name %></h1>
-          <p class="product-price">Price: $<%= product[0].price %></p>
+          <p class="product-price">Price: <span>&#8377</span><%= product[0].price %></p>
           <p class="product-description">Description:<%= product[0].description %></p>
+
+
+          <p class="product-stock">
+            <% if (product[0].quantity > 10) {%>
+              <span class="text-success"> In Stock</span>
+            <%} else if (product[0].quantity > 0) {%>
+              <span class="text-warning">Limited Stock</span>
+            <%} else { %>
+              <span class="text-danger"> Out of Stock</span>
+
+            <%} %>
+          </p>
           <div class="quantity-controls">
             <button class="btn btn-primary ml-3 add-to-cart-btn">Add to Cart</button>
             <a href="#"><i class="fas fa-heart wishlist-icon"></i></a>

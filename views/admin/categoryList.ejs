@@ -23,6 +23,8 @@
     <link href="/userAssets/css/adminDash.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 </head>
 
@@ -97,7 +99,6 @@
                 <thead class="thead-dark">
                     <tr>
                         <th>No</th>
-                        <th>Category ID</th>
                         <th>Category Name</th>
                         <th>Actions</th>
                      
@@ -108,7 +109,6 @@
 
                         <tr>
                         <th><%=index+1%></th>
-                        <th><%=Category._id%></th>
                         <th><%=Category.name%></th>
                         <th>
                             <button type="button" class="btn btn-primary edit-category" data-bs-toggle="modal" data-bs-target="#exampleModal" data-category-id="<%= Category._id%>" data-category-name="<%=Category.name%>">Edit</button>
@@ -141,7 +141,6 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <!-- Add input field for category ID -->
           <input type="hidden" id="categoryId">
           <input type="text" id="categoryName" value="" name="categoryName">
         </div>
@@ -204,9 +203,27 @@ document.querySelectorAll('.delete-button').forEach(button => {
     console.log("Adding event listener to delete button");
     button.addEventListener('click', async () => {
         const categoryId = button.getAttribute('data-category-id');
-        alert(categoryId);
+        console.log(`Delete button clicked for category ID: ${categoryId}`);
+
+
 
         try {
+            
+            const confirmed = await Swal.fire({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover this product!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Yes, delete it!",
+                        cancelButtonText: "No, keep it"
+                    });
+
+                    if(confirmed.isConfirmed===true){
+                        console.log(`Confirmed delete for category ID: ${categoryId}`);
+
+
+
+
             const response = await fetch(`/category/${categoryId}`, {
                 method: 'PUT',
                 headers: {
@@ -215,13 +232,13 @@ document.querySelectorAll('.delete-button').forEach(button => {
                 body: JSON.stringify({ is_deleted: true })
             });
 
-            const responseData = await response.json(); // Extract JSON response
+            const responseData = await response.json(); 
+            console.log('Response data:', responseData);
 
-            alert("Response:", responseData);
+
 
             if (response.ok) {
                 const categoryRow = button.closest('tr');
-                alert(categoryRow);
                 if (categoryRow) {
                     categoryRow.remove();
                 } else {
@@ -230,6 +247,7 @@ document.querySelectorAll('.delete-button').forEach(button => {
             } else {
                 console.error('Failed to delete category');
             }
+        }
         } catch (error) {
             console.error('Error:', error);
         }
@@ -280,6 +298,7 @@ $('#usersTable').on('click', '.edit-category', function() {
         })
         .then(response => {
             if (response.ok) {
+
                 // Category updated successfully
                 console.log('Category updated successfully');
                 location.reload();

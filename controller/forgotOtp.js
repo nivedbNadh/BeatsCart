@@ -19,7 +19,7 @@ const transporte=nodemailer.createTransport({
 
 
 
-
+// generate otp 
 
 function generateOtp(){
     const timestamp=Date.now()
@@ -68,7 +68,7 @@ try{
     
 }
 
-
+// verify otp
 
 const postVerify =(req,res)=>{
   try {

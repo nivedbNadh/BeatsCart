@@ -13,7 +13,7 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
-        background-color:#3498db
+        background-color: #3498db;
     }
     .otp-container {
         text-align: center;
@@ -41,6 +41,7 @@
 
 <div class="otp-container">
     <h2>Enter Your OTP</h2>
+    <div id="countdown" style="font-size: 16px; color: red; margin-bottom: 10px;">2:00</div>
     <% if (messages.error) { %>
         <div class="alert alert-danger" style="color: red;">
             <%= messages.error %>
@@ -48,14 +49,15 @@
     <% } %>
     <form id="otp-form" action='/otp-verifying' method="POST">
     <div>
-        <input type="text"  name="otp1" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 'otp2')">
-        <input type="text"   name="otp2"class="otp-input" id="otp2" maxlength="1" onkeyup="moveToNext(this, 'otp3')">
-        <input type="text"    name="otp3"class="otp-input" id="otp3" maxlength="1" onkeyup="moveToNext(this, 'otp4')">
-        <input type="text"     name="otp4"class="otp-input" id="otp4" maxlength="1" onkeyup="moveToNext(this, null)">
+        <input type="text" name="otp1" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 'otp2')">
+        <input type="text" name="otp2" class="otp-input" id="otp2" maxlength="1" onkeyup="moveToNext(this, 'otp3')">
+        <input type="text" name="otp3" class="otp-input" id="otp3" maxlength="1" onkeyup="moveToNext(this, 'otp4')">
+        <input type="text" name="otp4" class="otp-input" id="otp4" maxlength="1" onkeyup="moveToNext(this, null)">
     </div>
-    <p style="color: #fff;">Didn't receive the OTP? <a href="#" id="resendOtpLink">Resend OTP</a>
+    <p style="color: #fff;">Didn't receive the OTP? <a href="#" id="resendOtpLink" style="pointer-events: none; color: grey;">Resend OTP</a>
     </p>
     <button type="submit">Verify</button>
+</form>
 </div>
 
 <script>
@@ -64,14 +66,9 @@
             document.getElementById(nextFieldID).focus();
         }
     }
-</script>
 
-
-
-
-<script>
     const resendOtpLink = document.getElementById('resendOtpLink');
-    
+
     const resendOtp = async () => {
         try {
             resendOtpLink.removeEventListener('click', resendOtp);
@@ -84,17 +81,42 @@
             });
 
             if (!response.ok) {
-                throw new Error('Failed to send resend otp');
+                throw new Error('Failed to send resend OTP');
             }
 
             const data = await response.json();
             console.log('Resend OTP successful:', data);
+            startCountdown(120);  
         } catch (error) {
             console.error('Error sending resend OTP:', error);
         }
     };
 
     resendOtpLink.addEventListener('click', resendOtp);
+
+    const startCountdown = (duration) => {
+        let timer = duration, minutes, seconds;
+        const countdownElement = document.getElementById('countdown');
+
+        const countdownInterval = setInterval(() => {
+            minutes = Math.floor(timer / 60);
+            seconds = timer % 60;
+
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            countdownElement.textContent = minutes + ':' + seconds;
+
+            if (--timer < 0) {
+                clearInterval(countdownInterval);
+                countdownElement.textContent = "0:00";
+                resendOtpLink.style.pointerEvents = 'auto';
+                resendOtpLink.style.color = '';
+            }
+        }, 1000);
+    };
+
+    window.onload = () => {
+        startCountdown(120); 
+    };
 </script>
 
 </body>

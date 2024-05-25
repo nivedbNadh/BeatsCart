@@ -50,9 +50,6 @@ const loadHome = async (req, res) => {
 
 const loadLogin = async (req, res) => {
 
-  // if(req.session.userlogged){
-  //   return res.redirect("/home")
-  // }
   try {
       // Render the login page
       res.render("login", { error: null });
@@ -92,7 +89,6 @@ const createLogin = async (req, res) => {
 
   try {
     const userLog = await User.findOne({ email: email });
-    console.log(userLog,"................................login")
 
     if (!userLog) {
       return res.render("login", { error: "Invalid email or password" });
@@ -104,6 +100,7 @@ const createLogin = async (req, res) => {
     }
     req.session.userlogged= true;
     req.session.curUser = email;
+    req.session.email = email;
 
     res.redirect("/home");
   } catch (error) {
@@ -143,48 +140,50 @@ const loadAuth = (req, res) => {
 
 // googele Auth
 
-// const userLoginGoogleFailed_get = (req, res) => {
-//   return res.redirect('/user-login?message=Google authentication failed');
-// };
+const userLoginGoogleFailed_get = (req, res) => {
+  return res.redirect('/user-login?message=Google authentication failed');
+};
 
-// const userLoginGoogleSuccess_get = async (req, res) => {
-//   try {
-//     console.log('req.user:', req.user); 
+const userLoginGoogleSuccess_get = async (req, res) => {
+  try {
+    console.log('req.user:', req.user); 
 
-//     const givenName = req.user.name.givenName;
-//     const email = req.user.email;
-//     const name = givenName; 
-//     const existingUser = await User.findOne({ email });
+    const givenName = req.user.name.givenName;
+    const email = req.user.email;
+    const name = givenName; 
+    const existingUser = await User.findOne({ email });
+    
+    if (existingUser) {
+      req.session.userlogged = true;
+      req.session.curUser = email;
+      req.session.userGoogleLogged = true;
+      req.session.name = name;
+      req.session.email = email;
+      req.session.userId = existingUser._id;
+      return res.redirect('/');
+    } else {
+      // Generate  secure random password
+      const randomPassword = Math.random().toString(36).slice(-8); 
+      const hashedPassword = await bcrypt.hash(randomPassword, 10);
 
-//     if (existingUser) {
-//       req.session.userGoogleLogged = true;
-//       req.session.name = name;
-//       req.session.email = email;
-//       req.session.userId = existingUser._id;
-//       return res.redirect('/');
-//     } else {
-//       // Generate a secure random password
-//       const randomPassword = Math.random().toString(36).slice(-8); 
-//       const hashedPassword = await bcrypt.hash(randomPassword, 10);
+      const createNewUser = await User.create({
+        name: name,
+        email: email,
+        password: hashedPassword, 
+        status: true
+      });
 
-//       const createNewUser = await User.create({
-//         name: name,
-//         email: email,
-//         password: hashedPassword, 
-//         status: true
-//       });
-
-//       req.session.userGoogleLogged = true;
-//       req.session.name = name;
-//       req.session.email = email;
-//       req.session.userId = createNewUser._id;
-//       return res.redirect('/');
-//     }
-//   } catch (error) {
-//     console.error('Error during Google authentication success handling:', error);
-//     return res.redirect('/user-login?message=Google authentication failed');
-//   }
-// };
+      req.session.userGoogleLogged = true;
+      req.session.name = name;
+      req.session.email = email;
+      req.session.userId = createNewUser._id;
+      return res.redirect('/');
+    }
+  } catch (error) {
+    console.error('Error during Google authentication success handling:', error);
+    return res.redirect('/user-login?message=Google authentication failed');
+  }
+};
 
 
 
@@ -208,9 +207,14 @@ const productDetails = async (req, res) => {
       return res.redirect('/error')
     } else {
       const product = await Product.findById(productId);
-      console.log("pppppppppp", product);
-  
-     return res.render("productDetails", { product: [product] });
+
+      
+      // breadcrumbs
+      const breadcrumbs=[{name:'home',url:'/'},
+        {name:'Products',url:'/products'},
+        {name:product.name,url:req.originalUrl}
+      ]
+     return res.render("productDetails", { product: [product] ,breadcrumbs});
     }
   
   } catch (error) {
@@ -225,9 +229,22 @@ const productDetails = async (req, res) => {
 
 const products = async (req, res) => {
   try {
-    const user = req.session.user;
+    const loggined = req.session.userlogged;
+    let user = null
+    if(loggined != null){
+    const email = req.session.email
+     user = await User.findOne({ email: email });
+    }
     const products = await Product.find({is_deleted:false});
-    res.render("products", { error: null, user, products});
+const breadcrumbs=[
+  {name:'Home',url:'/'},
+  {name:'Products',url:'/products'}
+]
+res.render("products", { error: null, user, products,breadcrumbs});
+
+
+
+
   } catch (error) {
     console.error("error occured");
   }
@@ -279,8 +296,8 @@ module.exports = {
   loadForgot,
   loadForgotOtp,
   loadResetPassword,
-  // userLoginGoogleSuccess_get,
-  // userLoginGoogleFailed_get,
+  userLoginGoogleSuccess_get,
+  userLoginGoogleFailed_get,
   loadAuth,
   productDetails,
   products,
