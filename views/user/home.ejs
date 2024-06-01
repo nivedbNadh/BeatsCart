@@ -73,19 +73,38 @@
                                         <a class="dropdown-item" href="elements.html">elements</a>
                                     </div>
                                 </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="blog.html" id="navbarDropdown_2"
-                                        role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        blog
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown_2">
-                                        <a class="dropdown-item" href="blog.html"> blog</a>
-                                        <a class="dropdown-item" href="single-blog.html">Single blog</a>
-                                    </div>
-                                </li>
+                                
                                 
                                 <li class="nav-item">
                                     <a class="nav-link" href="/products">Products</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="blog.html" id="navbarDropdown_2"
+                                        role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <% if (!user) { %>
+
+                                        Account
+
+                                        <% } else { %>
+                                            <%= user.name %>
+                                            <%}%>
+
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown_2">
+                                        <% if (!user) { %>
+
+                                        <a class="dropdown-item" href="/login"> Login</a>
+                                        <a class="dropdown-item" href="/signup">SignUp</a>
+                                        <% } else { %>
+                                            <a class="dropdown-item" href="/userProfile">Profile</a>
+                                            <a class="dropdown-item" href="/">My Order</a>
+                                            <a class="dropdown-item" href="/cart">Cart</a>
+                                            <a class="dropdown-item" href="/">Coupon</a>
+                                            <a class="dropdown-item" href="/">walletHistory</a>
+                                            <a class="dropdown-item" href="/logout">Logout</a>
+                                        <%}%>
+
+                                    </div>
                                 </li>
                             </ul>
                         </div>
@@ -99,13 +118,13 @@
                                 </a>
 
                            
-
+<!-- 
                                 <% if (!user) { %>
                                     <a href="/login" class="btn btn-login">Login</a>
                                     <a href="/signup" class="btn btn-signup">Sign Up</a>
                                     <% } else { %>
                                         <a href="/logout" class="btn btn-login">Logout</a>
-                                    <%}%> 
+                                    <%}%>  -->
 
                             </div>
                         </div>
@@ -269,7 +288,10 @@
                             
                                 <div class="col-lg-3 col-sm-6 " id="product">
                                     <div class="single_product_item">
-                                        <button class="badge">Buy Now</button>
+                                        <a href="/productDetails/<%= data._id %>">
+
+                                            <button class="badge">Buy Now</button>
+                                        </a>
                                         <div class="product-card">
                                             
                                              <div class="product-tumb">

@@ -1,7 +1,879 @@
 <%-include('../layouts/user/header')%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 
 <%-include('../layouts/user/navbar')%>
+
+<style>
+    body {
+        background-color: #ecfdff;
+        margin-top: 20px;
+    }
+    .ui-w-80 {
+        width: 80px !important;
+        height: auto;
+    }
+    .btn-default {
+        border-color: rgba(24, 28, 33, 0.1);
+        background: rgba(0, 0, 0, 0);
+        color: #4E5155;
+        background-color: #014122;
+    }
+    label.btn {
+        margin-bottom: 0;
+    }
+    .btn {
+        cursor: pointer;
+    }
+    .text-light {
+        color: #0460bb !important;
+    }
+    .card {
+        background-clip: padding-box;
+        box-shadow: 0 1px 4px rgba(24, 28, 33, 0.012);
+    }
+    .row-bordered {
+        overflow: hidden;
+    }
+    .account-settings-fileinput {
+        position: absolute;
+        visibility: hidden;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+    }
+    .account-settings-links .list-group-item.active {
+        font-weight: bold !important;
+    }
+    html:not(.dark-style) .account-settings-links .list-group-item.active {
+        background: transparent !important;
+    }
+    .account-settings-multiselect~.select2-container {
+        width: 100% !important;
+    }
+    .light-style .account-settings-links .list-group-item {
+        padding: 0.85rem 1.5rem;
+        border-color: rgba(24, 28, 33, 0.03) !important;
+    }
+    .light-style .account-settings-links .list-group-item.active {
+        color: #4e5155 !important;
+    }
+    .material-style .account-settings-links .list-group-item {
+        padding: 0.85rem 1.5rem;
+        border-color: rgba(24, 28, 33, 0.03) !important;
+    }
+    .material-style .account-settings-links .list-group-item.active {
+        color: #4e5155 !important;
+    }
+    .dark-style .account-settings-links .list-group-item {
+        padding: 0.85rem 1.5rem;
+        border-color: rgba(255, 255, 255, 0.03) !important;
+    }
+    .dark-style .account-settings-links .list-group-item.active {
+        color: #fff !important;
+    }
+    .light-style .account-settings-links .list-group-item.active {
+        color: #4E5155 !important;
+    }
+    .address-container {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin-right: 15px;
+        margin-left: 10px;
+        position: relative;
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+    .address-heading {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .address-buttons {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+    }
+    .address-buttons button {
+        margin-left: 5px;
+        cursor: pointer;
+    }
+    .referralcodecolor {
+        font-weight: bold;
+        width: 80px;
+        height: 30px;
+        padding-left: 7px;
+        background-color: #bababa;
+        border-radius: 2px;
+    }
+</style>
+
+
+</head>
+<body>
+<div class="container light-style flex-grow-1 container-p-y" style="margin-top: 98px;">
+    <div class="card overflow-hidden">
+        <div class="row no-gutters row-bordered row-border-light">
+            <div class="col-md-3 pt-0">
+                <div class="list-group list-group-flush account-settings-links">
+                    <a class="list-group-item list-group-item-action active" data-toggle="list" href="#account-general">Account Details</a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list" href="#account-change-password">Change password</a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list" href="#account-info">Address</a>
+                    <a class="list-group-item list-group-item-action" href="/user/userOrder">My Orders</a>
+                    <a class="list-group-item list-group-item-action" href="/coupon">Coupons</a>
+                    <a class="list-group-item list-group-item-action" href="/walletHistory">Wallet History</a>
+                    <a class="list-group-item list-group-item-action" href="/user/logout">Logout</a>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="tab-content">
+                    <div class="tab-pane fade active show" id="account-general">
+                        <div class="card-body media align-items-center">
+                            <img src="/assets/homeimg/user-person-profile-block-account-circle.svg" alt class="d-block ui-w-80">
+                        </div>
+                        <hr class="border-light m-0">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-control" id="user-name" value=<%=user.name%>>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">E-mail</label>
+                                <input type="text" class="form-control mb-1" value=<%=user.email%>>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Wallet: ₹1000/-</label>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <button type="button" class="btn" style="background-color: #014122; color: #fff;" id="save-changes">Save changes</button>&nbsp;
+                        </div>
+                    </div>
+
+                    <!---------------------change password code------------------->
+
+                    <div class="tab-pane fade" id="account-change-password">
+                        <div id="alert-area" class="mt-3"></div>
+                        <div class="card-body pb-2">
+                            <img src="/assets/homeimg/change pass.png" class="d-block ui-w-80" alt="">
+                            <div class="form-group">
+                                <label class="form-label">Current password</label>
+                                <div class="input-group">
+                                    <input id="current-password" type="password" class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-outline-secondary toggle-password">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">New password</label>
+                                <div class="input-group">
+                                    <input id="new-password" type="password" class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-outline-secondary toggle-password">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Repeat new password</label>
+                                <div class="input-group">
+                                    <input id="repeat-new-password" type="password" class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-outline-secondary toggle-password">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right mt-3">
+                            <button type="button" class="btn" style="background-color: #014122; color: #fff;" id="btn-save-changess">Save changes</button>&nbsp;
+                            <a href="/user/profile"><button type="button" class="btn btn-danger">Cancel</button></a>
+                        </div>
+                        <div id="alert-area" class="mt-3"></div>
+                    </div>
+                    
+
+                         <!-----------------------Address-Code------------------>
+
+                    <div class="tab-pane fade" id="account-info">
+                        <div class="card-body pb-2">
+                            <form id="address-form" action="" method="post" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Mobile</label>
+                                            <input type="text" class="form-control" name="mobile" placeholder="Mobile">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Pincode</label>
+                                            <input type="text" class="form-control" name="pincode" placeholder="Pincode">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">House Name</label>
+                                            <input type="text" class="form-control" name="houseName" placeholder="House Name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Area</label>
+                                            <input type="text" class="form-control" name="area" placeholder="Area">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">City</label>
+                                            <input type="text" class="form-control" name="city" placeholder="City">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">State</label>
+                                            <input type="text" class="form-control" name="state" placeholder="State">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Landmark</label>
+                                            <input type="text" class="form-control" name="landmark" placeholder="Landmark">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <button type="submit" class="btn" style="background-color: #014122; color: #fff;">Save changes</button>&nbsp;
+                                </div>
+                            </form>
+                            <div id="address-list">
+                                <!-- % addresses.forEach(function(address, index) { %> -->
+
+                               
+                                    
+
+
+
+
+                                    <!-- <h2>User Profile</h2> -->
+                                    <div class="text-center mt-3">
+                                        <button id="add-address-btn" type="button" class="btn" style="background-color: #014122; color: #fff;">Add Address</button>&nbsp;
+                                    </div><br>
+                                  
+                                    <% if (addresses.length > 0) { %>
+                                      <% addresses.forEach((address,index) => { %>
+                                        <div class="address-container">
+                                            <div class="address-heading">Address <%= index + 1 %></div>
+                                          <p><strong>Mobile:</strong> <%= address.mobile %></p>
+                                          <p><strong>Pincode:</strong> <%= address.pincode %></p>
+                                          <p><strong>House Name:</strong> <%= address.houseName %></p>
+                                          <p><strong>City:</strong> <%= address.city %></p>
+                                          <p><strong>State:</strong> <%= address.state %></p>
+                                          <p><strong>landmark:</strong> <%= address.landmark %></p>
+                                          <div class="address-buttons">
+                                            <button type="button" class="btn btn-success">Edit</button>
+                                            <a class="btn btn-delete btn-danger" data-id="<%= address._id %>" href="#">Delete</a>
+                                        </div>
+                                        </div>
+                                      <% }) %>
+                                    <% } else { %>
+                                      <p>No addresses found.</p>
+                                    <% } %>
+
+
+
+
+
+
+                                <!-- More address containers as needed -->
+                            </div>
+                            
+                        </div>
+                        <div id="alert-area" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+
+
+
+<!--------------------Password change code------------------------->
+
+<script>
+    $ (document).ready(function() {
+        $("#btn-save-changess").click(function (){
+            var currentPassword=$("#current-password").val()
+            var newPassword=$("#new-password").val()
+            var repeatNewPassword=$("#repeat-new-password").val()
+           
+            console.log('currentPassword',currentPassword)
+            console.log("newPassword",newPassword)
+            console.log("repeatNewPassword",repeatNewPassword)
+
+            if(currentPassword === '' || newPassword === '' || repeatNewPassword === '') {
+                showAlert("please fill in all fields")
+                return 
+            }
+
+            if(newPassword !== repeatNewPassword) {
+                showAlert("Do not match password")
+            }
+
+            $.ajax({
+                url:"/change-password",
+                method:"post",
+                data:{
+                    currentPassword:currentPassword,
+                    newPassword:newPassword,
+                    repeatNewPassword:repeatNewPassword
+                },
+                success: function(response) {
+                    showSuccessAlert(response.message)
+                },
+                error:function(xhr,status,error) {
+                    showAlert(xhr.responseJSON.error)
+                }
+            })
+
+        })
+
+
+    // function to display success alert with ok button
+    function showSuccessAlert(message) {
+        $("#alert-area").html('<div class="alert alert-success" role="alert">' + message + '<button id="ok-button" class="btn btn-primary">OK</div>')
+
+            // handle click event for ok button
+            $("#ok-button").click(function(){
+                window.location.href="/login" // redirect to login page 
+            })
+    }
+
+// function to display alert within the webpage 
+
+function showAlert(message) {
+    $("#alert-area").html('<div class="alert alert-danger" role="alert">' + message + '</div>')
+    setTimeout(function(){
+        $("#alert-area").empty()
+    },3000)
+    }
+
+
+
+// Password visibility
+
+$(".toggle-password").click(function(){
+    var input=$(this).closest('.input-group').find('input')
+    var icon=$(this).find("i")
+    if(input.attr("type") === "password") {
+        input.attr("type","text")
+        icon.removeClass("fa-eye").addClass("fa-eye-slash")
+    } else {
+        input.attr("type","password")
+        icon.removeClass("fa-eye-slash").addClass("fa-eye")
+        }
+    })
+
+})
+
+// <---------------------change password code end above--------------->
+
+
+//<----------------------------- Address request code----------------------------->
+
+
+
+
+
+
+
+$(document).ready(function(){
+    $('#add-address-btn').click(function(){
+        $('#address-form').show()
+    })
+
+
+    // handle form submisssion
+    $('#address-form').submit(function(event){
+        event.preventDefault()
+        var formData=$(this).serialize()
+        console.log("form data serialized",formData)
+
+        $.post('/save-address',formData,function(response){
+            console.log("response",response)
+            $('#address-form')[0].reset()
+            location.reload()
+        })
+        })
+    })
+    function addAddress() {
+    
+    document.getElementById("address-success-message").style.display = "inline";
+}
+    
+    loadAddressList();
+    
+    function loadAddressList() {
+        $.get('/get-addresses', function(addresses) {
+            var addressListHtml = '';
+            addresses.forEach(function(address) {
+                addressListHtml += '<div class="card-body pb-2">';
+                addressListHtml += '<p>Mobile: ' + address.mobile + '</p>';
+                addressListHtml += '<p>Email: ' + address.email + '</p>';
+                addressListHtml += '<div class="text-right mt-3">';
+                addressListHtml += '<button type="button" class="btn btn-primary btn-edit" data-id="' + address._id + '">Edit</button>';
+                addressListHtml += '<button type="button" class="btn btn-danger btn-delete" data-id="' + address._id + '">Delete</button>';
+                addressListHtml += '</div>';
+                addressListHtml += '</div>';
+            });
+            $('#address-list').html(addressListHtml);
+        });
+    }
+    
+
+
+
+
+
+// handle delete button click
+$('#address-list').on('click','.btn-delete',function(){
+    var addressId = $(this).data('id');
+    alert(addressId)
+    console.log(addressId); // Make sure addressId is logged correctly
+    $.ajax({
+        url: '/delete-address/' + addressId,
+        type: 'DELETE',
+        success: function(response) {
+            loadAddressList();
+        },
+        error: function(xhr, status, error) {
+            console.error('Error deleting address:', error);
+        }
+    });
+});
+
+// handle cancel button click
+
+$('#btn-cancel').click(function(){
+    $('#address-form')[0].reset()
+    $('#btn-update-address').text('Add Address').attr('id','btn-save-address')
+
+})
+
+
+
+// handle edit button 
+
+$('#address-list').on('click', '.btn-edit', function(){
+        var container = $(this).closest('.address-container');
+        var addressId = container.data('id');
+        
+        // Convert address details to input fields
+        container.find('.address-mobile').html('<input type="text" class="form-control" name="mobile" value="' + container.find('.address-mobile').text() + '">');
+        container.find('.address-pincode').html('<input type="text" class="form-control" name="pincode" value="' + container.find('.address-pincode').text() + '">');
+        container.find('.address-houseName').html('<input type="text" class="form-control" name="houseName" value="' + container.find('.address-houseName').text() + '">');
+        container.find('.address-city').html('<input type="text" class="form-control" name="city" value="' + container.find('.address-city').text() + '">');
+        container.find('.address-state').html('<input type="text" class="form-control" name="state" value="' + container.find('.address-state').text() + '">');
+        container.find('.address-landmark').html('<input type="text" class="form-control" name="landmark" value="' + container.find('.address-landmark').text() + '">');
+        
+        // Change edit button to save button
+        $(this).removeClass('btn-edit btn-success').addClass('btn-save btn-primary').text('Save');
+    });
+
+    // Handle save button click
+    $('#address-list').on('click', '.btn-save', function(){
+        var container = $(this).closest('.address-container');
+        var addressId = container.data('id');
+        alert(addressId)
+        var updatedData = {
+            mobile: container.find('input[name="mobile"]').val(),
+            pincode: container.find('input[name="pincode"]').val(),
+            houseName: container.find('input[name="houseName"]').val(),
+            area: container.find('input[name="area"]').val(),
+            city: container.find('input[name="city"]').val(),
+            state: container.find('input[name="state"]').val(),
+            landmark: container.find('input[name="landmark"]').val()
+        };
+
+        $.ajax({
+            url: '/update-address/' + addressId,
+            type: 'PUT',
+            data: updatedData,
+            success: function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Address updated successfully!',
+                    showConfirmButton: false,
+                    timer: 1500 // Close after 1.5 seconds
+                }).then(function() {
+                    location.reload(); // Reload the page after successfully saving the address
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error updating address:', error);
+            }
+        });
+    });
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -26,3 +898,4 @@
 
 
 <%-include('../layouts/user/footer')%>
+

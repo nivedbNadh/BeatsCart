@@ -268,6 +268,8 @@ body {
       <div class="col-md-6"> 
         <div class="product-info">
           <h1 class="product-title">Product Name: <%= product[0].name %></h1>
+          <h1 id="product-id" data-id="<%= product[0].id %>"><%= product[0].id %></h1>
+
           <p class="product-price">Price: <span>&#8377</span><%= product[0].price %></p>
           <p class="product-description">Description:<%= product[0].description %></p>
 
@@ -283,7 +285,10 @@ body {
             <%} %>
           </p>
           <div class="quantity-controls">
-            <button class="btn btn-primary ml-3 add-to-cart-btn">Add to Cart</button>
+            <a href="/addToCart/:productId">
+
+              <button class="btn btn-primary ml-3 add-to-cart-btn">Add to Cart</button>
+            </a>
             <a href="#"><i class="fas fa-heart wishlist-icon"></i></a>
           </div>
         </div>
@@ -437,3 +442,32 @@ document.addEventListener("DOMContentLoaded", function() {
 
   
 </script>
+<script>
+  document.querySelector('.add-to-cart-btn').addEventListener('click', function() {
+    const productId = document.getElementById('product-id').dataset.id;
+
+    fetch('/addToCart/' + productId, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Success:', data);
+      // Add any additional logic to handle success response
+
+      // Redirect to the same page
+      window.location.href = window.location.href; // This will reload the page
+    })
+    .catch(error => {
+      console.error('Error adding product to cart:', error);
+    });
+  });
+</script>
+

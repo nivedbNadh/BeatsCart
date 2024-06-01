@@ -1,6 +1,7 @@
 const { json } = require("body-parser");
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
+const Address=require('../models/addressModel')
 // const GoogleUser = require("../models/GoogleUser");
 const mongoose=require('mongoose')
 
@@ -101,6 +102,7 @@ const createLogin = async (req, res) => {
     req.session.userlogged= true;
     req.session.curUser = email;
     req.session.email = email;
+    req.session.userId = userLog._id;
 
     res.redirect("/home");
   } catch (error) {
@@ -258,12 +260,14 @@ const userLogout = (req, res) => {
     }
 });
 
-res.redirect("/login");
+res.redirect("/");
 };
 
 
 
-const loadError = async (req,res)=>{
+// error 404
+
+const loadError =  (req,res)=>{
   try {
     res.render('error')
     
@@ -273,9 +277,10 @@ const loadError = async (req,res)=>{
   }
 }
 
+// error 504
 
 
-const errorfivehundred = async (req,res)=>{
+const errorfivehundred =  (req,res)=>{
   try {
     res.render('errorfive')
     
@@ -283,6 +288,191 @@ const errorfivehundred = async (req,res)=>{
     console.error("error occured")
   }
 }
+
+// userProfile 
+const loadUserProfile = async (req, res) => {
+  try {
+    const email = req.session.email;
+    console.log(email, 'Email from session');
+    
+    const user = await User.findOne({ email });
+    console.log(user, 'User found');
+
+    if (!user) {
+      console.log('User not found');
+      return res.status(404).send('User not found');
+    }
+
+    // Fetch addresses associated with the user ID
+    const addresses = await Address.find({ userId: user._id });
+    console.log(addresses, 'Addresses found');
+
+    // Render the user profile with user data and addresses
+    res.render('userProfile', { user, addresses });
+  } catch (error) {
+    console.error('Error occurred while loading user profile:', error);
+    res.status(500).send('Internal server error');
+  }
+};
+
+
+
+
+
+const userPasswordChange= async (req,res) =>{  
+  try {
+    const email=req.session.email
+    const user=await User.findOne({email})
+    if(!user) {
+      return res.status(404).json({error:'User not found'})
+    }
+
+    const isValidPassword=await bcrypt.compare(req.body.currentPassword,user.password)
+    if(!isValidPassword) {
+      return res.status(400).json({error:'Invalid current password'})
+    }
+
+    const newPassword=req.body.newPassword
+    const repeatNewPassword=req.body.repeatNewPassword
+    console.log('newPassword',newPassword)
+    console.log('repeatNewPassword',repeatNewPassword)
+    if(newPassword !== repeatNewPassword) {
+      return res.status(400).json({error:'Password do not match '})
+    }
+    const hashedPassword=await bcrypt.hash(newPassword,10)
+    user.password=hashedPassword
+    await user.save()
+    req.session.destroy()
+    res.status(200).json({message:'Password changed successfully'})
+
+
+    
+  } catch (error) {
+    console.error('Error changing password:',error)
+    res.status(500).json({error:'failed to change password.please try again later'})
+    
+  }
+
+}
+
+
+
+// const saveAddress= async (req,res)=>{
+//   try{
+//       const userId=req.session.user._id
+//       console.log("useriduseriduseriduserid",userId)
+
+//       const {name,mobile,email,pincode,houseName,locality,city,district,state}=req.body
+//       console.log("name,mobile,email,pincode,houseName,locality,city,district,state")
+//       const newAddress=new Address({
+//         userId:userId,
+//         name,
+//         mobile,
+//         email,
+//         pincode,
+//         houseName,
+//         locality,
+//         city,
+//         district,
+//         state
+
+//       })
+  
+
+//     } 
+
+
+//   } catch (error) {
+//     console.error('Error:',error)
+//     res.status(500).send('Internal server error')
+//   }
+// }
+
+
+
+const saveAddress = async (req,res)=>{
+  try{
+
+    console.log('req.body', req.body);
+    const userId=req.session.userId
+    console.log("useriduseriduseriduserid",userId)
+
+    const {mobile,email,pincode,houseName,city,state,landmark}=req.body
+    console.log('req.body', req.body)
+      const newAddress=new Address({
+        userId:userId,
+        mobile,
+        email,
+        pincode,
+        houseName,
+        city,
+        state,
+        landmark
+
+      })
+      console.log('newAddress',newAddress)
+      await newAddress.save();
+
+  }catch(error){
+    console.error('Error:',error)
+    res.status(500).send('Internal server error')
+  }
+  }
+
+
+
+  const deleteAddress = async (req, res) => {
+    try {
+        const addressId = req.params.id;
+        console.log(addressId, " addressId addressId addressId addressId");
+        const deletedAddress = await Address.findByIdAndDelete(addressId);
+        if (!deletedAddress) {
+            return res.status(404).send('Address not found');
+        }
+        const userId = req.session.userId;
+        await User.findByIdAndUpdate(userId, { $pull: { addresses: addressId } });
+        res.redirect('/profile');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+    }
+};
+
+
+
+const editAddress = async (req, res) => {
+  try {
+      const { id } = req.params;
+      const updatedAddress = await Address.findByIdAndUpdate(id, req.body, { new: true });
+      if (!updatedAddress) {
+          return res.status(404).json({ message: 'Address not found' });
+      }
+      res.json({ message: 'Address updated successfully', updatedAddress });
+  } catch (error) {
+      res.status(500).json({ message: 'Error updating address', error });
+  }
+};
+
+
+
+
+// fetching address details 
+
+const getAddressDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const address = await Address.findById(id);
+    if (!address) {
+      return res.status(404).json({ message: 'Address not found' });
+    }
+    res.json(address);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching address details', error });
+  }
+};
+
+
+
 
 
 
@@ -303,5 +493,11 @@ module.exports = {
   products,
   userLogout,
   loadError,
-  errorfivehundred
+  errorfivehundred,
+  loadUserProfile,
+  userPasswordChange,
+  saveAddress,
+  deleteAddress,
+  editAddress,
+  getAddressDetails
 };
