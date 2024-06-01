@@ -462,61 +462,6 @@ $('#btn-cancel').click(function(){
 
 
 
-// handle edit button 
-
-$('#address-list').on('click', '.btn-edit', function(){
-        var container = $(this).closest('.address-container');
-        var addressId = container.data('id');
-        
-        // Convert address details to input fields
-        container.find('.address-mobile').html('<input type="text" class="form-control" name="mobile" value="' + container.find('.address-mobile').text() + '">');
-        container.find('.address-pincode').html('<input type="text" class="form-control" name="pincode" value="' + container.find('.address-pincode').text() + '">');
-        container.find('.address-houseName').html('<input type="text" class="form-control" name="houseName" value="' + container.find('.address-houseName').text() + '">');
-        container.find('.address-city').html('<input type="text" class="form-control" name="city" value="' + container.find('.address-city').text() + '">');
-        container.find('.address-state').html('<input type="text" class="form-control" name="state" value="' + container.find('.address-state').text() + '">');
-        container.find('.address-landmark').html('<input type="text" class="form-control" name="landmark" value="' + container.find('.address-landmark').text() + '">');
-        
-        // Change edit button to save button
-        $(this).removeClass('btn-edit btn-success').addClass('btn-save btn-primary').text('Save');
-    });
-
-    // Handle save button click
-    $('#address-list').on('click', '.btn-save', function(){
-        var container = $(this).closest('.address-container');
-        var addressId = container.data('id');
-        alert(addressId)
-        var updatedData = {
-            mobile: container.find('input[name="mobile"]').val(),
-            pincode: container.find('input[name="pincode"]').val(),
-            houseName: container.find('input[name="houseName"]').val(),
-            area: container.find('input[name="area"]').val(),
-            city: container.find('input[name="city"]').val(),
-            state: container.find('input[name="state"]').val(),
-            landmark: container.find('input[name="landmark"]').val()
-        };
-
-        $.ajax({
-            url: '/update-address/' + addressId,
-            type: 'PUT',
-            data: updatedData,
-            success: function(response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Address updated successfully!',
-                    showConfirmButton: false,
-                    timer: 1500 // Close after 1.5 seconds
-                }).then(function() {
-                    location.reload(); // Reload the page after successfully saving the address
-                });
-            },
-            error: function(xhr, status, error) {
-                console.error('Error updating address:', error);
-            }
-        });
-    });
-
-
 
 
 
