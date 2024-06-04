@@ -72,13 +72,19 @@ userRoute.get("/userProfile",userAuth.authentication,userController.loadUserProf
 userRoute.post("/change-password",userAuth.authentication,userController.userPasswordChange)
 userRoute.post("/save-address",userAuth.authentication,userController.saveAddress)
 userRoute.delete('/delete-address/:id', userController.deleteAddress);
-userRoute.put('/update-address/:id', userController.editAddress);
-userRoute.get('/addresses/:id', userController.getAddressDetails);
+userRoute.get('/editAddress/:id',userController.loadEditAddress)
+userRoute.post('/submit-address/:id', userController.editAddress);
 
 
 // cart
-// userRoute.get("/cart",userAuth.authentication,cartController.cart)
-// userRoute.post("/addToCart/:productId", userAuth.authentication, cartController.addToCart);
+userRoute.get("/cart",userAuth.authentication,cartController.cart)
+userRoute.post("/addToCart/:productId", userAuth.authentication, cartController.addToCart);
+userRoute.delete("/remove-from-cart/:productId",cartController.cartDelete)
+
+
+// checkout
+
+userRoute.get('/checkout',userController.loadCheckout)
 
 
 

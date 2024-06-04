@@ -397,14 +397,15 @@ const saveAddress = async (req,res)=>{
     const userId=req.session.userId
     console.log("useriduseriduseriduserid",userId)
 
-    const {mobile,email,pincode,houseName,city,state,landmark}=req.body
+    const {mobile,pincode,houseName,area,city,state,landmark}=req.body
+    
     console.log('req.body', req.body)
       const newAddress=new Address({
         userId:userId,
         mobile,
-        email,
         pincode,
         houseName,
+        area,
         city,
         state,
         landmark
@@ -440,37 +441,84 @@ const saveAddress = async (req,res)=>{
 
 
 
+
+// edit page get
+
+
+const loadEditAddress = async (req, res) => {
+  try {
+    const user = req.session.email;
+    const addressId = req.params.id;
+    console.log(addressId,"addressIdaddressIdaddressIdaddressIdaddressId") 
+    if (!addressId) {
+      return res.status(400).send('Address ID is required');
+    }
+    const address = await Address.findById(addressId);
+    console.log(address,"kkkkkkkkkkkkkkkkkkkkkkkk")
+    if (!address) {
+      return res.status(404).send('Address not found');
+    }
+    res.render('editAddress', { user, address });
+  } catch (error) {
+    console.error('Error occurred:', error);
+    res.status(500).send('Internal server error');
+  }
+};
+
+
+ 
 const editAddress = async (req, res) => {
   try {
-      const { id } = req.params;
-      const updatedAddress = await Address.findByIdAndUpdate(id, req.body, { new: true });
-      if (!updatedAddress) {
-          return res.status(404).json({ message: 'Address not found' });
-      }
-      res.json({ message: 'Address updated successfully', updatedAddress });
-  } catch (error) {
-      res.status(500).json({ message: 'Error updating address', error });
-  }
-};
+    const { mobile, pincode, houseName, city, state, landmark,area } = req.body;
+    const addressId = req.params.id;
+    console.log("addressId",addressId)
 
-
-
-
-// fetching address details 
-
-const getAddressDetails = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const address = await Address.findById(id);
+    let address = await Address.findById(addressId);
     if (!address) {
-      return res.status(404).json({ message: 'Address not found' });
+      return res.status(404).send('Address not found');
     }
-    res.json(address);
+
+    address.mobile = mobile;
+    address.pincode = pincode;
+    address.houseName = houseName;
+    address.city = city;
+    address.state = state;
+    address.landmark = landmark;
+    address.area= area
+
+    await address.save();
+    res.redirect('/userProfile');
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching address details', error });
+    console.error('Error updating address:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
 
+
+
+
+
+
+
+
+// load checkout 
+const loadCheckout= async(req,res)=>{
+  try {
+    const email= req.session.email
+    const user = await User.findOne({email})
+
+    if(!user) {
+      return res.status(400).json({message:'user not found'})
+    }
+
+      res.render('checkout',{user})
+      
+  } catch (error) {
+      console.error('error occured')
+      res.status(500).send('internal server error')
+      
+  }
+}
 
 
 
@@ -498,6 +546,7 @@ module.exports = {
   userPasswordChange,
   saveAddress,
   deleteAddress,
+  loadEditAddress,
   editAddress,
-  getAddressDetails
+  loadCheckout
 };

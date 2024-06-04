@@ -21,6 +21,9 @@ pincode:{type:String
 houseName:{type:String
 
 },
+area:{type:String
+
+},
 landmark:{type:String
 
 },
@@ -28,9 +31,7 @@ landmark:{type:String
 city:{
     type:String
 },
-district:{type:String
 
-},
 state:{
     type:String
 }

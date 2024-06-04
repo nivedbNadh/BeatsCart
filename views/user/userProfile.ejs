@@ -8,6 +8,7 @@
     body {
         background-color: #ecfdff;
         margin-top: 20px;
+        font-size: 10px;
     }
     .ui-w-80 {
         width: 80px !important;
@@ -21,6 +22,7 @@
     }
     label.btn {
         margin-bottom: 0;
+        font-size: 14px;
     }
     .btn {
         cursor: pointer;
@@ -44,6 +46,8 @@
     }
     .account-settings-links .list-group-item.active {
         font-weight: bold !important;
+        font-size: 14px;
+
     }
     html:not(.dark-style) .account-settings-links .list-group-item.active {
         background: transparent !important;
@@ -54,9 +58,13 @@
     .light-style .account-settings-links .list-group-item {
         padding: 0.85rem 1.5rem;
         border-color: rgba(24, 28, 33, 0.03) !important;
+        font-size: 14px;
+
     }
     .light-style .account-settings-links .list-group-item.active {
         color: #4e5155 !important;
+        font-size: 14px;
+
     }
     .material-style .account-settings-links .list-group-item {
         padding: 0.85rem 1.5rem;
@@ -84,10 +92,12 @@
         position: relative;
         margin-bottom: 20px;
         overflow: hidden;
+        font-size: 10px
     }
     .address-heading {
         font-weight: bold;
         margin-bottom: 10px;
+        font-size: 8px;
     }
     .address-buttons {
         position: absolute;
@@ -98,14 +108,14 @@
         margin-left: 5px;
         cursor: pointer;
     }
-    .referralcodecolor {
+    /* .referralcodecolor {
         font-weight: bold;
         width: 80px;
         height: 30px;
         padding-left: 7px;
         background-color: #bababa;
         border-radius: 2px;
-    }
+    } */
 </style>
 
 
@@ -142,7 +152,7 @@
                                 <input type="text" class="form-control mb-1" value=<%=user.email%>>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Wallet: ₹1000/-</label>
+                                <label class="form-label"></label>
                             </div>
                         </div>
                         <div class="text-center mt-3">
@@ -262,11 +272,12 @@
                                           <p><strong>Mobile:</strong> <%= address.mobile %></p>
                                           <p><strong>Pincode:</strong> <%= address.pincode %></p>
                                           <p><strong>House Name:</strong> <%= address.houseName %></p>
+                                          <p><strong>Area:</strong> <%=address.area %></p>
                                           <p><strong>City:</strong> <%= address.city %></p>
                                           <p><strong>State:</strong> <%= address.state %></p>
                                           <p><strong>landmark:</strong> <%= address.landmark %></p>
                                           <div class="address-buttons">
-                                            <button type="button" class="btn btn-success">Edit</button>
+                                            <a href="/editAddress/<%= address._id %>" class="btn btn-success btn-edit" data-id="<%= address._id %>">Edit</a>
                                             <a class="btn btn-delete btn-danger" data-id="<%= address._id %>" href="#">Delete</a>
                                         </div>
                                         </div>
@@ -280,7 +291,6 @@
 
 
 
-                                <!-- More address containers as needed -->
                             </div>
                             
                         </div>
@@ -383,6 +393,9 @@ $(".toggle-password").click(function(){
 
 
 
+// address validation code
+
+
 
 
 
@@ -438,14 +451,14 @@ $(document).ready(function(){
 // handle delete button click
 $('#address-list').on('click','.btn-delete',function(){
     var addressId = $(this).data('id');
-    alert(addressId)
-    console.log(addressId); // Make sure addressId is logged correctly
+    alert("Are you sure to delete this address")
     $.ajax({
         url: '/delete-address/' + addressId,
         type: 'DELETE',
         success: function(response) {
             loadAddressList();
         },
+        
         error: function(xhr, status, error) {
             console.error('Error deleting address:', error);
         }
@@ -462,383 +475,38 @@ $('#btn-cancel').click(function(){
 
 
 
+// handle edit button
+
+// $('#address-form').on('click','#btn-update-address',function(){
+// var addressId=$(this).data('id')
+// alert(addressId)
+// var formData=$('#address-form').serialize()
+// alert(formData)
+// $.ajax({
+//     url:'/update-address/'+addressId,
+//     type:'PUT',
+//     data:formData,
+//     success:function(response) {
+//         alert:(response.message)
+//         loadAddressList()
+//         $('#address-form')[0].reset()
+//         $('#btn-update-address').text('Add Address').attr('id','btn-save-address')
+//     },
+//     error:function(xhr,status,error){
+
+//         alert(xhr,responseJSON.error)
+//     }
+// })
+
+
+// })
+
+
+
 
 
 
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

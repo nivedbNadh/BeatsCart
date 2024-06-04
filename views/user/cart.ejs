@@ -1,4 +1,5 @@
-
+<%-include('../layouts/user/header')%>
+<%-include('../layouts/user/navbar')%>
 
 <!-- cart items details -->
 
@@ -15,25 +16,46 @@
         <tr>
           <td>
             <div class="cart-info">
-              <img src="<%= product.productId.image %>" alt="" /> <!-- Assuming image URL is stored in the product model -->
+              <img src="/uploads/<%= product.productId.image[0] %>" alt="" /> <!-- Assuming image URL is stored in the product model -->
               <div>
                 <p><%= product.productId.name %></p>
                 <small>Price ₹<%= product.productId.price.toFixed(2) %></small>
                 <br />
-                <a href="#">Remove</a>
+                <a href="#" class="remove-btn" data-product-id="<%= product.productId._id %>">Remove</a>
               </div>
             </div>
           </td>
-          <td><input type="number" value="<%= product.quantity %>" /></td>
+          <td>
+            <div class="quantity">
+              <button class="btn-decrease" data-product-id="<%= product.productId._id %>">-</button>
+              <input type="text" value="<%= product.quantity %>" readonly />
+              <button class="btn-increase" data-product-id="<%= product.productId._id %>">+</button>
+            </div>
+          </td>
           <td>₹<%= (product.quantity * product.productId.price).toFixed(2) %></td>
         </tr>
       <% }); %>
     <% } else { %>
-      <tr>
-        <td colspan="3">Cart is empty</td>
-      </tr>
+      <div class="container-fluid mt-100">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h5>Cart</h5>
+              </div>
+              <div class="card-body cart">
+                <div class="col-sm-12 empty-cart-cls text-center">
+                  <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3">
+                  <h3><strong>Your Cart is Empty</strong></h3>
+                  <h4>Add something to make me happy :)</h4>
+                  <a href="#" class="btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     <% } %>
-
   </table>
 
   <div class="total-price">
@@ -59,25 +81,6 @@
   </div>
 </div>
 
-
-
-<!-- Footer -->
-
-
-<script>
-  var MenuItems = document.getElementById('MenuItems');
-  MenuItems.style.maxHeight = '0px';
-
-  function menutoggle() {
-    if (MenuItems.style.maxHeight == '0px') {
-      MenuItems.style.maxHeight = '200px';
-    } else {
-      MenuItems.style.maxHeight = '0px';
-    }
-  }
-</script>
-
-
 <style>
   * {
   margin: 0;
@@ -87,7 +90,12 @@
 
 body {
   font-family: "Poppins", sans-serif;
+  background-color: #ecfdff;
+}
 
+.cart-page {
+  margin: 90px auto;
+  background-color: #ecfdff;
 }
 
 .navbar {
@@ -257,10 +265,6 @@ h4 {
   padding: 50px;
 }
 
-small {
-  color: #555;
-}
-
 /* testimonial */
 
 .testimonial {
@@ -270,13 +274,13 @@ small {
 .testimonial .col-3 {
   text-align: center;
   padding: 40px 20px;
-  box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: transform 0.5s;
 }
 
 .testimonial .col-3 img {
-  width: 100px;
+  width: 50px;
   margin-top: 20px;
   border-radius: 50%;
 }
@@ -285,22 +289,19 @@ small {
   transform: translateY(-10px);
 }
 
-.fa-quote-left {
+.fa.fa-quote-left {
   font-size: 34px;
   color: #ff523b;
 }
 
-.col-3 p {
-  font-size: 14px;
-  margin: 12px 0;
-  color: #777777;
+.col-3 h3 {
+  font-size: 18px;
+  color: #555;
+  font-weight: 600;
+  margin: 10px 0;
 }
 
-.testimonial .col-3 h3 {
-  font-weight: 600;
-  color: #555;
-  font-size: 16px;
-}
+/* brands */
 
 .brands {
   margin: 100px auto;
@@ -317,18 +318,20 @@ small {
 }
 
 .col-5 img:hover {
-  width: 100%;
-  cursor: pointer;
   filter: grayscale(0);
 }
 
 /* footer */
 
-.footer {
+footer {
   background: #000;
-  color: #8a8a8a;
+  color: #fff;
   font-size: 14px;
   padding: 60px 0 20px;
+}
+
+.footer .row {
+  margin-bottom: 20px;
 }
 
 .footer p {
@@ -336,7 +339,7 @@ small {
 }
 
 .footer h3 {
-  color: #ecfdff;
+  color: #ffffff;
   margin-bottom: 20px;
 }
 
@@ -359,7 +362,6 @@ small {
 
 .footer-col-2 img {
   width: 180px;
-  margin-bottom: 20px;
 }
 
 .footer-col-3,
@@ -374,9 +376,6 @@ ul {
 
 .app-logo {
   margin-top: 20px;
-}
-.app-logo img {
-  width: 140px;
 }
 
 .footer hr {
@@ -393,136 +392,10 @@ ul {
 .menu-icon {
   width: 28px;
   margin-left: 20px;
-  display: none;
 }
-
-/* media query for menu */
-
-@media only screen and (max-width: 800px) {
-  nav ul {
-    position: absolute;
-    top: 70px;
-    left: 0;
-    background: #333;
-    width: 100%;
-    overflow: hidden;
-    transition: max-height 0.5s;
-  }
-  nav ul li {
-    display: block;
-    margin-right: 50px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-
-  nav ul li a {
-    color: #fff;
-  }
-  .menu-icon {
-    display: block;
-    cursor: pointer;
-  }
-}
-
-/* all products page */
-
-.row-2 {
-  justify-content: space-between;
-  margin: 100px auto 50px;
-}
-
-select {
-  border: 1px solid #ff523b;
-  padding: 5px;
-}
-
-select:focus {
-  outline: none;
-}
-
-.page-btn {
-  margin: 0 auto 80px;
-}
-
-.page-btn span {
-  display: inline-block;
-  border: 1px solid #ff523b;
-  margin-left: 10px;
-  width: 40px;
-  height: 40px;
-  text-align: center;
-  line-height: 40px;
-  cursor: pointer;
-}
-
-.page-btn span:hover {
-  background: #ff523b;
-  color: #ffffff;
-}
-
-/* single product details */
-
-.single-product {
-  margin-top: 80px;
-}
-
-.single-product .col-2 img {
-  padding: 0;
-}
-
-.single-product .col-2 {
-  padding: 20px;
-}
-
-.single-product h4 {
-  margin: 20px 0;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-.single-product select {
-  display: block;
-  padding: 10px;
-  margin-top: 20px;
-}
-
-.single-product input {
-  width: 50px;
-  height: 40px;
-  padding-left: 10px;
-  font-size: 20px;
-  margin-right: 10px;
-  border: 1px solid #ff523b;
-}
-
-input:focus {
-  outline: none;
-}
-
-.single-product .fas {
-  color: #ff523b;
-  margin-left: 10px;
-}
-
-.small-img-row {
-  display: flex;
-  justify-content: space-between;
-}
-
-.small-img-col {
-  flex-basis: 24%;
-  cursor: pointer;
-}
-
-/* cart items */
 
 .cart-page {
-  margin: 90px auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
+  margin: 80px auto;
 }
 
 .cart-info {
@@ -533,10 +406,11 @@ table {
 th {
   text-align: left;
   padding: 5px;
-  color: #ffffff;
+  color: #fff;
   background: #ff523b;
   font-weight: normal;
 }
+
 td {
   padding: 10px 5px;
 }
@@ -576,112 +450,105 @@ td:last-child {
 th:last-child {
   text-align: right;
 }
-/* account page */
-.account-page {
-  padding: 50px 0;
-  background: radial-gradient(#fff, #ffd6d6);
+
+.quantity {
+  display: flex;
+  align-items: center;
 }
 
-.form-container {
-  background: #ffffff;
-  width: 300px;
-  height: 400px;
-  position: relative;
-  text-align: center;
-  padding: 20px 0;
-  margin: auto;
-  box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.form-container span {
-  font-weight: bold;
-  padding: 0 10px;
-  color: #555555;
-  cursor: pointer;
-  width: 100px;
-  display: inline-block;
-}
-
-.form-btn {
-  display: inline-block;
-}
-
-.form-container form {
-  max-width: 300px;
-  padding: 0 20px;
-  position: absolute;
-  top: 130px;
-  transition: transform 1s;
-}
-
-form input {
-  width: 100%;
-  height: 30px;
-  margin: 10px 0;
-  padding: 0 10px;
-  border: 1px solid #ccc;
-}
-
-form .btn {
-  width: 100%;
+.quantity button {
+  background-color: #ff523b;
+  color: white;
   border: none;
+  padding: 5px 10px;
   cursor: pointer;
-  margin: 10px 0;
+  font-size: 16px;
+  margin: 0 5px;
 }
 
-form .btn:focus {
+.quantity button:focus {
   outline: none;
 }
 
-#LoginForm {
-  left: -300px;
-}
-
-#RegForm {
-  left: 0;
-}
-
-form a {
-  font-size: 12px;
-}
-
-#Indicator {
-  width: 100px;
-  border: none;
-  background: #ff523b;
-  height: 3px;
-  margin-top: 8px;
-  transform: translateX(100px);
-  transition: transform 1s;
-}
-
-/* media query for less than 600 screen size */
-
-@media only screen and (max-width: 600px) {
-  .row {
-    text-align: center;
-  }
-  .col-2,
-  .col-3,
-  .col-4 {
-    flex-basis: 100%;
-  }
-
-  .single-product .row {
-    text-align: left;
-  }
-
-  .single-product .col-2 {
-    padding: 20px 0;
-  }
-  .single-product h1 {
-    font-size: 26px;
-    line-height: 32px;
-  }
-  .cart-info p {
-    display: none;
-  }
+.quantity input {
+  width: 40px;
+  height: 30px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
 </style>
+
+<!-- Footer -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.remove-btn').forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            const productId = this.getAttribute('data-product-id');
+            fetch(`/remove-from-cart/${productId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.message === 'Product removed from cart successfully') {
+                        location.reload();
+                    } else {
+                        console.error('Failed to remove item from cart');
+                        alert('An error occurred while trying to remove the item from the cart. Please try again later.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while trying to remove the item from the cart. Please try again later.');
+                });
+        });
+    });
+
+    function updateCartTotals() {
+        let subtotal = 0;
+        document.querySelectorAll('table .cart-info').forEach(row => {
+            const price = parseFloat(row.querySelector('small').innerText.replace('Price ₹', ''));
+            const quantity = parseInt(row.querySelector('input').value);
+            subtotal += price * quantity;
+        });
+        document.querySelector('.total-price .subtotal').innerText = `₹${subtotal.toFixed(2)}`;
+        const tax = subtotal * 0.05;
+        document.querySelector('.total-price .tax').innerText = `₹${tax.toFixed(2)}`;
+        const total = subtotal + tax;
+        document.querySelector('.total-price .total').innerText = `₹${total.toFixed(2)}`;
+    }
+
+    document.querySelectorAll('.btn-decrease').forEach(button => {
+        button.addEventListener('click', function () {
+            const input = this.nextElementSibling;
+            let quantity = parseInt(input.value);
+            if (quantity > 1) {
+                input.value = --quantity;
+                updateCartTotals();
+            }
+        });
+    });
+
+    document.querySelectorAll('.btn-increase').forEach(button => {
+        button.addEventListener('click', function () {
+            const input = this.previousElementSibling;
+            let quantity = parseInt(input.value);
+            input.value = ++quantity;
+            updateCartTotals();
+        });
+    });
+});
+</script>
+
+<%-include('../layouts/user/footer')%>

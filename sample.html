@@ -1,328 +1,745 @@
-<style>
-    body {
-    background: #f5f5f5;
-    margin-top: 20px;
-}
-
-.ui-w-80 {
-    width : 80px !important;
-    height: auto;
-}
-
-.btn-default {
-    border-color: rgba(24, 28, 33, 0.1);
-    background  : rgba(0, 0, 0, 0);
-    color       : #4E5155;
-    background-color: #014122;
-}
-
-label.btn {
-    margin-bottom: 0;
-}
-.btn {
-    cursor: pointer;
-}
-
-.text-light {
-    color: #0460bb !important;
-}
-
-.card {
-    background-clip: padding-box;
-    box-shadow     : 0 1px 4px rgba(24, 28, 33, 0.012);
-}
-
-.row-bordered {
-    overflow: hidden;
-}
-
-.account-settings-fileinput {
-    position  : absolute;
-    visibility: hidden;
-    width     : 1px;
-    height    : 1px;
-    opacity   : 0;
-}
-
-.account-settings-links .list-group-item.active {
-    font-weight: bold !important;
-    
-}
-
-html:not(.dark-style) .account-settings-links .list-group-item.active {
-    background: transparent !important;
-
-}
-
-.account-settings-multiselect~.select2-container {
-    width: 100% !important;
-}
-
-.light-style .account-settings-links .list-group-item {
-    padding     : 0.85rem 1.5rem;
-    border-color: rgba(24, 28, 33, 0.03) !important;
-}
-
-.light-style .account-settings-links .list-group-item.active {
-    color: #4e5155 !important;
-}
-
-.material-style .account-settings-links .list-group-item {
-    padding     : 0.85rem 1.5rem;
-    border-color: rgba(24, 28, 33, 0.03) !important;
-}
-
-.material-style .account-settings-links .list-group-item.active {
-    color: #4e5155 !important;
-    
-}
-
-.dark-style .account-settings-links .list-group-item {
-    padding     : 0.85rem 1.5rem;
-    border-color: rgba(255, 255, 255, 0.03) !important;
-}
-
-.dark-style .account-settings-links .list-group-item.active {
-    color: #fff !important;
-    
-}
-
-.light-style .account-settings-links .list-group-item.active {
-    color: #4E5155 !important;
-}
-
-.light-style .account-settings-links .list-group-item {
-    padding     : 0.85rem 1.5rem;
-    border-color: rgba(24, 28, 33, 0.03) !important;
-}
-
-.address-container {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-            margin-right: 15px;
-            margin-left: 10px;
-            position: relative;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-
-        .address-heading {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .address-buttons {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-        }
-
-        .address-buttons button {
-            margin-left: 5px;
-            cursor: pointer;
-        }
-        .referralcodecolor{
-            font-weight: bold;
-            width: 80px;
-            height: 30px;
-            padding-left: 7px;
-            background-color: #bababa;
-            border-radius: 2px;
-        }
-
-</style>
-
-<!--Website: wwww.codingdung.com-->
-<!-- <!DOCTYPE html> -->
-<html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile </title>
-    <!-- <link rel="stylesheet" href="style.css"> -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Import logos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- Import fonts -->
+  <link href='https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+  <!-- Import jquery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <!-- Import Css  -->
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <!-- Import JavaScript  -->
+  <style>
+    /* Checkout Page CSS*/
+
+main {
+  z-index: -1000;
+}
+
+.checkoutMain {
+  background-color: #f0f0f1;
+  font-family: "PT Sans";
+  padding: 20px 50px;
+}
+
+.checkoutMain h1{
+  color: maroon;
+}
+
+.checkoutContent {
+  display: flex;
+  margin: 50px 20px;
+  min-width: 600px;
+}
+
+.basketMain {
+  background-color:white;
+  border-style: black;
+  width: 55%;
+  padding: 0px 30px;
+}
+
+.custInfo {
+  width: 45%;
+  background-color: #1d2327;
+  padding: 0px 30px;
+  position: relative;
+  min-height: 650px;
+}
+
+.basketList {
+  list-style-type: none;
+}
+
+.basketListItem {
+  display: flex;
+  margin: 40px 0px 50px 10px;
+  --background-color: red;
+}
+
+.basketItemDetails {
+  padding: 10px;
+  margin: 0px 0px 0px 40px;
+  list-style-type: none;
+  width: 80%;
+}
+
+.basketItemName {
+  color: maroon;
+  font-size: 15pt;
+}
+
+.itemPic {
+  width: 20%;
+  height: 20%;
+  margin: 20px 0px 0px 0px;
+  min-width: 100px;
+}
+
+.price {
+  margin: -50px 40px 0px 0px;
+  float: right;
+  font-size: 15pt;
+}
+
+.itemDetail {
+  margin: 2px 0px;
+}
+
+.detailText {
+  color: white;
+}
+
+.bin {
+  margin: 0px 0px 0px -65px;
+  padding: 35px 40px 35px 35px;
+}
+
+.inputList {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+.inputDiv {
+  --background-color: red;
+  position: relative;
+}
+
+.inputBox {
+  margin: 5px 0px 10px 0px;
+  padding: 5px 0px;
+  width: 100%;
+}
+
+.inputListLabel {
+  color: lightGray;
+}
+
+#termsAgree {
+  position: absolute;
+  left: 20px;
+  bottom: -10px;
+  font-size: 12pt;
+  padding: 10px;
+}
+
+#completeCheckout {
+  background-color: maroon;
+  font-size: 13pt;
+  padding: 8px;
+  border: none;
+  position: absolute;
+  right: 20px;
+  bottom: -10px
+}
+
+#completeButtons {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  width: 100%;
+  background-color: red;
+  margin: 0px -30px 0px 0px;
+  display:flex;
+}
+
+@media (max-width: 1250px) {
+  
+  .checkoutContent {
+    flex-direction: column;
+  }
+  
+  .basketMain {
+    width: 90%
+  }
+  
+  .custInfo {
+    width: 90%;
+  }
+  
+
+  
+  
+  @media (max-width: 700px) {
+   
+    .basketListItem {
+      flex-direction:column;
+      margin: 75px 0px; 
+      padding: 0px;
+    }
+    
+    .price {
+      float: left;
+      margin: 0px;
+    }
+    
+    .checkoutContent {
+      min-width: 350px;
+    }
+    
+    .itemPic {
+      margin: 0px 0px 0px 50px;
+    }
+    
+    .bin {
+      margin: 0px 0px -100px -50px;
+    }
+    
+    #completeButtons {
+      flex-direction:column;
+    }
+    
+    #termsAgree {
+      margin: 60px 0px;
+    }
+    
+    .custInfo {
+      min-height: 680px;
+    }
+    
+  }
+  
+}
+
+/*Footer CSS*/
+
+footer{
+/*   position:fixed;
+  bottom:0;
+  left:0; */
+  width:100%; 
+  height: 200px;
+  background-color: #1d2327;
+  display:flex; 
+  flex-direction:row;
+  justify-content: space-evenly;
+}
+
+footer div{
+  flex:1;
+  text-align:center;
+  color:#d63638;
+  padding:20px 0px;
+  font-family:sans-serif;
+}
+
+footer ul{
+/*   padding:30px 110px; */
+  text-align:center;
+}
+footer li{
+/*   padding:5px 110px; */
+  justify-content:center;
+}
+footer {
+  position: relative;
+}
+.copyright{
+  text-align:left;
+/*   padding: 10px 30px; */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 1em;
+  color:grey;
+  font-size:13px;
+}
+.about, .contact, .loc, footer li{
+  padding-bottom:15px;
+}
+footer p{
+  font-size:1.25em;
+}
+.sm{
+  display:flex;
+  width:100%;
+  justify-content:center;
+  margin-right:10px;
+  padding-bottom:30px;
+
+}
+footer i{
+  margin-left:50px;
+  font-size:40px;
+  color:black;
+}
+.event{
+  display:flex;
+  flex-direction:column;
+  border-style: ridge;
+  border-radius:0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow:5px 5px 5px #D3D3D3;
+  margin:10px;
+  width: 280px;
+  flex-shrink: 0;
+  height: 100%;
+  transform:translate(-50%);
+  animation: event 9s linear infinite;
+}
+.image{
+  width:auto;
+}
+.event i{
+  font-size:20px;
+  color:#AA0000;
+  margin-left:auto;
+  
+}
+.title{
+  font-size:20px;
+  font-weight:bold;
+}
+
+.book{
+  color:#AA0000;
+}
+.title,.book,.date{
+  font-family:sans-serif; 
+  padding-bottom:10px;
+  text-align:center;
+}
+.eventspanel{
+  padding:30px 10px 50px 1010px;
+  display:flex;
+  justify-content:center;
+  width: 800px;
+  overflow-x: auto;
+}
+footer h1{
+  font-family:sans-serif;
+  color:#AA0000;
+  padding-top:10px;
+  padding-left:40px;
+}
+@keyframes event{
+  100%{
+    transform: translateX(-400px);
+  }
+}
+.car{
+  width:400px;
+  left:0%;
+  bottom:-15px;
+  transform:translate(0%);
+  position:absolute;
+  z-index:2;
+}
+.car img{
+ 
+  width:90px;
+  animation: car 30s linear infinite;
+}
+@keyframes car{
+  100%{
+    transform:translateX(1500px);
+  }
+}
+
+
+
+ 
+
+  
+  
+/* Nav Bar CSS */
+
+  
+  body{
+    background: #f0f0f1;
+    user-select: none;
+    margin: 0;
+    padding: 50px 0px;
+  }
+  
+  .navbar{
+    width: 100%;
+    height: 50px;
+    background-color: #1d2327;
+    position:fixed;
+    top:0px;
+    z-index: 1000;
+  
+  }
+  
+  nav{
+    width: 100%;
+    padding: auto;
+    position:fixed;
+ 
+  }
+  
+  nav li, footer li{
+    color: white;
+    justify-content: space-between;
+    display: flex;
+    flex: 1;
+    position: relative;
+  }
+  
+  nav li:hover{
+    color: red;
+  }
+
+  footer li:hover{
+    color: red;
+  }
+  
+  .logo{
+  position: relative;
+  float: left;
+  height: 25px;
+  color: white;
+  margin: 12px 10px 15px 10px;
+  width: 250px;
+  cursor: pointer;
+  }
+  
+  .options{
+    float: left;
+    position: relative;
+    width: 40px;
+    margin: 12px 0px 0px 0px;
+    cursor: pointer;
+    font-family: "PT Sans";
+    margin-left: 30px;
+    font-size: 13pt;
+  }
+  
+  .pipe{
+    float: right;
+    margin: 14px 15px 0px 0px;
+  
+  }
+  
+  .account{
+    float: right;
+    width: 60px;
+    margin: 15px 2px;
+    cursor: pointer;
+    font-family: "PT Sans";
+    font-size: 12pt;
+  }
+  
+  .UserIcon{
+    float: right;
+    margin: 16px 20px 0px 0px
+  }
+  
+  .ShoppingCart{
+    float: right;
+    margin : 16px 20px 0px 0px;
+    cursor: pointer;
+  }
+  
+  .checkout{
+    background: grey;
+    position: absolute;
+    top: 35px;
+    right: -595%;
+    width: 250px;
+    height: 290px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border: 2px solid Maroon;
+    display: none;
+  }
+  
+  .checkout input[value="Checkout"]{
+    background: green;
+    color:white;
+    text-align: center;
+    padding: 10px;
+    text-decoration: none;
+    display: block;
+    border-radius: 5px;
+    border: 5px;
+    font-size: 16px;
+    margin: 200px 0px 5px 50px;
+    width: 150px
+  }
+  
+  .checkout input[value="View Order"]{
+    background: maroon;
+    color:white;
+    text-align: center;
+    padding: 10px;
+    text-decoration: none;
+    display: block;
+    border-radius: 5px;
+    border: 5px;
+    font-size: 16px;
+    margin: 10px 0px 0px 50px;
+    width: 150px;
+  }
+  
+  .checkout:hover{
+    color: black;
+  }
+  
+  .search{
+   float: right;
+   cursor: pointer;
+   width: 20px;
+   margin: 16px 10px 0px 0px;
+  }
+  
+  .search-box{
+    background: grey;
+    position: absolute;
+    top: 40px;
+    right: -75%;
+    width: 320px;
+    margin: 0;
+    height: 60px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border: 2px solid maroon;
+    display: none;
+    z-index: 100;
+  }
+  
+  .search-box:before{
+    content: "";
+    position: absolute;
+    top: -32px;
+    right: 14px;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid maroon;
+  }
+  
+  .search-box input[type="text"]{
+    width: 200px;
+    padding: 5px 0px;
+    margin-left: 23px;
+    margin: 13px;
+    border: 2px solid maroon;
+    outline: none;
+  }
+  
+  .search-box input[type="button"]{
+    width: 80px;
+    padding: 5px 0px;
+    background: maroon;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #fff;
+    transition-duration: 0.2s;
+    outline: none;
+  }
+  
+  .search-box input[type="button"]:hover{
+    color: black;
+  }
+
+  </style>
 </head>
 
-<body style="background-color: #fff;">
-    <div class="container light-style flex-grow-1 container-p-y ">
-        <h4 class="font-weight-bold py-3 mb-4">
-            My Account
-        </h4>
-        <div class="card overflow-hidden">
-            <div class="row no-gutters row-bordered row-border-light">
-                <div class="col-md-3 pt-0">
-                    <div class="list-group list-group-flush account-settings-links" >
-                        <a class="list-group-item list-group-item-action active" data-toggle="list"
-                            href="#account-general">Account Details</a>
-                        <a class="list-group-item list-group-item-action" data-toggle="list"
-                            href="#account-change-password">Change password</a>
-                        <a class="list-group-item list-group-item-action" data-toggle="list"
-                            href="#account-info">Address</a>
-                        <!-- <a class="list-group-item list-group-item-action" 
-                            href="/checkout">Orders / Payments</a> -->
-                        
-                            <a class="list-group-item list-group-item-action" 
-                                href="/user/userOrder">My Orders</a>
-                            <a class="list-group-item list-group-item-action" 
-                                href="/coupon">Coupons</a>
-                            <a class="list-group-item list-group-item-action" 
-                                href="/walletHistory">Wallet History</a>
-                            <a class="list-group-item list-group-item-action" 
-                            href="/user/logout">Logout</a>
-                    </div>
-                </div>
-                <div class="col-md-9">
-                    <div class="tab-content">
-                        <div class="tab-pane fade active show" id="account-general">
-                            <div class="card-body media align-items-center">
-                                <img src="/assets/homeimg/user-person-profile-block-account-circle.svg" alt class="d-block ui-w-80">
-                            </div>
-                            <hr class="border-light m-0">
-                            <div class="card-body">
-                                <div class="form-group">
-                                    
-                                    <label class="form-label">Name</label>
-                                    <input type="text" class="form-control" id="user-name" value="">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">E-mail</label>
-                                    <input type="text" class="form-control mb-1" value="">
-                                </div>
-                                <div class="form-group d-flex">
-                                    <label class="form-label ">Referal Code:  </label>
-                                        <p class="referralcodecolor"></p>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Wallet: /-</label>
-                                </div>
-                            </div>
-                            <div class="text-center mt-3">
-                                <button type="button" class="btn" style="background-color: #014122; color: #fff;" id="save-changes">Save changes</button>&nbsp;
-                                <!-- <button type="button" class="btn btn-danger">Cancel</button> -->
-                            </div>
-                        </div>
-                        <br><br>
-
-
-<!-- ===================change password=================================================== -->
-                        <div class="tab-pane fade" id="account-change-password">                            <div id="alert-area" class="mt-3"></div>
-
-                            <div class="card-body pb-2">
-                            <img src="/assets/homeimg/change pass.png" class="d-block ui-w-80" alt="" >
-
-                                <div class="form-group">
-                                    <label class="form-label">Current password</label>
-                                    <input id="current-password" type="password" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">New password</label>
-                                    <input id="new-password" type="password" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Repeat new password</label>
-                                    <input id="repeat-new-password" type="password" class="form-control">
-                                </div>
-                            </div>
-                            <div class="text-right mt-3">
-                                <button type="button" class="btn " style="background-color: #014122; color: #fff;" id="btn-save-changess" >Save changes</button>&nbsp;
-                                <a href="/user/profile"> <button type="button" class="btn btn-danger">Cancel</button> </a>
-                            </div>
-                            <div id="alert-area" class="mt-3"></div>
-
-                        </div>
 
 
 
-<!-- =====================Address===================================== -->
-<div class="tab-pane fade" id="account-info">
 
-    <div class="card-body pb-2">
-        <form id="address-form" action="" method="post" style="display: none;">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="form-label">Mobile</label>
-                        <input type="text" class="form-control" name="mobile" placeholder="Mobile">
-                    </div>
-                    <!-- <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" placeholder="Email">
-                    </div> -->
-                    <div class="form-group">
-                        <label class="form-label">Pincode</label>
-                        <input type="text" class="form-control" name="pincode" placeholder="Pincode">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">House Name</label>
-                        <input type="text" class="form-control" name="houseName" placeholder="House Name">
-                    </div>
-                </div>
-                <!-- Right side -->
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="form-label">Locality</label>
-                        <input type="text" class="form-control" name="locality" placeholder="Locality">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">City</label>
-                        <input type="text" class="form-control" name="city" placeholder="City">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">District</label>
-                        <input type="text" class="form-control" name="district" placeholder="District">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">State</label>
-                        <input type="text" class="form-control" name="state" placeholder="State">
-                    </div>
-                </div>
-            </div>
-            <div class="text-right mt-3">
-    <span id="address-success-message" style="display:none; color:green;">Address added successfully!</span>
+<body>
 
-                <button type="submit" class="btn btn-success" id="btn-save-address">Add</button>
-                <button type="button" class="btn btn-danger" id="btn-cancel ">Cancel</button>
-            </div>
-        </form>
-    </div>
 
-    <div id="address-list">
-        <!-- Address list will be displayed here -->
-    </div>
 
-    <button type="button" class="btn " style="background-color: #014122; color: #fff ;" id="btn-add-address">Add Address</button>
-    <br><br>
-    
-        <div class="address-container">
-            <div class="address-heading">Address </div>
-            <div class="address-buttons">
-                <a href="/edit-address/" class="btn btn-success btn-edit" data-id="">Edit</a>
-                <!-- <button >Edit</button> -->
-                <a class="btn btn-delete btn-danger"  href="/user/deleteaddress/">Delete</a>
-            </div>
-            <div>
-                <span></span>
-                <span></span>
-            </div>
-            <div>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                            </div>
-                         </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+        <!-- Nav Bar -->
+  <div class="navbar">
+    <nav>
+      <li class="logo"><img src="https://i.imgur.com/qeAgBRP.png" alt="Wagon's Roll Logo"></li>
+      <li class="options">Rent</li>
+      <li class="options">Events</li>
+      <li class="account">Register</li>
+      <li class= "pipe">|</li>
+      <li class="account">Log In </li>
+      <li class="UserIcon">
+        <i class="fa fa-user" aria-hidden="true"></i>
+      </li>
+      <li class ="ShoppingCart">
+        <i class="fa fa-shopping-cart" aria-hidden= "true"></i>
+        <div class = "checkout">
+          <input type="button" value = "Checkout">
+          <input type="button" value = "View Order">
         </div>
-        
-    </div><br><br><br><br>
-    <!-- <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script> -->
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript">
+      </li>
+      <li class="search">
+        <i class="fa fa-search" aria-hidden="true"></i>
+        <div class="search-box">
+          <input type="text">
+          <input type="button" value="Search">
+        </div>
+      </li>
+    </nav>
+  </div>
+
+
+
+<!-- Checkout Page -->
+
+<main>
+  <div class="checkoutMain">
+    <h1>
+        Checkout
+    </h1>
+    <div class="checkoutContent">
+      <div class="basketMain">
+        <h2>
+          Basket
+        </h2>
+        <ul class="basketList">
+
+
+          <div class="basketListItem">
+            <div class="bin">
+              <i class="fa fa-trash" aria-hidden="true"></i>
+            </div>
+            <img class="itemPic" src="https://www.pngall.com/wp-content/uploads/8/White-SUV-PNG-Image.png">
+            <ul class="basketItemDetails"
+                <li><b class="basketItemName">Item Name Here</b></li>
+              <li><p class="itemDetail">Capacity</p></li>
+              <li><p class="itemDetail">Booking Date</p></li>
+              <li><b class="price">Price</b></li>
+            </ul>
+          </div>
+      
+      <div class="basketListItem">
+            <div class="bin">
+              <i class="fa fa-trash" aria-hidden="true"></i>
+            </div>
+            <img class="itemPic" src="https://www.pngall.com/wp-content/uploads/8/White-SUV-PNG-Image.png">
+            <ul class="basketItemDetails"
+                <li><b class="basketItemName">Item Name Here</b></li>
+              <li><p class="itemDetail">Capacity</p></li>
+              <li><p class="itemDetail">Booking Date</p></li>
+              <li><b class="price">Price</b></li>
+            </ul>
+          </div>
+  
+  <div class="basketListItem">
+            <div class="bin">
+              <i class="fa fa-trash" aria-hidden="true"></i>
+            </div>
+            <img class="itemPic" src="https://www.pngall.com/wp-content/uploads/8/White-SUV-PNG-Image.png">
+            <ul class="basketItemDetails"
+                <li><b class="basketItemName">Item Name Here</b></li>
+              <li><p class="itemDetail">Capacity</p></li>
+              <li><p class="itemDetail">Booking Date</p></li>
+              <li><b class="price">Price</b></li>
+            </ul>
+          </div>
+
+<div class="basketListItem">
+            <div class="bin">
+              <i class="fa fa-trash" aria-hidden="true"></i>
+            </div>
+            <img class="itemPic" src="https://www.pngall.com/wp-content/uploads/8/White-SUV-PNG-Image.png">
+            <ul class="basketItemDetails"
+                <li><b class="basketItemName">Item Name Here</b></li>
+              <li><p class="itemDetail">Capacity</p></li>
+              <li><p class="itemDetail">Booking Date</p></li>
+              <li><b class="price">Price</b></li>
+            </ul>
+          </div>
+      
+        </ul>
+      </div>
+      <div class="custInfo">
+        <h2 class="detailText">
+          Payment Details
+        </h2>
+        <p class="detailText">Please check that your details below are correct:</p>
+        <div class="inputDiv">
+
+          <form class="inputList">
+            
+            <label class="inputListLabel" for="firstName">First Name:</label><br>
+            <input type="text" class="inputBox" name="firstName"><br>
+            
+            <label class="inputListLabel" for="LastName">Last Name:</label><br>
+            <input type="text" class="inputBox" name="lastName"><br>
+                
+            <label class="inputListLabel" for="email">Email Address:</label><br>
+            <input type="text" class="inputBox" name="email"><br>
+            
+            <label class="inputListLabel" for="contactNumber">Contact Number:</label><br>
+            <input type="text" class="inputBox" name="contactNumber"><br>
+            
+            <label class="inputListLabel" for="LastName">Card Number:</label><br>
+            <input type="text" class="inputBox" name="lastName"><br>
+                
+            <label class="inputListLabel" for="expiryDate">Expiry Date:</label><br>
+            <input type="text" class="inputBox" name="expiryDate"><br>
+            
+            <label class="inputListLabel" for="nameOnCard">Name on Card:</label><br>
+            <input type="text" class="inputBox" name="nameOnCard"><br>
+            
+          </form>
+        </div>
+        <div id="completeButtons">
+          <div id="termsAgree">
+            <input type="checkbox" name="termsAgreeBox">
+            <label for="termsAgreeBox" class="detailText">I agree to the terms and conditions</label>
+          </div>
+          <input id="completeCheckout" class="detailText" type="button" value="Complete Checkout">
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+
+
+
+<!-- Footer -->
+
+<footer>
+  <div class="about">
+    <p class="about wagons">About Wagons Roll</p>
+    <ul>
+      <li><a href="">Our business</a></li>
+      <li><a href="">Terms and condition</a></li>
+    </ul>
+    <p class="copyright">Copyright © 2022 Wagons Roll</p>
+        <div class="car">
+        <img src="https://www.pngall.com/wp-content/uploads/8/White-SUV-PNG-Image.png">
+        </div>
+  </div>
+  <div class="contact">
+    <p class="contact us">Contact us</p>
+    <ul>
+      <li>Telephone: +4476892347</li>
+      <li>Email: wagonsroll@yahoo.com</li>
+    </ul>
+  </div>
+  <div class=location>
+    <p class="loc">Top cities</p>
+    <ul>
+      <li>London</li>
+      <li>Manchester</li>
+      <li>Brighton</li>
+      <li>Leeds</li>
+    </ul>
+  </div>
+</footer>
+
+
+
+</body>
+
+<script>
+  const box = document.querySelector('.search-box');	
+		$(".fa-search").click(function(){
+    		box.classList.toggle('open');
+    });
+
+	$(document).ready(function(){
+		$(".fa-shopping-cart").click(function(){
+    		$(".checkout").toggle();
+    });
+});
+
+const menu = document.querySelector('.nav-bar');	
+		$(".menu-toggle").click(function(){
+    		menu.classList.toggle('active');
+    });
+</script>
