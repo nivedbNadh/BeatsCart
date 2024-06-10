@@ -2,6 +2,7 @@ const { json } = require("body-parser");
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
 const Address=require('../models/addressModel')
+const Cart=require('../models/cartModel')
 // const GoogleUser = require("../models/GoogleUser");
 const mongoose=require('mongoose')
 
@@ -400,6 +401,7 @@ const saveAddress = async (req,res)=>{
     const {mobile,pincode,houseName,area,city,state,landmark}=req.body
     
     console.log('req.body', req.body)
+    
       const newAddress=new Address({
         userId:userId,
         mobile,
@@ -413,6 +415,12 @@ const saveAddress = async (req,res)=>{
       })
       console.log('newAddress',newAddress)
       await newAddress.save();
+      
+      if(newAddress) {
+        return res.status(200).json({message:'address addded succesfully'})
+      } else{
+        redirect('/userProfile')
+      }
 
   }catch(error){
     console.error('Error:',error)
@@ -502,24 +510,71 @@ const editAddress = async (req, res) => {
 
 
 // load checkout 
-const loadCheckout= async(req,res)=>{
+const loadCheckout = async (req, res) => {
   try {
-    const email= req.session.email
-    const user = await User.findOne({email})
+    const email = req.session.email;
+    const user = await User.findOne({ email });
+    const userId=req.session.userId
+    const cart=await Cart.findOne({userId}).populate('products.productId')
 
-    if(!user) {
-      return res.status(400).json({message:'user not found'})
+    
+    const addresses = await Address.find({ userId: user._id });
+    console.log(addresses, "addresses")
+
+    if (!user) {
+      return res.status(400).json({ message: 'User not found' });
     }
 
-      res.render('checkout',{user})
-      
+    if(!cart) {
+      return res.status(404).json({message:'Cart not found '})
+    }
+
+    let subtotal=0
+    cart.products.forEach(product=>{
+      subtotal+=product.quantity * product.productId.price
+    })
+
+
+    const tax=subtotal * 0.05
+    const total=subtotal+tax
+
+    const cartItems=cart.products.map(product=>({
+      productName:product.productId.name,
+      productImage:product.productId.image[0],
+      price:product.productId.price,
+      quantity:product.quantity
+    }))
+
+
+    res.render('checkout', { user, addresses, cartItems, subtotal,tax,total });
   } catch (error) {
-      console.error('error occured')
-      res.status(500).send('internal server error')
-      
+    console.error('Error occurred:', error);
+    res.status(500).send('Internal server error');
   }
 }
 
+
+// checkout address page code 
+const loadCheckoutAddress = async(req,res)=>{
+
+
+try {
+  const email=req.session.email
+  const user=User.findOne({email})
+  const userId=req.session.userId
+  const addresses=await Address.find()
+if(!user) {
+  return res.status(400).json({message:'user not found'})
+}
+
+  res.render('checkAddress',{user,userId:userId,addresses})
+} catch (error) {
+  console.error('error occured')
+  res.status(500).send('internal server error')
+  
+}
+  
+}
 
 
 
@@ -548,5 +603,6 @@ module.exports = {
   deleteAddress,
   loadEditAddress,
   editAddress,
-  loadCheckout
+  loadCheckout,
+  loadCheckoutAddress 
 };

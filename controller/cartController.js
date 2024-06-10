@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const Cart = require('../models/cartModel');
 const Products=require('../models/productModel')
+
+
+
+
 const addToCart = async (req, res) => {
     try {
         const productId = req.params.productId;
@@ -43,6 +47,7 @@ const cart = async (req, res) => {
       }
 
         const cart = await Cart.findOne({ userId }).populate('products.productId');
+        console.log("cartcartcartcart",cart)
 
         if (!cart) {
             return res.status(404).json({ message: 'Cart not found' });
@@ -91,14 +96,58 @@ const cartDelete= async (req,res)=>{
         res.status(500).json({message:'Internal server error'})
         
     }
-
-
-
-
-
 }
 
 
+
+const updateCartQuantity=async (req,res) =>{
+    try {
+
+        const {productId,action}=req.body
+        const userId = req.session.userId
+        console.log( userId,"dm    dnej     mmmkiwwensndsm,pqwkjnsd;dniensndpqjpqnsde ")
+
+        let cart=await Cart.findOne({userId})
+
+        if(!cart) {
+            return res.status(404).json({message:'Cart not found'})
+
+        }
+
+        const productIndex=cart.products.findIndex(P => P.productId.toString() === productId)
+
+
+        if(productIndex === -1) {
+            return res.status(404).json({message: 'Product not found in cart'})
+        }
+
+        if(action === 'increment') {
+            cart.products[productIndex].quantity += 1
+        } else if( action === 'decrement') {
+            if(cart.products[productIndex].quantity > 1) {
+                cart.products[productIndex].quantity -= 1
+
+            } else{
+                return res.status(400).json({message:'Qantity  cannot be less than 1'})
+            }
+        }
+
+        await cart.save()
+
+        const subtotal= cart.products.reduce((acc,product) => {
+            return acc + (product.quantity * product.productId.price)
+            
+        },0)
+
+        res.status(200).json({message:'Quantity updated successfully',subtotal})
+       
+        
+    } catch (error) {
+        console.error('Error in updateCartQuantity:',error)
+        res.status(500).json({message:'Internal server error'})
+
+    }
+}
 
 
 
@@ -110,4 +159,5 @@ module.exports = {
     cart,
     addToCart,
     cartDelete,
+    updateCartQuantity
 };

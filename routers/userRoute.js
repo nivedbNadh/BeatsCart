@@ -13,6 +13,7 @@ const userController = require("../controller/userController");
 const otpController = require("../controller/otpController");
 const forgotOtp = require("../controller/forgotOtp");
 const cartController = require("../controller/cartController")
+const checkController= require("../controller/checkController")
 
 
 const { router } = require("./userRoute");
@@ -80,11 +81,28 @@ userRoute.post('/submit-address/:id', userController.editAddress);
 userRoute.get("/cart",userAuth.authentication,cartController.cart)
 userRoute.post("/addToCart/:productId", userAuth.authentication, cartController.addToCart);
 userRoute.delete("/remove-from-cart/:productId",cartController.cartDelete)
+userRoute.put('/update-cart-quantity',userAuth.authentication,cartController.updateCartQuantity)
+
 
 
 // checkout
 
 userRoute.get('/checkout',userController.loadCheckout)
+userRoute.get('/checkAddress',userController.loadCheckoutAddress)
+userRoute.post('/addaddresscheckout',checkController.addAddressCheckout)
+
+
+// order
+userRoute.get('/successorder',checkController.successOrder)
+userRoute.post('/placeorder',checkController.orderCreate)
+
+
+
+
+
+
+
+
 
 
 

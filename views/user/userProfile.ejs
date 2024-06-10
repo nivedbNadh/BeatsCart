@@ -415,7 +415,7 @@ $(document).ready(function(){
         $.post('/save-address',formData,function(response){
             console.log("response",response)
             $('#address-form')[0].reset()
-            location.reload()
+            location.replace()
         })
         })
     })

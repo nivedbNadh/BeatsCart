@@ -1,0 +1,224 @@
+<%-include('../layouts/user/header')%>
+<%-include('../layouts/user/navbar')%>
+
+<style>
+    body {
+        text-align: center;
+        margin: 0;
+        background-color: #fff;
+        margin-top: 30px;
+    }
+    .card-body {
+        display: inline-block;
+        text-align: left;
+        width: 80%;
+        max-width: 1128px;
+        border: 1px solid #ced4da;
+        background-color: white;
+    }
+    .form-group {
+        margin-bottom: 10px;
+    }
+    .form-label {
+        font-size: 14px;
+        margin-left: 27px;
+        font-weight: bold;
+    }
+    .form-control {
+        height: 40px;
+        font-size: 14px;
+        width: 400px;
+        margin-left: 77px;
+        border-radius: 4px;
+        border: 1px solid #ced4da;
+    }
+</style>
+</head>
+<body>
+    <br><br>
+    <h3>Add Address</h3>
+    <div class="card-body pb-2">
+        <form id="address-form" action="/submit-address/" method="post">
+            <div class="row">
+                <!-- Left side form fields -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">Mobile</label>
+                        <input type="text" id="mobile" class="form-control" name="mobile" placeholder="Mobile" required>
+                        <span id="mobile-error" class="error-message"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Pincode</label>
+                        <input type="text" id="pincode" class="form-control" name="pincode" placeholder="Pincode" required>
+                        <span id="pincode-error" class="error-message"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">House Name</label>
+                        <input type="text" id="houseName" class="form-control" name="houseName" placeholder="House Name" required>
+                        <span id="house-error" class="error-message"></span>
+                    </div>
+                </div>
+                <!-- Right side form fields -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">Area</label>
+                        <input type="text" id="area" class="form-control" name="area" placeholder="Area" required>
+                        <span id="area-error" class="error-message"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">City</label>
+                        <input type="text" id="city" class="form-control" name="city" placeholder="City" required>
+                        <span id="city-error" class="error-message"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Landmark</label>
+                        <input type="text" id="landmark" class="form-control" name="landmark" placeholder="Enter your landmark" required>
+                        <span id="landmark-error" class="error-message"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">State</label>
+                        <input type="text" id="state" class="form-control" name="state" placeholder="State" required>
+                        <span id="state-error" class="error-message"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <span id="address-success-message" style="display:none; color:green;">Address added successfully!</span>
+                <div>
+                    <button class="btn" type="button" onclick="submitForm()">Submit</button>
+                    <a href="/checkout"><button class="btn" type="button">Cancel</button></a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        function submitForm() {
+            var mobile = document.getElementById("mobile").value;
+            var pincode = document.getElementById("pincode").value;
+            var houseName = document.getElementById("houseName").value;
+            var area = document.getElementById("area").value;
+            var city = document.getElementById("city").value;
+            var landmark = document.getElementById("landmark").value;
+            var state = document.getElementById("state").value;
+
+            // Clear previous error messages
+            document.querySelectorAll('.error-message').forEach(function(element) {
+                element.textContent = '';
+            });
+
+            // Validation
+            var isValid = true;
+
+            if (mobile.trim() === "") {
+                document.getElementById("mobile-error").textContent = "Mobile is required";
+                isValid = false;
+            }
+
+            if (pincode.trim() === "") {
+                document.getElementById("pincode-error").textContent = "Pincode is required";
+                isValid = false;
+            }
+
+            if (houseName.trim() === "") {
+                document.getElementById("house-error").textContent = "House Name is required";
+                isValid = false;
+            }
+
+            if (area.trim() === "") {
+                document.getElementById("area-error").textContent = "Area is required";
+                isValid = false;
+            }
+
+            if (city.trim() === "") {
+                document.getElementById("city-error").textContent = "City is required";
+                isValid = false;
+            }
+
+            if (landmark.trim() === "") {
+                document.getElementById("landmark-error").textContent = "Landmark is required";
+                isValid = false;
+            }
+
+            if (state.trim() === "") {
+                document.getElementById("state-error").textContent = "State is required";
+                isValid = false;
+            }
+
+            var mobilePattern = /^[0-9]{10}$/;
+            if (!mobilePattern.test(mobile)) {
+                document.getElementById("mobile-error").textContent = "Please enter a valid 10-digit mobile number";
+                isValid = false;
+            }
+
+            var pincodePattern = /^[0-9]{6}$/;
+            if (!pincodePattern.test(pincode)) {
+                document.getElementById("pincode-error").textContent = "Please enter a valid 6-digit pincode";
+                isValid = false;
+            }
+
+            if (!isValid) return;
+
+            var data = {
+                mobile: mobile,
+                pincode: pincode,
+                houseName: houseName,
+                area: area,
+                city: city,
+                landmark: landmark,
+                state: state
+            };
+
+            console.log(data, "data");
+
+            // Make AJAX request
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/addaddresscheckout", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        document.getElementById("address-success-message").style.display = "block"; // Show success message
+                    } else {
+                        console.error("Error adding address:", xhr.responseText);
+                    }
+                }
+            };
+            xhr.send(JSON.stringify(data));
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("address-success-message").style.display = "none"; // Hide success message initially
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<%-include('../layouts/user/footer')%>
+
+

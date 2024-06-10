@@ -29,7 +29,7 @@
             <div class="quantity">
               <button class="btn-decrease" data-product-id="<%= product.productId._id %>">-</button>
               <input type="text" value="<%= product.quantity %>" readonly />
-              <button class="btn-increase" data-product-id="<%= product.productId._id %>">+</button>
+              <button class="btn-increase" data-product-id="<%= product.productId._id %>" <%= product.quantity >= 10 ? 'disabled' : '' %> >+</button>
             </div>
           </td>
           <td>₹<%= (product.quantity * product.productId.price).toFixed(2) %></td>
@@ -62,20 +62,22 @@
     <table>
       <tr>
         <td>Subtotal</td>
-        <td>₹<%= subtotal.toFixed(2) %></td>
+        <td>₹ <span class="subtotal"><%= subtotal.toFixed(2) %></span></td>
       </tr>
       <tr>
         <td>Tax</td>
-        <td>₹<%= (subtotal * 0.05).toFixed(2) %></td> <!-- Assuming tax is 5% -->
+        <td>₹ <span class="tax"><%= (subtotal * 0.05).toFixed(2) %></span></td><!-- Assuming tax is 5% -->
       </tr>
       <tr>
         <td>Total</td>
-        <td>₹<%= (subtotal * 1.05).toFixed(2) %></td> <!-- Total = Subtotal + Tax -->
+        <td>₹ <span class="total"><%= (subtotal * 1.05).toFixed(2) %> </span></td> <!-- Total = Subtotal + Tax -->
       </tr>
       <tr>
         <td>
-          <button>checkout</button>
-        </td>
+          <a href="/checkout"><button>Checkout</button></a>
+
+
+         </td>
       </tr>
     </table>
   </div>
@@ -483,7 +485,100 @@ th:last-child {
 <!-- Footer -->
 
 <script>
+
+
 document.addEventListener('DOMContentLoaded', function () {
+    function updateCartTotals() {
+        let subtotal = 0;
+        document.querySelectorAll('table .cart-info').forEach(row => {
+            const priceElement = row.querySelector('small');
+            const quantityElement = row.querySelector('input');
+
+            if (priceElement && quantityElement) {
+                const price = parseFloat(priceElement.innerText.replace('Price ₹', ''));
+                const quantity = parseInt(quantityElement.value);
+                subtotal += price * quantity;
+            }
+        });
+
+        document.querySelector('.total-price .subtotal').innerText = `₹${subtotal.toFixed(2)}`;
+        const tax = subtotal * 0.05;
+        document.querySelector('.total-price .tax').innerText = `₹${tax.toFixed(2)}`;
+        const total = subtotal + tax;
+        document.querySelector('.total-price .total').innerText = `₹${total.toFixed(2)}`;
+    }
+
+    document.querySelectorAll('.btn-decrease').forEach(button => {
+        button.addEventListener('click', function () {
+            const productId = this.getAttribute('data-product-id');
+            fetch(`/update-cart-quantity`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ productId, action: 'decrement' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Quantity updated successfully') {
+                    const input = this.nextElementSibling;
+                    if (input) {
+                        let quantity = parseInt(input.value);
+                        if (quantity > 1) {
+                            input.value = --quantity;
+                            updateCartTotals();
+                            location.reload(); // Add this line to refresh the page
+                        }
+                    }
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while updating the cart. Please try again later.');
+            });
+        });
+    });
+
+    document.querySelectorAll('.btn-increase').forEach(button => {
+        button.addEventListener('click', function () {
+            const productId = this.getAttribute('data-product-id');
+            fetch(`/update-cart-quantity`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ productId, action: 'increment' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Quantity updated successfully') {
+                    const input = this.previousElementSibling;
+                    if (input) {
+                        let quantity = parseInt(input.value);
+                        if(quantity < 10) {
+                          input.value = ++quantity;
+                          updateCartTotals();
+
+                          if(quantity >= 10) {
+                            this.disabled=true // disable increment button reach quantity 10
+                          }
+                       
+                          location.reload(); // refresh page 
+                        }
+                    }
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while updating the cart. Please try again later.');
+            });
+        });
+    });
+
     document.querySelectorAll('.remove-btn').forEach(button => {
         button.addEventListener('click', function (event) {
             event.preventDefault();
@@ -494,61 +589,62 @@ document.addEventListener('DOMContentLoaded', function () {
                     'Content-Type': 'application/json',
                 },
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.message === 'Product removed from cart successfully') {
-                        location.reload();
-                    } else {
-                        console.error('Failed to remove item from cart');
-                        alert('An error occurred while trying to remove the item from the cart. Please try again later.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.message === 'Product removed from cart successfully') {
+                    location.reload();
+                } else {
+                    console.error('Failed to remove item from cart');
                     alert('An error occurred while trying to remove the item from the cart. Please try again later.');
-                });
-        });
-    });
-
-    function updateCartTotals() {
-        let subtotal = 0;
-        document.querySelectorAll('table .cart-info').forEach(row => {
-            const price = parseFloat(row.querySelector('small').innerText.replace('Price ₹', ''));
-            const quantity = parseInt(row.querySelector('input').value);
-            subtotal += price * quantity;
-        });
-        document.querySelector('.total-price .subtotal').innerText = `₹${subtotal.toFixed(2)}`;
-        const tax = subtotal * 0.05;
-        document.querySelector('.total-price .tax').innerText = `₹${tax.toFixed(2)}`;
-        const total = subtotal + tax;
-        document.querySelector('.total-price .total').innerText = `₹${total.toFixed(2)}`;
-    }
-
-    document.querySelectorAll('.btn-decrease').forEach(button => {
-        button.addEventListener('click', function () {
-            const input = this.nextElementSibling;
-            let quantity = parseInt(input.value);
-            if (quantity > 1) {
-                input.value = --quantity;
-                updateCartTotals();
-            }
-        });
-    });
-
-    document.querySelectorAll('.btn-increase').forEach(button => {
-        button.addEventListener('click', function () {
-            const input = this.previousElementSibling;
-            let quantity = parseInt(input.value);
-            input.value = ++quantity;
-            updateCartTotals();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while trying to remove the item from the cart. Please try again later.');
+            });
         });
     });
 });
+
+
+    // function updateCartTotals() {
+    //     let subtotal = 0;
+    //     document.querySelectorAll('table .cart-info').forEach(row => {
+    //         const price = parseFloat(row.querySelector('small').innerText.replace('Price ₹', ''));
+    //         const quantity = parseInt(row.querySelector('input').value);
+    //         subtotal += price * quantity;
+    //     });
+    //     document.querySelector('.total-price .subtotal').innerText = `₹${subtotal.toFixed(2)}`;
+    //     const tax = subtotal * 0.05;
+    //     document.querySelector('.total-price .tax').innerText = `₹${tax.toFixed(2)}`;
+    //     const total = subtotal + tax;
+    //     document.querySelector('.total-price .total').innerText = `₹${total.toFixed(2)}`;
+    // }
+
+    // document.querySelectorAll('.btn-decrease').forEach(button => {
+    //     button.addEventListener('click', function () {
+    //         const input = this.nextElementSibling;
+    //         let quantity = parseInt(input.value);
+    //         if (quantity > 1) {
+    //             input.value = --quantity;
+    //             updateCartTotals();
+    //         }
+    //     });
+    // });
+
+    // document.querySelectorAll('.btn-increase').forEach(button => {
+    //     button.addEventListener('click', function () {
+    //         const input = this.previousElementSibling;
+    //         let quantity = parseInt(input.value);
+    //         input.value = ++quantity;
+    //         updateCartTotals();
+    //     });
+    // });
 </script>
 
 <%-include('../layouts/user/footer')%>
