@@ -1,6 +1,4 @@
-
-
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -8,6 +6,292 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TimeGaze</title>
   <link rel="icon" href="/image/android-chrome-512x512.png" type="image/png" alt="Site Icon">
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+
+  <!-- boostrap css cdn link -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+  <!-- bootstrap icon cdn link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+
+
+  <!-- css style sheet link -->
+  <link rel="stylesheet" href="/css/header_footer.css">
+
+
+  <style>
+    .is-activeMobile {
+      background-color: white;
+      color: black !important;
+      border: 2px solid;
+    }
+
+    .mobile-profile-navigaton .text-white {
+      padding: 4px;
+    }
+
+    .mobile-profile-navigaton {
+      display: none;
+    }
+
+    aside a {
+      color: black;
+    }
+
+    @media (max-width:768px) {
+      aside {
+        display: none !important;
+      }
+
+      .mobile-profile-navigaton {
+        display: block;
+      }
+    }
+
+    aside li {
+      text-align: center;
+      padding: 0.5rem
+    }
+
+    .is-active {
+      color: white;
+      border: 2px solid;
+      text-align: center;
+      margin: 0;
+      background: black;
+    }
+
+    .is-active span {
+      color: white;
+    }
+
+    @media (min-width: 576px) {
+
+      #section-last h3 {
+        font-size: 1.3rem;
+        text-transform: capitalize;
+      }
+    }
+
+    .form-control:focus .accordian-button:focus {
+      color: var(--bs-body-color);
+      background-color: var(--bs-body-bg);
+      border-color: none;
+      outline: 0;
+      box-shadow: none;
+    }
+
+
+    .breadcrumb-item a {
+      color: rgb(0, 0, 0) !important;
+      font-size: inherit;
+    }
+
+    .cart-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cart-container {
+
+      overflow-y: auto;
+      max-height: 440px;
+    }
+    .active>.page-link,
+    .page-link.active {
+      background-color: black !important;
+      border-color: azure !important;
+    }
+    .page-link {
+      color: black;
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- Header content can be added here directly or include via another static HTML file -->
+
+  <div class="container-fluid">
+    <nav aria-label="breadcrumb " class="p-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">orders</li>
+      </ol>
+    </nav>
+  </div>
+
+  <section class="container-fluid my-3">
+    <div class="row">
+      <aside class="col-md-3 p-2 bg-light-subtle">
+        <div>
+          <ul class="flex-column d-flex ">
+            <li>
+              <h4>Your account</h4>
+            </li>
+            <li class="">
+              <a href="/profile">
+                <span class="text ">Profile</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="/address">
+                <span class="text">address</span>
+              </a>
+            </li>
+            <li class="is-active ">
+              <a href="orderHistory">
+                <span class="text">orders</span>
+              </a>
+            </li>
+            <li class="">
+              <a href="/wallet">
+                <span class="text">wallet</span>
+              </a>
+            </li>
+            <li>
+              <!-- <form action="/logout" method="post" class="py3 d-flex align-items-center justify-content-center">
+                <i class="bi bi-arrow-return-left text-danger"></i>
+                <button type="submit" class="btn "><span class="text-danger">LOG OUT</span></button>
+              </form> -->
+            </li>
+          </ul>
+
+        </div>
+
+      </aside>
+      <div class="mobile-profile-navigaton">
+        <div class="col-12 d-flex   container-fluid justify-content-evenly bg-dark mb-3">
+          <a href="/profile">
+            <div class="text-white">Profile</div>
+          </a>
+          <a href="/address">
+            <div class="text-white  ">address</div>
+          </a>
+          <a href="/orderHistory">
+            <div class="text-white is-activeMobile ">orders</div>
+          </a>
+          <a href="/wallet">
+            <div class="text-white ">wallet</div>
+          </a>
+        </div>
+      </div>
+      
+      <div class="col-md-9 cart-container">
+        <div class="container-fluid ">
+          <div class="row mb-2 d-flex justify-content-start">
+            <div class="col-6 col-md-4 p-0">
+              <form action="/orderHistory" method="get">
+                <input type="text" name="search" id="searchInput" value="" class="form-control rounded-0"
+                  placeholder="Search...">
+              </form>
+            </div>
+            <div class="category-dropDownList col-3 bg-white">
+              <select class="btn btn-white col-12 text-start" name="status" id="orderStatusDropdown">
+                <option value="" selected>All</option>
+                <option class="text-capitalize" value="placed">placed</option>
+                <option class="text-capitalize" value="pending">pending</option>
+                <option class="text-capitalize" value="shipped">shipped</option>
+                <option class="text-capitalize" value="canceled">canceled</option>
+                <option class="text-capitalize" value="delivered">delivered</option>
+                <option class="text-capitalize" value="returned">returned</option>
+              </select>
+            </div>        
+          </div>      
+        </div>
+        
+        <!-- Static Order Example -->
+        <div class="card mb-3 rounded-0 border p-2">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="m-1">
+                    <a href="/orderSingle?soid=orderID" class="card-body">
+                      <img src="uploads/sample-image.jpg" style="height: 48px; width: 48px;"
+                        class="img-sm rounded border" alt="Product Image">
+                    </a>
+                  </div>
+                </div>
+                <div class="col-md-6 d-flex align-items-center">
+                  <div>
+                    <span class="d-block text-capitalize">
+                      Sample Product Name
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 d-flex align-items-center status text-danger">
+              <span class="me-3 text-dark">Status:</span>
+              canceled
+            </div>
+            <div class="col-md-2 d-flex align-items-center justify-content-end">
+              <div>
+                <div class="delivery-status">
+                  <div class="status-icon"></div>
+                  <button class="btn btn-dark btn-sm changeOrder" value="canceled"
+                    data-id="orderID" style="font-size: 0.6rem;" disabled>cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End of Static Order Example -->
+
+        <div class="text-center">
+          \(^Д^)/<br>
+          No Orders.
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Footer content can be added here directly or include via another static HTML file -->
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/js/orderStatus.js"></script>
+  <script>
+    const dropDown = document.getElementById('orderStatusDropdown');
+    dropDown.addEventListener('change', function (event) {
+      event.preventDefault();
+      const checkedValues = {};
+      checkedValues.status = dropDown.value;
+      let queryString = new URLSearchParams(checkedValues).toString();
+      window.location.href = '/orderHistory?' + queryString;
+    });
+  </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+<!--==============================================================ORDER HISTORY PAGE BACKUP =========================================================================================-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BeatsCart</title>
+  <link rel="icon" href="/image/android-chrome-512x512.png" type="image/png" alt="Site Icon">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
 
   <!-- boostrap css cdn link -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -17,24 +301,63 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
 
   <!-- css style sheet link -->
-  <link rel="stylesheet" href='/css/header_footer.css'>
-
+  <link rel="stylesheet" href="/css/header_footer.css">
 
   <style>
-    table td{
-      font-size: 0.6rem;
-    }
-    table th{
-      
-      font-size: 0.8rem;
-    }
-    .cart-container {
-
-      overflow-y: auto;
-      max-height: 200px;
+   .is-activeMobile {
+      background-color: #fff;
+      color: #000 !important;
+      border: 2px solid;
     }
 
-    .form-control:focus {
+    .mobile-profile-navigaton .text-white {
+      padding: 4px;
+    }
+
+    .mobile-profile-navigaton {
+      display: none;
+    }
+
+    aside a {
+      color: #000;
+    }
+
+    @media (max-width: 768px) {
+      aside {
+        display: none !important;
+      }
+
+      .mobile-profile-navigaton {
+        display: block;
+      }
+    }
+
+    aside li {
+      text-align: center;
+      padding: 0.5rem;
+    }
+
+    .is-active {
+      color: #fff;
+      border: 2px solid;
+      text-align: center;
+      margin: 0;
+      background: #000;
+    }
+
+    .is-active span {
+      color: #fff;
+    }
+
+    @media (min-width: 576px) {
+      #section-last h3 {
+        font-size: 1.3rem;
+        text-transform: capitalize;
+      }
+    }
+
+    .form-control:focus,
+    .accordian-button:focus {
       color: var(--bs-body-color);
       background-color: var(--bs-body-bg);
       border-color: none;
@@ -42,602 +365,269 @@
       box-shadow: none;
     }
 
-    .btn-close:focus {
-      outline: 0;
-      box-shadow: none;
-      border-color: none;
-    }
-
-    .form-fontSize {
-      font-size: 0.9rem;
-    }
-
-    .inputfiled-size {
-      height: 1.6rem;
+    .breadcrumb-item a {
+      color: #000 !important;
+      font-size: inherit;
     }
 
     .cart-container::-webkit-scrollbar {
       display: none;
     }
+
+    .cart-container {
+      overflow-y: auto;
+      max-height: 440px;
+    }
+
+    .active>.page-link,
+    .page-link.active {
+      background-color: #000 !important;
+      border-color: azure !important;
+    }
+
+    .page-link {
+      color: #000;
+    }
+
+    .address-list {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .address-list li {
+      margin-top: 4px;
+    }
+
+    .order-detail {
+      color: #000;
+      font-weight: 300;
+      font-size: 15px;
+      font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    }
+
+    .order-status {
+      color: #ff4500;
+      font-weight: 300;
+    }
+
+    .container-fluid {
+      margin-top: 20px;
+    }
+
+    .card {
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .btn {
+      border-radius: 20px;
+    }
+
+    .breadcrumb {
+      background-color: #f8f9fa;
+      border-radius: 10px;
+    }
+
+    .breadcrumb-item.active {
+      color: #6c757d;
+    }
+
+    .form-control {
+      border-radius: 20px;
+    }
+
+    .category-dropDownList .btn {
+      border-radius: 20px;
+    }
+
+    .order-header {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .order-item {
+      margin-bottom: 15px;
+    }
+
+    .order-status span {
+      font-weight: bold;
+    }
+
+
   </style>
 
 </head>
 
 <body>
-  <!-- header -->
-  <%-include('../layouts/user/header')%>
-  <%-include('../layouts/user/navbar')%>
+  <div class="container-fluid">
+    <nav aria-label="breadcrumb " class="p-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">orders</li>
+      </ol>
+    </nav>
+  </div>
 
-
-
-
-  <section>
-    <!-- checkout + summary -->
-    <section class="bg-light my-5">
-      <div class="container-fluid">
-        <div class="row">
-        
-
-          <div class="col-md-9 mb-2 ">
-            <div class="bg-white my-1 col-md-8 p-2 d-flex justify-content-between align-items-center border">
-              <div>
-                <h5 class="m-0" style="font-size: 0.9rem;">Logged in</h5>
-                <small class="mb-0 text-wrap" style="font-size: 0.6rem;">
-               
-                </small>
-              </div>
-              <div class="text-success">
-                <i class="bi bi-check-circle"></i>
-              </div>
-            </div>
-               <!-- address -->
-            <div class="d-flex col-md-8  flex-column border mb-1 bg-white p-2 flex-sm-row justify-content-between ">
-              <!-- default address -->
-              <div class="">
-                <div class="d-flex flex-column">
-                  <div class="d-flex flex-wrap align-items-center mb-2">
-                    <span class="me-2 form-fontSize ">
-                    </span>
-                    <span class="badge bg-secondary me-2">
-                    </span>
-                    <span>
-                    </span>
-                  </div>
-                  <address class="mb-0 " style="font-size: 0.6rem;white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 200px;">
-                  </address>
-                </div>
-              </div>
-              <!-- default address -->
-              <div class=" d-flex align-items-center justify-content-md-end gap-2">
-                <!-- modal trigger button for edit address -->
-                <i class="btn bi bi-pencil-fill" data-bs-toggle="modal" data-bs-target="#addressModal"></i>
-
-                <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel"
-                  aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content rounded-0">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="addressModalLabel">Edit Address</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body p-1">
-                        <form class="requires-validation" data-id=""
-                          novalidate>
-                          <div class="row p-1">
-
-                            <div class="col-md-6 mb-1">
-                              <label for="validateName" class="form-label form-fontSize"> Name</label>
-                              <input type="text" class="form-control inputfiled-size" name='name'
-                                value="" id="validateName">
-                              <small class="text-danger"></small>
-                            </div>
-
-                            <div class="col-md-6 mb-1">
-                              <label for="validateMobileNumber" class="form-label form-fontSize"> Mobile
-                                Number</label>
-                              <input type="number" name="mobileNumber"
-                                value=""
-                                class="form-control inputfiled-size" id="validateMobileNumber">
-                              <small class="text-danger"></small>
-                            </div>
-
-                            <div class="col-md-4 mb-1">
-                              <label for="state" class="form-label">State</label>
-                              <select class="form-select" name="state" id="state">
-                                <option value="">Select state</option>
-                                  <option value=""
-                                    >
-                               
-                                  </option>
-                              </select>
-                              <small class="text-danger"></small>
-                            </div>
-
-                            <div class="col-md-4 mb-1">
-                              <label for="district" class="form-label">district</label>
-                              <select class="form-select" name="district" id="district">
-                              </select>
-                              <small class="text-danger"></small>
-                            </div>
-                            <div class="col-6 col-md-4 mb-1">
-                              <label for="validatelocality" class="form-label form-fontSize">Locality</label>
-                              <input type="text" name="locality" value=""
-                                class="form-control inputfiled-size" id="validatelocality">
-                              <small class="text-danger"></small>
-                            </div>
-
-                            <div class="col-md-12 mb-1">
-                              <label for="validateAdress" class="form-label form-fontSize">Address</label>
-                              <textarea class="form-control " name="address" id="validateAdress" rows="3"
-                                placeholder="Address (area and street)"></textarea>
-                              <small class="text-danger"></small>
-                            </div>
-
-                            <div class="col-md-12 mb-1">
-                              <div class="col-5">
-                                <label for="validatePincode" class="form-label form-fontSize">Pincode</label>
-                                <input type="number" name="pincode"
-                                  value=""
-                                  class="form-control inputfiled-size" id="validatePincode">
-                                <small class="text-danger"></small>
-                              </div>
-                            </div>
-
-                            <div class="col-md-12 mb-1">
-                              <div class="col-2 d-flex flex-column ">
-                                <label class="form-label form-fontSize">Address Type</label>
-                                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                  <input type="radio" name="addressType" class="btn-check" id="home"
-                                    autocomplete="off" value="Home"
-                                    >
-                                  <label class="btn btn-outline-dark" for="home">Home</label>
-
-                                  <input type="radio" name="addressType" class="btn-check" id="office"
-                                    autocomplete="off" value="Office"
-                                    >
-                                  <label class="btn btn-outline-dark" for="office">Office</label>
-                                  <small class="text-danger"></small>
-                                </div>
-                                <small class="text-danger"></small>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="d-flex justify-content-center mt-3">
-                            <button type="submit" id="updateAddress" class="btn btn-outline-dark col-6">save
-                              Address</button>
-                          </div>
-                        </form>
-
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- end of modal for edit address -->
-
-                <!-- modal for show all other address -->
-                <i class="btn btn-dark" style="font-size: 0.5rem;" data-bs-toggle="modal"
-                  data-bs-target="#addressChangeModal">Change</i>
-
-                <div class="modal fade" id="addressChangeModal" tabindex="-1" aria-labelledby="addressModalLabel"
-                  aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content rounded-0">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="addressModalLabel">Select Address</h5>
-                        <button type="button " class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        <!-- single address body -->
-                          <div class="d-flex flex-column border mb-2  ">
-
-                            <div class="d-flex justify-content-between">
-                              <div class="mb-1 p-2  d-flex flex-column ">
-                                <div class="">
-                                  <label for="address1" class="me-2 text-capitalize">
-                                  </label>
-                                  <span class="badge bg-secondary me-2 text-capitalize">
-                                  </span>
-                                  <span>
-                                  </span>
-                                </div>
-                                <address style="white-space: nowrap;
-                              overflow: hidden;
-                              text-overflow: ellipsis;
-                              max-width: 200px;" class="text-capitalize m-0 form-fontSize">
-                                </address>
-                              </div>
-                              <div style="order: 1; " class="d-flex align-items-center me-1">
-                                <button type="button" data-id=""
-                                  style="font-size: 0.6rem;" class="btn btn-dark change-address">Select</button>
-                              </div>
-                            </div>
-
-                          </div>
-                          <!--end of  single address body -->
-                            <!-- Button for trigger add a new address modal -->
-                            <button style="font-size:0.6rem ;" data-bs-toggle="modal"
-                              data-bs-target="#addAddressModal" class="btn btn-dark m-1" type="submit">Add New
-                              Address</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- modal for add a new address -->
-              <div class="modal fade" id="addAddressModal" tabindex="-3" aria-labelledby="addressModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                  <div class="modal-content rounded-0">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="addressModalLabel">Add Address</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body p-1">
-                      <form action="/api/createAdress?source=checkout" method="post" class="requires-validation1"
-                        novalidate>
-                        <div class="row p-2">
-
-                          <div class="col-md-6">
-                            <label for="validateName1" class="form-label"> name</label>
-                            <input type="text" class="form-control " name='name' id="validateName1">
-                            <small class="text-danger"></small>
-                          </div>
-
-                          <div class="col-md-6">
-                            <label for="validateMobileNumber1" class="form-label"> mobileNumber</label>
-                            <input type="number" name="mobileNumber" class="form-control " id="validateMobileNumber1">
-                            <small class="text-danger"></small>
-                          </div>
-
-                          <div class="col-md-4">
-                            <label for="state2" class="form-label">State</label>
-                            <select class="form-select" name="state" id="state2">
-                              <option value="" disabled selected>Select state</option>
-                                <option value="">
-                                </option>
-                            </select>
-                            <small class="text-danger"></small>
-                          </div>
-                          <div class="col-md-4">
-                            <label for="district2" class="form-label">district</label>
-                            <select class="form-select" name="district" id="district2">
-                              <option value="" disabled selected>Select district</option>
-
-                            </select>
-                            <!--                           
-                            <label for="inputAddress" class="form-label">District</label>
-                            <input type="text" name="district" class="form-control " id="validateCaseDiameter"> -->
-                            <small class="text-danger"></small>
-
-                          </div>
-                          <div class="col-md-4">
-                            <label for="locality" class="form-label">Locality</label>
-                            <input type="text" name="locality" class="form-control " id="locality">
-                            <small class="text-danger"></small>
-                          </div>
-
-
-                          <div class="col-md-12">
-                            <div class="row">
-                              <div class="col-md-12">
-                                <label for="validateAdress1" class="form-label">Address</label>
-                                <textarea class="form-control " name="address" id="validateAdress1" rows="4"
-                                  placeholder="adress(area and street)"></textarea>
-                                <small class="text-danger"></small>
-                              </div>
-                            </div>
-
-                          </div>
-                          <div class="col-md-12">
-                            <div class="col-5">
-                              <label for="validateCaseShape" class="form-label">Pincode</label>
-                              <input type="number" name="pincode" class="form-control " id="validateCaseShape">
-                              <small class="text-danger"></small>
-                            </div>
-                          </div>
-                          <div class="col-md-12">
-                            <div class="col-md-2 d-flex flex-column ">
-                              <label class="form-label">AdressType</label>
-                              <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                <input type="radio" name="addressType" class="btn-check" id="home1" autocomplete="off"
-                                  value="Home">
-                                <label class="btn btn-outline-dark" for="home1">Home</label>
-
-                                <input type="radio" name="addressType" class="btn-check" id="office1"
-                                  autocomplete="off" value="Office">
-                                <label class="btn btn-outline-dark" for="office1">Office</label>
-                              </div>
-                              <small class="text-danger"></small>
-                            </div>
-                          </div>
-                        </div>
-
-
-                        <div class="d-flex justify-content-center mt-3">
-                          <button type="submit" class="btn btn-outline-dark col-6">Add adress</button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- end of modal for add a new address -->
-            </div>
-                <div class="d-flex col-md-8  flex-column border mb-1 bg-white p-2 flex-sm-row justify-content-end ">
-                  <button style="font-size:0.6rem ;" data-bs-toggle="modal"
-                              data-bs-target="#addAddressModal" class="btn btn-dark m-1" type="submit">Add New
-                              Address</button>
-                               <!-- modal for add a new address -->
-              <div class="modal fade" id="addAddressModal" tabindex="-3" aria-labelledby="addressModalLabel"
-              aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content rounded-0">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="addressModalLabel">Add Address</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body p-1">
-                    <form action="/api/createAdress?source=checkout" method="post" class="requires-validation1"
-                      novalidate>
-                      <div class="row p-2">
-
-                        <div class="col-md-6">
-                          <label for="validateName1" class="form-label"> name</label>
-                          <input type="text" class="form-control " name='name' id="validateName1">
-                          <small class="text-danger"></small>
-                        </div>
-
-                        <div class="col-md-6">
-                          <label for="validateMobileNumber1" class="form-label"> mobileNumber</label>
-                          <input type="number" name="mobileNumber" class="form-control " id="validateMobileNumber1">
-                          <small class="text-danger"></small>
-                        </div>
-
-                        <div class="col-md-4">
-                          <label for="state2" class="form-label">State</label>
-                          <select class="form-select" name="state" id="state2">
-                            <option value="" disabled selected>Select state</option>
-                              <option value="">
-                              </option>
-                          </select>
-                          <small class="text-danger"></small>
-                        </div>
-                        <div class="col-md-4">
-                          <label for="district2" class="form-label">district</label>
-                          <select class="form-select" name="district" id="district2">
-                            <option value="" disabled selected>Select district</option>
-
-                          </select>
-                          <!--                           
-                          <label for="inputAddress" class="form-label">District</label>
-                          <input type="text" name="district" class="form-control " id="validateCaseDiameter"> -->
-                          <small class="text-danger"></small>
-
-                        </div>
-                        <div class="col-md-4">
-                          <label for="locality" class="form-label">Locality</label>
-                          <input type="text" name="locality" class="form-control " id="locality">
-                          <small class="text-danger"></small>
-                        </div>
-
-
-                        <div class="col-md-12">
-                          <div class="row">
-                            <div class="col-md-12">
-                              <label for="validateAdress1" class="form-label">Address</label>
-                              <textarea class="form-control " name="address" id="validateAdress1" rows="4"
-                                placeholder="adress(area and street)"></textarea>
-                              <small class="text-danger"></small>
-                            </div>
-                          </div>
-
-                        </div>
-                        <div class="col-md-12">
-                          <div class="col-5">
-                            <label for="validateCaseShape" class="form-label">Pincode</label>
-                            <input type="number" name="pincode" class="form-control " id="validateCaseShape">
-                            <small class="text-danger"></small>
-                          </div>
-                        </div>
-                        <div class="col-md-12">
-                          <div class="col-md-2 d-flex flex-column ">
-                            <label class="form-label">AdressType</label>
-                            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                              <input type="radio" name="addressType" class="btn-check" id="home1" autocomplete="off"
-                                value="Home">
-                              <label class="btn btn-outline-dark" for="home1">Home</label>
-
-                              <input type="radio" name="addressType" class="btn-check" id="office1"
-                                autocomplete="off" value="Office">
-                              <label class="btn btn-outline-dark" for="office1">Office</label>
-                            </div>
-                            <small class="text-danger"></small>
-                          </div>
-                        </div>
-                      </div>
-
-
-                      <div class="d-flex justify-content-center mt-3">
-                        <button type="submit" class="btn btn-outline-dark col-6">Add adress</button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- end of modal for add a new address -->
-                </div>
-           
-            <!-- items in cart -->
-            <div class="d-flex col-md-8 border mb-1 bg-white p-2">
-
-
-              <div class="cart-container">
-                <h6 class="text-dark my-4">Items in cart</h6>
-                <!-- single cart Item -->
-                                <div class="d-flex align-items-center mb-4">
-                    <div class="me-3 position-relative">
-                      <img src="/uploads/" style="height: 96px; width: 96px;"
-                        class="img-sm rounded border" />
-                    </div>
-                    <div class="">
-                      <a href="#" class="nav-link">
-                       <br />
-
-                      </a>
-                      <div class="price text-muted">Total:₹
-                      
-                          
-                        </div>
-                    </div>
-                  </div>
-              </div>
-            </div>
-            <!-- items in cart -->
-
-            <!-- payment option -->
-            <div class="d-flex col-md-8 border mb-1 bg-white p-2 d-flex flex-column">
-              <form action="" data-id="" class="payment" novalidate>
-                <h5 class="form-label form-fontSize" style="font-size: 0.9rem;">Payment Option</h5>
-                <div class="ms-2">
-                  <div class="d-flex-align-items-center ">
-                  
-                    
-                    <div class="card-body ">
-                      <i class="bi bi-wallet"></i>
-                      <span>Balace: ₹</span><br>
-                      <i class="text-muted"></i>
-                    </div>
-                    <input type="radio" name="PaymentOption" id="wallet" autocomplete="off"
-                      value="wallet"  >
-                    <label for="wallet">wallet</label>
-                  </div>
-                  <div class="d-flex-align-items-center">
-                    <input type="radio" name="PaymentOption" id="onlinePayment" autocomplete="off"
-                      value="onlinePayment"  >
-                    <label for="onlinePayment">Online Payment</label>
-                  </div>
-                  <div class="d-flex-align-items-center">
-                    <input type="radio" name="PaymentOption" id="cashOnDelivery" autocomplete="off"
-                      value="cashOnDelivery">
-                    <label for="cashOnDelivery">Cash on Delivery</label>
-                  </div>
-                </div>
-                <small class="text-danger"></small>
-                <div class="d-flex justify-content-end">
-                  <input type="submit" class="btn btn-dark m-2" style="font-size: 0.6rem;" value="submit">
-                </div>
-
+  <!-- <section class="container-fluid my-3">
+    <div class="row">
+      <aside class="col-md-3 p-2 bg-light-subtle">
+        <div>
+          <ul class="flex-column d-flex ">
+            <li>
+              <h4>Your account</h4>
+            </li>
+            <li class="">
+              <a href="/profile">
+                <span class="text ">Profile</span>
+              </a>
+            </li>
+            <li>
+              <a href="/address">
+                <span class="text">address</span>
+              </a>
+            </li>
+            <li class="is-active ">
+              <a href="orderHistory">
+                <span class="text">orders</span>
+              </a>
+            </li>
+            <li class="">
+              <a href="/wallet">
+                <span class="text">wallet</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </aside> -->
+      <!-- <div class="mobile-profile-navigaton">
+        <div class="col-12 d-flex container-fluid justify-content-evenly bg-dark mb-3">
+          <a href="/profile">
+            <div class="text-white">Profile</div>
+          </a>
+          <a href="/address">
+            <div class="text-white">address</div>
+          </a>
+          <a href="/orderHistory">
+            <div class="text-white is-activeMobile">orders</div>
+          </a>
+          <a href="/wallet">
+            <div class="text-white">wallet</div>
+          </a>
+        </div>
+      </div> -->
+<!-- 
+      <div class="col-md-9 cart-container">
+        <div class="container-fluid">
+          <div class="row mb-2 d-flex justify-content-start">
+            <div class="col-6 col-md-4 p-0">
+              <form action="/orderHistory" method="get">
+                <input type="text" name="search" id="searchInput" value="" class="form-control rounded-0"
+                  placeholder="Search...">
               </form>
             </div>
-            <!-- payment option -->
-
+            <div class="category-dropDownList col-3 bg-white">
+              <select class="btn btn-white col-12 text-start" name="status" id="orderStatusDropdown">
+                <option value="" selected>All</option>
+                <option class="text-capitalize" value="placed">placed</option>
+                <option class="text-capitalize" value="pending">pending</option>
+                <option class="text-capitalize" value="shipped">shipped</option>
+                <option class="text-capitalize" value="canceled">canceled</option>
+                <option class="text-capitalize" value="delivered">delivered</option>
+                <option class="text-capitalize" value="returned">returned</option>
+              </select>
+            </div>
           </div>
+        </div>
 
-
-
-          <!-- summary
-          <div class="col-md-3 mt-2"> 
-            <div class="card mb-1 border shadow-0 ">
-              <div class="card-body coupenDiv">
-                <form>
-                  <div class="form-group">
-                    <label class="form-label d-flex justify-content-between"><div>Have coupon?</div><div><button style="font-size: 0.6rem;" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#couponModal">
-                      <i class="bi bi-info-circle"></i>
-                    </button></div></label>
-                    
-                    <div class="input-group ">
-                      <input type="text" class="form-control border" name="code" placeholder="Coupon code">
-                      <button class="btn btn-light border" data-cartId=""
-                        id="coupenCode">Apply</button>
+        <!-- Loop through the orders and display them -->
+        <% if (orders.length > 0) { %> 
+          <% orders.forEach(order => { %>
+            <div class="card mb-3 rounded-0 border p-2">
+              <div class="row">
+                <div class="col-md-6">
+                  <% order.products.forEach(item => { %> 
+                    <div class="row mb-2">
+                      <!-- <div class="col-md-3"> -->
+                        <!-- <a href="/product/" class="card-body"> -->
+                          <!-- <img src="" style="height: 48px; width: 48px;" class="img-sm rounded border" alt="Product Image"> -->
+                        <!-- </a> -->
+                      <!-- </div> -->
+                   <!-- <div class="col-md-9 d-flex align-items-center">
+                        <div>
+                            <span class="d-block text-capitalize order-detail">Name: <%= item.product.name %></span>
+                            <span class="d-block order-detail">Quantity: <%= item.quantity %></span>
+                            <span class="d-block order-detail">Price: $<%= item.product.price %></span>
+                          </div>
+                      </div>
                     </div>
-                    <small class="text-danger"></small>
-                  </div>
-                </form>
-              </div>
-
-              <div class="card shadow-0 border">
-                <div class="card-body p-2 cartSummary">
-                  <div class="d-flex justify-content-between">
-                    
-                    <p class="mb-0">Price </p>
-                    <p class="mb-0">₹
-                    </p>
-                  </div>
-
-                  <div class="d-flex justify-content-between " >
-                    <p class="mb-0">Discount:</p>
-                    <p class="mb-0 text-success discount">0</p>
-                  </div>
-
-                  <div class="d-flex justify-content-between">
-                    <p class="mb-0">Delivery</p>
-                    <p class="mb-0 text-success">Free</p>
-                  </div>
-                  <hr />
-                  <div class="d-flex justify-content-between">
-                    <p class="mb-0 ">Total price:</p>
-                    <p class="mb-0 fw-bold finalPrice" id="cartTotal">₹
-                    </p>
+                  <% }); %>
+                </div>
+                <div class="col-md-4 d-flex align-items-center status">
+                  <span class="me-3 text-dark">Status:</span>
+                  <%= order.status %>
+                </div>
+                <div class="col-md-2 d-flex align-items-center justify-content-end">
+                  <div>
+                    <div class="delivery-status">
+                        <div>
+                            <button class="btn btn-danger btn-sm cancelOrder" data-id="<%= order._id %>" style="font-size: 0.8rem;">Cancel</button>
+                          </div>
+                      <button class="btn btn-dark btn-sm changeOrder" value="<%= order.status %>" data-id="<%= order._id %>" style="font-size: 0.6rem;" disabled><%= order.status %></button>
+                    </div>
                   </div>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-12">
+                    <span class="d-block order-detail">Total: $<%= order.totals.totalprice %></span>
+                    <span class="d-block order-detail">Order Date: <%= order.orderDate %></span>
+                    <span class="d-block order-detail">Order Time: <%= order.orderTime %></span>
+                  <!-- <ul class="address-list">
+                    <li>House Name: <%= order.address.houseName %></li>
+                    <li>Area: <%= order.address.area %></li>
+                    <li>Landmark: <%= order.address.landmark %></li>
+                    <li>City: <%= order.address.city %></li>
+                    <li>State: <%= order.address.state %></li>
+                    <li>Pincode: <%= order.address.pincode %></li>
+                  </ul>   -->
 
+                   </div>
+              </div>
             </div>
-
-          </div> -->
-        </div>
-    </section>
-    <!-- checkout + summary -->
-<!-- 
-  </section>
-
-  <div class="modal modal-sm" id="couponModal" tabindex="-1">
-    <div class="modal-dialog ">
-      <div class="modal-content rounded-0">
-        <div class="modal-header">
-          
-          <button type="button" style="font-size: 0.6rem;" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body "> 
-          <table class="table">
-            <thead>
-              <tr>
-               
-                <th>Coupon Code</th>
-                <th>Discount</th>
-                <th>Expiry Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-            
-              
-            </tbody>
-          </table>  
-        </div>
-       
+          <% }); %>
+        <% } else { %>
+          <div class="text-center">
+            <br>
+            No Orders.
+          </div>
+        <% } %>
       </div>
     </div>
-  </div> -->
-  
+  </section>
 
-
-
-<%-include('../layouts/user/footer')%>
-  <!-- footer -->
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+ <!--- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  <script src="/js/checkout.js"></script>
-  <script src="/js/togglebutton.js"></script>
+  <script src="/js/orderStatus.js"></script>
   <script>
+    const dropDown = document.getElementById('orderStatusDropdown');
+    dropDown.addEventListener('change', function (event) {
+      event.preventDefault();
+      const checkedValues = {};
+      checkedValues.status = dropDown.value;
+      let queryString = new URLSearchParams(checkedValues).toString();
+      window.location.href = '/orderHistory?' + queryString;
+    });
+  </script>
+</body>
+
+</html> -->

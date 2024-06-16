@@ -129,7 +129,7 @@
                     <a class="list-group-item list-group-item-action active" data-toggle="list" href="#account-general">Account Details</a>
                     <a class="list-group-item list-group-item-action" data-toggle="list" href="#account-change-password">Change password</a>
                     <a class="list-group-item list-group-item-action" data-toggle="list" href="#account-info">Address</a>
-                    <a class="list-group-item list-group-item-action" href="/user/userOrder">My Orders</a>
+                    <a class="list-group-item list-group-item-action" href="orderHistory">My Orders</a>
                     <a class="list-group-item list-group-item-action" href="/coupon">Coupons</a>
                     <a class="list-group-item list-group-item-action" href="/walletHistory">Wallet History</a>
                     <a class="list-group-item list-group-item-action" href="/user/logout">Logout</a>
@@ -210,55 +210,61 @@
 
                          <!-----------------------Address-Code------------------>
 
-                    <div class="tab-pane fade" id="account-info">
-                        <div class="card-body pb-2">
-                            <form id="address-form" action="" method="post" style="display: none;">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Mobile</label>
-                                            <input type="text" class="form-control" name="mobile" placeholder="Mobile">
+                         <div class="tab-pane fade" id="account-info">
+                            <div class="card-body pb-2">
+                                <form id="address-form" action="" method="post" style="display: none;">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label">Mobile</label>
+                                                <input type="text" class="form-control" name="mobile" placeholder="Mobile">
+                                                <div class="invalid-feedback" id="mobile-error"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Pincode</label>
+                                                <input type="text" class="form-control" name="pincode" placeholder="Pincode">
+                                                <div class="invalid-feedback" id="pincode-error"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">House Name</label>
+                                                <input type="text" class="form-control" name="houseName" placeholder="House Name">
+                                                <div class="invalid-feedback" id="houseName-error"></div>
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="form-label">Pincode</label>
-                                            <input type="text" class="form-control" name="pincode" placeholder="Pincode">
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">House Name</label>
-                                            <input type="text" class="form-control" name="houseName" placeholder="House Name">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label">Area</label>
+                                                <input type="text" class="form-control" name="area" placeholder="Area">
+                                                <div class="invalid-feedback" id="area-error"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">City</label>
+                                                <input type="text" class="form-control" name="city" placeholder="City">
+                                                <div class="invalid-feedback" id="city-error"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">State</label>
+                                                <input type="text" class="form-control" name="state" placeholder="State">
+                                                <div class="invalid-feedback" id="state-error"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Landmark</label>
+                                                <input type="text" class="form-control" name="landmark" placeholder="Landmark">
+                                                <div class="invalid-feedback" id="landmark-error"></div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Area</label>
-                                            <input type="text" class="form-control" name="area" placeholder="Area">
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">City</label>
-                                            <input type="text" class="form-control" name="city" placeholder="City">
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">State</label>
-                                            <input type="text" class="form-control" name="state" placeholder="State">
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">Landmark</label>
-                                            <input type="text" class="form-control" name="landmark" placeholder="Landmark">
-                                        </div>
+                                    <div class="text-center mt-3">
+                                        <button type="submit" class="btn" style="background-color: #014122; color: #fff;">Save changes</button>
                                     </div>
-                                </div>
-                                <div class="text-center mt-3">
-                                    <button type="submit" class="btn" style="background-color: #014122; color: #fff;">Save changes</button>&nbsp;
-                                </div>
-                            </form>
-                            <div id="address-list">
-                                <!-- % addresses.forEach(function(address, index) { %> -->
+                                </form>
+                        
+                                <div id="address-list"></div>
+                            </div>
+                        </div>
+                         <!-- % addresses.forEach(function(address, index) { %> -->
 
                                
-                                    
-
-
-
 
                                     <!-- <h2>User Profile</h2> -->
                                     <div class="text-center mt-3">
@@ -285,11 +291,6 @@
                                     <% } else { %>
                                       <p>No addresses found.</p>
                                     <% } %>
-
-
-
-
-
 
                             </div>
                             
@@ -389,91 +390,153 @@ $(".toggle-password").click(function(){
 // <---------------------change password code end above--------------->
 
 
-//<----------------------------- Address request code----------------------------->
 
 
-
-// address validation code
-
+//<----------------------------- Address validation----------------------------->
 
 
+$(document).ready(function() {
+    // Show the address form when the add address button is clicked
+    $('#add-address-btn').click(function() {
+        $('#address-form').show();
+    });
 
+    // handle form submission
+    $('#address-form').submit(function(event) {
+        event.preventDefault();
 
+        // Clear previous errors
+        $('input').removeClass('is-invalid');
+        $('.invalid-feedback').text('');
 
-$(document).ready(function(){
-    $('#add-address-btn').click(function(){
-        $('#address-form').show()
-    })
+        // Fetch form data
+        var mobile = $('input[name="mobile"]').val().trim();
+        var pincode = $('input[name="pincode"]').val().trim();
+        var houseName = $('input[name="houseName"]').val().trim();
+        var area = $('input[name="area"]').val().trim();
+        var city = $('input[name="city"]').val().trim();
+        var state = $('input[name="state"]').val().trim();
+        var landmark = $('input[name="landmark"]').val().trim();
 
+        // validate mobile number
+        if (mobile.length !== 10 || !/^\d+$/.test(mobile)) {
+            showInlineError('mobile', 'Mobile number must be exactly 10 digits');
+            return;
+        }
 
-    // handle form submisssion
-    $('#address-form').submit(function(event){
-        event.preventDefault()
-        var formData=$(this).serialize()
-        console.log("form data serialized",formData)
+        // validate pincode
+        if (pincode.length !== 6 || !/^\d+$/.test(pincode)) {
+            showInlineError('pincode', 'Pincode must be exactly 6 digits');
+            return;
+        }
 
-        $.post('/save-address',formData,function(response){
-            console.log("response",response)
-            $('#address-form')[0].reset()
-            location.replace()
-        })
-        })
-    })
-    function addAddress() {
-    
-    document.getElementById("address-success-message").style.display = "inline";
-}
-    
-    loadAddressList();
-    
+        // vheck for empty fields
+        if (houseName === '') {
+            showInlineError('houseName', 'House Name is required');
+            return;
+        }
+        if (area === '') {
+            showInlineError('area', 'Area is required');
+            return;
+        }
+        if (city === '') {
+            showInlineError('city', 'City is required');
+            return;
+        }
+        if (state === '') {
+            showInlineError('state', 'State is required');
+            return;
+        }
+        if (landmark === '') {
+            showInlineError('landmark', 'Landmark is required');
+            return;
+        }
+
+        // if all validations pass, proceed with form submission
+
+        var formData = $(this).serialize();
+        $.post('/save-address', formData, function(response) {
+            showAlert('Address saved successfully', 'success');
+            $('#address-form')[0].reset();
+            $('#address-form').hide();
+            loadAddressList();
+        }).fail(function(xhr, status, error) {
+            showAlert('Error saving address: ' + xhr.responseJSON.error);
+        });
+    });
+
+    // Function to display alert message
+    function showAlert(message, type = 'danger') {
+        $('#alert-area').html('<div class="alert alert-' + type + '" role="alert">' + message + '</div>');
+        setTimeout(function() {
+            $('#alert-area').empty();
+        }, 3000);
+    }
+
+    // Function to show inline error message
+    function showInlineError(inputName, message) {
+        $('input[name="' + inputName + '"]').addClass('is-invalid');
+        $('#' + inputName + '-error').text(message);
+    }
+
+    // Function to load the address list (if necessary)
     function loadAddressList() {
         $.get('/get-addresses', function(addresses) {
             var addressListHtml = '';
-            addresses.forEach(function(address) {
-                addressListHtml += '<div class="card-body pb-2">';
-                addressListHtml += '<p>Mobile: ' + address.mobile + '</p>';
-                addressListHtml += '<p>Email: ' + address.email + '</p>';
-                addressListHtml += '<div class="text-right mt-3">';
-                addressListHtml += '<button type="button" class="btn btn-primary btn-edit" data-id="' + address._id + '">Edit</button>';
-                addressListHtml += '<button type="button" class="btn btn-danger btn-delete" data-id="' + address._id + '">Delete</button>';
+            addresses.forEach(function(address, index) {
+                addressListHtml += '<div class="address-container">';
+                addressListHtml += '<div class="address-heading">Address ' + (index + 1) + '</div>';
+                addressListHtml += '<p><strong>Mobile:</strong> ' + address.mobile + '</p>';
+                addressListHtml += '<p><strong>Pincode:</strong> ' + address.pincode + '</p>';
+                addressListHtml += '<p><strong>House Name:</strong> ' + address.houseName + '</p>';
+                addressListHtml += '<p><strong>Area:</strong> ' + address.area + '</p>';
+                addressListHtml += '<p><strong>City:</strong> ' + address.city + '</p>';
+                addressListHtml += '<p><strong>State:</strong> ' + address.state + '</p>';
+                addressListHtml += '<p><strong>Landmark:</strong> ' + address.landmark + '</p>';
+                addressListHtml += '<div class="address-buttons">';
+                addressListHtml += '<a href="/editAddress/' + address._id + '" class="btn btn-success btn-edit" data-id="' + address._id + '">Edit</a>';
+                addressListHtml += '<a class="btn btn-delete btn-danger" data-id="' + address._id + '" href="#">Delete</a>';
                 addressListHtml += '</div>';
                 addressListHtml += '</div>';
             });
             $('#address-list').html(addressListHtml);
         });
     }
-    
 
+    // Load the address list on page load
+});
 
+$(document).ready(function() {
+    // Handle click event for delete button
+    $('.btn-delete').on('click', function(event) {
+        event.preventDefault(); 
 
+        var addressId = $(this).data('id');
+        console.log('Deleting address with ID:', addressId); 
 
+        var confirmation = confirm('Are you sure you want to delete this address?');
 
-// handle delete button click
-$('#address-list').on('click','.btn-delete',function(){
-    var addressId = $(this).data('id');
-    alert("Are you sure to delete this address")
-    $.ajax({
-        url: '/delete-address/' + addressId,
-        type: 'DELETE',
-        success: function(response) {
-            loadAddressList();
-        },
-        
-        error: function(xhr, status, error) {
-            console.error('Error deleting address:', error);
+        if (confirmation) {
+            $.ajax({
+                type: 'DELETE',
+                url: '/delete-address/' + addressId,
+                success: function(response) {
+                    console.log('Address deleted successfully:', response); 
+                    window.location.reload(); 
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error deleting address:', error);
+                    alert('Error deleting address. Please try again later.'); 
+                }
+            });
         }
     });
 });
-
-// handle cancel button click
-
-$('#btn-cancel').click(function(){
-    $('#address-form')[0].reset()
-    $('#btn-update-address').text('Add Address').attr('id','btn-save-address')
-
-})
+loadAddressList();
 
 
+
+    // Initially load the address list
 
 // handle edit button
 
@@ -509,6 +572,7 @@ $('#btn-cancel').click(function(){
 </script>
 
 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
 <%-include('../layouts/user/footer')%>
 

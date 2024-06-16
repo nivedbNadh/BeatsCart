@@ -7,6 +7,9 @@
   <title>BeatsCart</title>
   <link rel="icon" href="/image/android-chrome-512x512.png" type="image/png" alt="Site Icon">
   <style>
+
+
+
     table td {
       font-size: 0.6rem;
     }
@@ -183,59 +186,77 @@
 
 
 
-
 <script>
+
   document.addEventListener('DOMContentLoaded', function() {
-      const orderButton = document.getElementById('orderButton');
-  
-      orderButton.addEventListener('click', function() {
-          const selectedAddress = document.querySelector('input[name="address"]:checked');
-          const selectedPayment = document.querySelector('input[name="PaymentOption"]:checked');
-  
-          if (!selectedAddress) {
-              alert('Please select an address.');
-              return;
-          }
-  
-          if (!selectedPayment) {
-              alert('Please select a payment method.');
-              return;
-          }
-  
-          const orderData = {
-              paymentMethod: selectedPayment.value,
-              address: selectedAddress.value,
-          };
-  
-          console.log('requestData', orderData);
-  
-          placeOrder(orderData);
-      });
+    const orderButton = document.getElementById('orderButton');
+
+  orderButton.addEventListener('click', function() {
+      const selectedAddress = document.querySelector('input[name="address"]:checked');
+      const selectedPayment = document.querySelector('input[name="PaymentOption"]:checked');
+
+      if (!selectedAddress) {
+          alert('Please select an address.');
+          return;
+      }
+
+      if (!selectedPayment) {
+          alert('Please select a payment method.');
+          return;
+      }
+
+      const orderData = {
+          paymentMethod: selectedPayment.value,
+          address: selectedAddress.value,
+          products: [
+              // Assuming this is dynamically generated from cart items
+              // <% cartItems.forEach(item => { %>
+              //     {
+              //         product: "<%= item._id %>",
+              //         quantity: <%= item.quantity %>
+              //     },
+              // <% }); %>
+          ]
+      };
+
+      console.log('requestData', orderData);
+
+      placeOrder(orderData);
   });
-  
-  // Function to place order
-  function placeOrder(orderData) {
-      fetch('/placeorder', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(orderData)
-      })
-      .then(response => {
-          if (response.ok) {
-              window.location.href = '/successorder';
-          } else {
-              return response.json().then(data => {
-                  alert('Failed to place order. Please try again.');
-                  console.error('Response error data:', data);
+});
+
+function placeOrder(orderData) {
+  fetch('/placeorder', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(orderData)
+  })
+  .then(response => {
+      if (response.ok) {
+        return response.json() // used to parse the json data
+      } else {
+          return response.json().then(data => {
+              alert('Failed to place order. Please try again.');
+              throw new Error(data.message || 'Failed to place order')
               });
-          }
-      })
-      .catch(error => {
-          console.error('Error:', error);
-          alert('Failed to place order. Please try again later.');
-      });
-  }
-  </script>
+            }
+        })
+
+  .then(data=>{
+    if(data.success) {
+      window.location.href='/successorder'
+    } else{
+      alert('Failed to place order .please try again')
+    }
+  })
   
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Failed to place order. Please try again later.');
+    });
+    }
+  
+  
+  </script>

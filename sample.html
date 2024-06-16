@@ -1,745 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <!-- Import logos -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <!-- Import fonts -->
-  <link href='https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
-  <!-- Import jquery -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <!-- Import Css  -->
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <!-- Import JavaScript  -->
-  <style>
-    /* Checkout Page CSS*/
-
-main {
-  z-index: -1000;
-}
-
-.checkoutMain {
-  background-color: #f0f0f1;
-  font-family: "PT Sans";
-  padding: 20px 50px;
-}
-
-.checkoutMain h1{
-  color: maroon;
-}
-
-.checkoutContent {
-  display: flex;
-  margin: 50px 20px;
-  min-width: 600px;
-}
-
-.basketMain {
-  background-color:white;
-  border-style: black;
-  width: 55%;
-  padding: 0px 30px;
-}
-
-.custInfo {
-  width: 45%;
-  background-color: #1d2327;
-  padding: 0px 30px;
-  position: relative;
-  min-height: 650px;
-}
-
-.basketList {
-  list-style-type: none;
-}
-
-.basketListItem {
-  display: flex;
-  margin: 40px 0px 50px 10px;
-  --background-color: red;
-}
-
-.basketItemDetails {
-  padding: 10px;
-  margin: 0px 0px 0px 40px;
-  list-style-type: none;
-  width: 80%;
-}
-
-.basketItemName {
-  color: maroon;
-  font-size: 15pt;
-}
-
-.itemPic {
-  width: 20%;
-  height: 20%;
-  margin: 20px 0px 0px 0px;
-  min-width: 100px;
-}
-
-.price {
-  margin: -50px 40px 0px 0px;
-  float: right;
-  font-size: 15pt;
-}
-
-.itemDetail {
-  margin: 2px 0px;
-}
-
-.detailText {
-  color: white;
-}
-
-.bin {
-  margin: 0px 0px 0px -65px;
-  padding: 35px 40px 35px 35px;
-}
-
-.inputList {
-  list-style-type: none;
-  padding: 0px;
-  margin: 0px;
-}
-
-.inputDiv {
-  --background-color: red;
-  position: relative;
-}
-
-.inputBox {
-  margin: 5px 0px 10px 0px;
-  padding: 5px 0px;
-  width: 100%;
-}
-
-.inputListLabel {
-  color: lightGray;
-}
-
-#termsAgree {
-  position: absolute;
-  left: 20px;
-  bottom: -10px;
-  font-size: 12pt;
-  padding: 10px;
-}
-
-#completeCheckout {
-  background-color: maroon;
-  font-size: 13pt;
-  padding: 8px;
-  border: none;
-  position: absolute;
-  right: 20px;
-  bottom: -10px
-}
-
-#completeButtons {
-  position: absolute;
-  bottom: 30px;
-  right: 30px;
-  width: 100%;
-  background-color: red;
-  margin: 0px -30px 0px 0px;
-  display:flex;
-}
-
-@media (max-width: 1250px) {
-  
-  .checkoutContent {
-    flex-direction: column;
-  }
-  
-  .basketMain {
-    width: 90%
-  }
-  
-  .custInfo {
-    width: 90%;
-  }
-  
-
-  
-  
-  @media (max-width: 700px) {
-   
-    .basketListItem {
-      flex-direction:column;
-      margin: 75px 0px; 
-      padding: 0px;
-    }
-    
-    .price {
-      float: left;
-      margin: 0px;
-    }
-    
-    .checkoutContent {
-      min-width: 350px;
-    }
-    
-    .itemPic {
-      margin: 0px 0px 0px 50px;
-    }
-    
-    .bin {
-      margin: 0px 0px -100px -50px;
-    }
-    
-    #completeButtons {
-      flex-direction:column;
-    }
-    
-    #termsAgree {
-      margin: 60px 0px;
-    }
-    
-    .custInfo {
-      min-height: 680px;
-    }
-    
-  }
-  
-}
-
-/*Footer CSS*/
-
-footer{
-/*   position:fixed;
-  bottom:0;
-  left:0; */
-  width:100%; 
-  height: 200px;
-  background-color: #1d2327;
-  display:flex; 
-  flex-direction:row;
-  justify-content: space-evenly;
-}
-
-footer div{
-  flex:1;
-  text-align:center;
-  color:#d63638;
-  padding:20px 0px;
-  font-family:sans-serif;
-}
-
-footer ul{
-/*   padding:30px 110px; */
-  text-align:center;
-}
-footer li{
-/*   padding:5px 110px; */
-  justify-content:center;
-}
-footer {
-  position: relative;
-}
-.copyright{
-  text-align:left;
-/*   padding: 10px 30px; */
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  padding: 1em;
-  color:grey;
-  font-size:13px;
-}
-.about, .contact, .loc, footer li{
-  padding-bottom:15px;
-}
-footer p{
-  font-size:1.25em;
-}
-.sm{
-  display:flex;
-  width:100%;
-  justify-content:center;
-  margin-right:10px;
-  padding-bottom:30px;
-
-}
-footer i{
-  margin-left:50px;
-  font-size:40px;
-  color:black;
-}
-.event{
-  display:flex;
-  flex-direction:column;
-  border-style: ridge;
-  border-radius:0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  box-shadow:5px 5px 5px #D3D3D3;
-  margin:10px;
-  width: 280px;
-  flex-shrink: 0;
-  height: 100%;
-  transform:translate(-50%);
-  animation: event 9s linear infinite;
-}
-.image{
-  width:auto;
-}
-.event i{
-  font-size:20px;
-  color:#AA0000;
-  margin-left:auto;
-  
-}
-.title{
-  font-size:20px;
-  font-weight:bold;
-}
-
-.book{
-  color:#AA0000;
-}
-.title,.book,.date{
-  font-family:sans-serif; 
-  padding-bottom:10px;
-  text-align:center;
-}
-.eventspanel{
-  padding:30px 10px 50px 1010px;
-  display:flex;
-  justify-content:center;
-  width: 800px;
-  overflow-x: auto;
-}
-footer h1{
-  font-family:sans-serif;
-  color:#AA0000;
-  padding-top:10px;
-  padding-left:40px;
-}
-@keyframes event{
-  100%{
-    transform: translateX(-400px);
-  }
-}
-.car{
-  width:400px;
-  left:0%;
-  bottom:-15px;
-  transform:translate(0%);
-  position:absolute;
-  z-index:2;
-}
-.car img{
- 
-  width:90px;
-  animation: car 30s linear infinite;
-}
-@keyframes car{
-  100%{
-    transform:translateX(1500px);
-  }
-}
-
-
-
- 
-
-  
-  
-/* Nav Bar CSS */
-
-  
-  body{
-    background: #f0f0f1;
-    user-select: none;
-    margin: 0;
-    padding: 50px 0px;
-  }
-  
-  .navbar{
-    width: 100%;
-    height: 50px;
-    background-color: #1d2327;
-    position:fixed;
-    top:0px;
-    z-index: 1000;
-  
-  }
-  
-  nav{
-    width: 100%;
-    padding: auto;
-    position:fixed;
- 
-  }
-  
-  nav li, footer li{
-    color: white;
-    justify-content: space-between;
-    display: flex;
-    flex: 1;
-    position: relative;
-  }
-  
-  nav li:hover{
-    color: red;
-  }
-
-  footer li:hover{
-    color: red;
-  }
-  
-  .logo{
-  position: relative;
-  float: left;
-  height: 25px;
-  color: white;
-  margin: 12px 10px 15px 10px;
-  width: 250px;
-  cursor: pointer;
-  }
-  
-  .options{
-    float: left;
-    position: relative;
-    width: 40px;
-    margin: 12px 0px 0px 0px;
-    cursor: pointer;
-    font-family: "PT Sans";
-    margin-left: 30px;
-    font-size: 13pt;
-  }
-  
-  .pipe{
-    float: right;
-    margin: 14px 15px 0px 0px;
-  
-  }
-  
-  .account{
-    float: right;
-    width: 60px;
-    margin: 15px 2px;
-    cursor: pointer;
-    font-family: "PT Sans";
-    font-size: 12pt;
-  }
-  
-  .UserIcon{
-    float: right;
-    margin: 16px 20px 0px 0px
-  }
-  
-  .ShoppingCart{
-    float: right;
-    margin : 16px 20px 0px 0px;
-    cursor: pointer;
-  }
-  
-  .checkout{
-    background: grey;
-    position: absolute;
-    top: 35px;
-    right: -595%;
-    width: 250px;
-    height: 290px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    border: 2px solid Maroon;
-    display: none;
-  }
-  
-  .checkout input[value="Checkout"]{
-    background: green;
-    color:white;
-    text-align: center;
-    padding: 10px;
-    text-decoration: none;
-    display: block;
-    border-radius: 5px;
-    border: 5px;
-    font-size: 16px;
-    margin: 200px 0px 5px 50px;
-    width: 150px
-  }
-  
-  .checkout input[value="View Order"]{
-    background: maroon;
-    color:white;
-    text-align: center;
-    padding: 10px;
-    text-decoration: none;
-    display: block;
-    border-radius: 5px;
-    border: 5px;
-    font-size: 16px;
-    margin: 10px 0px 0px 50px;
-    width: 150px;
-  }
-  
-  .checkout:hover{
-    color: black;
-  }
-  
-  .search{
-   float: right;
-   cursor: pointer;
-   width: 20px;
-   margin: 16px 10px 0px 0px;
-  }
-  
-  .search-box{
-    background: grey;
-    position: absolute;
-    top: 40px;
-    right: -75%;
-    width: 320px;
-    margin: 0;
-    height: 60px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    border: 2px solid maroon;
-    display: none;
-    z-index: 100;
-  }
-  
-  .search-box:before{
-    content: "";
-    position: absolute;
-    top: -32px;
-    right: 14px;
-    border-left: 12px solid transparent;
-    border-right: 12px solid transparent;
-    border-top: 15px solid transparent;
-    border-bottom: 15px solid maroon;
-  }
-  
-  .search-box input[type="text"]{
-    width: 200px;
-    padding: 5px 0px;
-    margin-left: 23px;
-    margin: 13px;
-    border: 2px solid maroon;
-    outline: none;
-  }
-  
-  .search-box input[type="button"]{
-    width: 80px;
-    padding: 5px 0px;
-    background: maroon;
-    border-radius: 4px;
-    cursor: pointer;
-    color: #fff;
-    transition-duration: 0.2s;
-    outline: none;
-  }
-  
-  .search-box input[type="button"]:hover{
-    color: black;
-  }
-
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order History</title>
+<link rel="stylesheet" href="styles.css">
 </head>
-
-
-
-
-
 <body>
-
-
-
-
-        <!-- Nav Bar -->
-  <div class="navbar">
-    <nav>
-      <li class="logo"><img src="https://i.imgur.com/qeAgBRP.png" alt="Wagon's Roll Logo"></li>
-      <li class="options">Rent</li>
-      <li class="options">Events</li>
-      <li class="account">Register</li>
-      <li class= "pipe">|</li>
-      <li class="account">Log In </li>
-      <li class="UserIcon">
-        <i class="fa fa-user" aria-hidden="true"></i>
-      </li>
-      <li class ="ShoppingCart">
-        <i class="fa fa-shopping-cart" aria-hidden= "true"></i>
-        <div class = "checkout">
-          <input type="button" value = "Checkout">
-          <input type="button" value = "View Order">
-        </div>
-      </li>
-      <li class="search">
-        <i class="fa fa-search" aria-hidden="true"></i>
-        <div class="search-box">
-          <input type="text">
-          <input type="button" value="Search">
-        </div>
-      </li>
-    </nav>
+  <div id="orders">
+    <!-- Orders will be dynamically inserted here -->
   </div>
-
-
-
-<!-- Checkout Page -->
-
-<main>
-  <div class="checkoutMain">
-    <h1>
-        Checkout
-    </h1>
-    <div class="checkoutContent">
-      <div class="basketMain">
-        <h2>
-          Basket
-        </h2>
-        <ul class="basketList">
-
-
-          <div class="basketListItem">
-            <div class="bin">
-              <i class="fa fa-trash" aria-hidden="true"></i>
-            </div>
-            <img class="itemPic" src="https://www.pngall.com/wp-content/uploads/8/White-SUV-PNG-Image.png">
-            <ul class="basketItemDetails"
-                <li><b class="basketItemName">Item Name Here</b></li>
-              <li><p class="itemDetail">Capacity</p></li>
-              <li><p class="itemDetail">Booking Date</p></li>
-              <li><b class="price">Price</b></li>
-            </ul>
-          </div>
-      
-      <div class="basketListItem">
-            <div class="bin">
-              <i class="fa fa-trash" aria-hidden="true"></i>
-            </div>
-            <img class="itemPic" src="https://www.pngall.com/wp-content/uploads/8/White-SUV-PNG-Image.png">
-            <ul class="basketItemDetails"
-                <li><b class="basketItemName">Item Name Here</b></li>
-              <li><p class="itemDetail">Capacity</p></li>
-              <li><p class="itemDetail">Booking Date</p></li>
-              <li><b class="price">Price</b></li>
-            </ul>
-          </div>
-  
-  <div class="basketListItem">
-            <div class="bin">
-              <i class="fa fa-trash" aria-hidden="true"></i>
-            </div>
-            <img class="itemPic" src="https://www.pngall.com/wp-content/uploads/8/White-SUV-PNG-Image.png">
-            <ul class="basketItemDetails"
-                <li><b class="basketItemName">Item Name Here</b></li>
-              <li><p class="itemDetail">Capacity</p></li>
-              <li><p class="itemDetail">Booking Date</p></li>
-              <li><b class="price">Price</b></li>
-            </ul>
-          </div>
-
-<div class="basketListItem">
-            <div class="bin">
-              <i class="fa fa-trash" aria-hidden="true"></i>
-            </div>
-            <img class="itemPic" src="https://www.pngall.com/wp-content/uploads/8/White-SUV-PNG-Image.png">
-            <ul class="basketItemDetails"
-                <li><b class="basketItemName">Item Name Here</b></li>
-              <li><p class="itemDetail">Capacity</p></li>
-              <li><p class="itemDetail">Booking Date</p></li>
-              <li><b class="price">Price</b></li>
-            </ul>
-          </div>
-      
-        </ul>
+  <div id="no-orders" class="hidden">
+    <div class="no-orders-content">
+      <div class="icon-container">
+        <svg viewBox="0 0 24 24" class="icon">
+          <circle cx="12" cy="12" r="10"></circle>
+          <text x="50%" y="50%" text-anchor="middle" alignment-baseline="middle" font-size="10px" fill="#ffffff">!</text>
+        </svg>
       </div>
-      <div class="custInfo">
-        <h2 class="detailText">
-          Payment Details
-        </h2>
-        <p class="detailText">Please check that your details below are correct:</p>
-        <div class="inputDiv">
-
-          <form class="inputList">
-            
-            <label class="inputListLabel" for="firstName">First Name:</label><br>
-            <input type="text" class="inputBox" name="firstName"><br>
-            
-            <label class="inputListLabel" for="LastName">Last Name:</label><br>
-            <input type="text" class="inputBox" name="lastName"><br>
-                
-            <label class="inputListLabel" for="email">Email Address:</label><br>
-            <input type="text" class="inputBox" name="email"><br>
-            
-            <label class="inputListLabel" for="contactNumber">Contact Number:</label><br>
-            <input type="text" class="inputBox" name="contactNumber"><br>
-            
-            <label class="inputListLabel" for="LastName">Card Number:</label><br>
-            <input type="text" class="inputBox" name="lastName"><br>
-                
-            <label class="inputListLabel" for="expiryDate">Expiry Date:</label><br>
-            <input type="text" class="inputBox" name="expiryDate"><br>
-            
-            <label class="inputListLabel" for="nameOnCard">Name on Card:</label><br>
-            <input type="text" class="inputBox" name="nameOnCard"><br>
-            
-          </form>
-        </div>
-        <div id="completeButtons">
-          <div id="termsAgree">
-            <input type="checkbox" name="termsAgreeBox">
-            <label for="termsAgreeBox" class="detailText">I agree to the terms and conditions</label>
-          </div>
-          <input id="completeCheckout" class="detailText" type="button" value="Complete Checkout">
-        </div>
-      </div>
+      <p>No orders found.</p>
     </div>
   </div>
-</main>
 
-
-
-
-<!-- Footer -->
-
-<footer>
-  <div class="about">
-    <p class="about wagons">About Wagons Roll</p>
-    <ul>
-      <li><a href="">Our business</a></li>
-      <li><a href="">Terms and condition</a></li>
-    </ul>
-    <p class="copyright">Copyright © 2022 Wagons Roll</p>
-        <div class="car">
-        <img src="https://www.pngall.com/wp-content/uploads/8/White-SUV-PNG-Image.png">
-        </div>
-  </div>
-  <div class="contact">
-    <p class="contact us">Contact us</p>
-    <ul>
-      <li>Telephone: +4476892347</li>
-      <li>Email: wagonsroll@yahoo.com</li>
-    </ul>
-  </div>
-  <div class=location>
-    <p class="loc">Top cities</p>
-    <ul>
-      <li>London</li>
-      <li>Manchester</li>
-      <li>Brighton</li>
-      <li>Leeds</li>
-    </ul>
-  </div>
-</footer>
-
-
-
+  <script src="script.js"></script>
 </body>
+</html>
+
+
+<style>
+ body {
+  font-family: 'Arial', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f2f2f2;
+}
+
+#orders {
+  /* Styles for your orders container */
+}
+
+#no-orders {
+  text-align: center;
+  animation: fadeIn 0.5s ease both;
+}
+
+.no-orders-content {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  background-color: #ff5733;
+  border-radius: 50%;
+  margin: 0 auto 20px auto;
+}
+
+.icon {
+  width: 50px;
+  height: 50px;
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+</style>
 
 <script>
-  const box = document.querySelector('.search-box');	
-		$(".fa-search").click(function(){
-    		box.classList.toggle('open');
-    });
+ // Simulate checking for orders
+const orders = []; // Replace with actual logic to fetch orders
 
-	$(document).ready(function(){
-		$(".fa-shopping-cart").click(function(){
-    		$(".checkout").toggle();
-    });
-});
+// Check if there are orders
+if (orders.length === 0) {
+  document.getElementById('no-orders').classList.remove('hidden');
+} else {
+  document.getElementById('orders').innerHTML = '<p>Your order history:</p>'; // Example of adding orders dynamically
+}
 
-const menu = document.querySelector('.nav-bar');	
-		$(".menu-toggle").click(function(){
-    		menu.classList.toggle('active');
-    });
+
 </script>

@@ -41,7 +41,7 @@
                                         <button class="badge" onclick="getProductDetails('<%= data._id %>')">Buy Now</button>
                                         <div class="product-card">
                                             
-                                         <div class="product-tumb">
+                                         <div class="product-tumb"> 
                                             <img src="/uploads/<%= data.image[0]%>" alt="Headphone">
                                         </div>
                                             <!-- <h1>hello</h1> -->
@@ -68,22 +68,23 @@
                                             font-family: 'Roboto', sans-serif;
                                             margin: 0;
                                             padding: 0;
+                                            background-color: #ecfdff;
                                         }
                                     
                                         .product-card {
-                                            width: 250px; /* Reduced width */
-                                            height: 350px; /* Reduced height */
+                                            width: 250px; 
+                                            height: 350px; 
                                             position: relative;
                                             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                                             margin: 50px auto;
                                             background: #fff;
                                             border-radius: 10px;
                                             overflow: hidden;
-                                            transition: transform 0.3s ease; /* Added transition for hover effect */
+                                            transition: transform 0.3s ease; 
                                         }
                                     
                                         .product-card:hover {
-                                            transform: translateY(-5px); /* Move the card up slightly on hover */
+                                            transform: translateY(-5px);
                                         }
                                     
                                         .badge {
@@ -179,8 +180,8 @@
                                     }
 
                                     .breadcrumb .breadcrumb-item {
-                                        font-size: 16px; /* Adjust font size */
-                                        color: #555; /* Adjust text color */
+                                        font-size: 16px; 
+                                        color: #555; 
                                     }
 
                                     .breadcrumb .breadcrumb-item a {
@@ -190,11 +191,11 @@
                                     }
 
                                     .breadcrumb .breadcrumb-item a:hover {
-                                        color: #0056b3; /* Change link color on hover */
+                                        color: #0056b3; 
                                     }
 
                                     .breadcrumb .breadcrumb-item.active {
-                                        color: #000; /* Adjust active item text color */
+                                        color: #000; 
                                     }
 
                                                                     </style>

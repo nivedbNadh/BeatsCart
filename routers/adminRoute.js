@@ -38,6 +38,12 @@ adminRoute.post('/updateproduct/:id',adminAuth, upload.array('image'), adminCont
 
 
 
+// order management 
+
+adminRoute.get('/orderMange',adminAuth,adminController.loadAdminManage)
+adminRoute.post('/updateOrderStatus',adminAuth,adminController.updateOrderStatus)
+
+
 module.exports=adminRoute
 
 

@@ -18,7 +18,7 @@ const addToCart = async (req, res) => {
         let cart = await Cart.findOne({ userId });
 
         if (!cart) {
-            cart = new Cart({ userId, products: [] });
+            cart = new Cart({ userId, products: [],subtotal:0,total:0,tax:0 });
         }
 
         const existingProductIndex = cart.products.findIndex(p => p.productId.toString() === productId);
@@ -41,29 +41,41 @@ const addToCart = async (req, res) => {
 const cart = async (req, res) => {
     try {
         const userId = req.session.userId;
-      const user=  req.session.email
-      if(!user) {
-        return res.status(404).json({message:'user not found'})
-      }
+        const user = req.session.email;
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
 
-        const cart = await Cart.findOne({ userId }).populate('products.productId');
-        console.log("cartcartcartcart",cart)
+        let cart = await Cart.findOne({ userId }).populate('products.productId');
+        // console.log("cartcartcartcart", cart);
 
         if (!cart) {
-            return res.status(404).json({ message: 'Cart not found' });
+            cart=new Cart({userId,products:[],totals:{subtotal:0,tax:0,total:0}})
+            await cart.save()
         }
 
         let subtotal = 0;
         cart.products.forEach(product => {
+            product.price = product.productId.price
             subtotal += product.quantity * product.productId.price;
         });
 
-        res.render('cart', { cart, subtotal ,user});
+        const taxRate = 0.1; 
+        const tax = subtotal * taxRate;
+        const total = subtotal + tax;
+
+        cart.totals.subtotal = subtotal;
+        cart.totals.tax = tax;
+        cart.totals.total = total;
+        await cart.save();
+
+        res.render('cart', { cart, subtotal, user });
     } catch (error) {
         console.error('Error in cart:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 
 
 
@@ -116,21 +128,48 @@ const updateCartQuantity=async (req,res) =>{
 
         const productIndex=cart.products.findIndex(P => P.productId.toString() === productId)
 
+        // fetch product from database to check stock quantity
+        const product=await Products.findById(productId)
 
-        if(productIndex === -1) {
-            return res.status(404).json({message: 'Product not found in cart'})
+        if(!product) {
+            return res.status(404).json({message:'Product not found '})
         }
 
-        if(action === 'increment') {
-            cart.products[productIndex].quantity += 1
-        } else if( action === 'decrement') {
-            if(cart.products[productIndex].quantity > 1) {
-                cart.products[productIndex].quantity -= 1
 
+
+
+        if(action=== 'increment') {
+            if(cart.products[productIndex].quantity < product.quantity) {
+                cart.products[productIndex].quantity+=1
+            }else{
+                return res.status(400).json({message:'Cannot increment quantity.stock limit reached '})
+            }
+        } else if(action=== 'decrement') {
+            if(cart.products[productIndex].quantity > 1) {
+                cart.products[productIndex].quantity-=1
             } else{
-                return res.status(400).json({message:'Qantity  cannot be less than 1'})
+                return res.status(400).json({message:'Quantity cannot be less than 1'})
             }
         }
+
+
+
+
+
+        // if(productIndex === -1) {
+        //     return res.status(404).json({message: 'Product not found in cart'})
+        // }
+
+        // if(action === 'increment') {
+        //     cart.products[productIndex].quantity += 1
+        // } else if( action === 'decrement') {
+        //     if(cart.products[productIndex].quantity > 1) {
+        //         cart.products[productIndex].quantity -= 1
+
+        //     } else{
+        //         return res.status(400).json({message:'Qantity  cannot be less than 1'})
+        //     }
+        // }
 
         await cart.save()
 

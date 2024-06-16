@@ -6,22 +6,163 @@
   <title>Thank You Page</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <style>
+    body {
+      background-color: #ecfdff; /* Set a warm background color */
+    }
+
+    .thankyou-icon {
+      animation: bounce 1s infinite; /* Add a bouncing animation */
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-30px);
+      }
+      60% {
+        transform: translateY(-15px);
+      }
+    }
+
+    .untree_co-section {
+      position: relative; /* Set position to relative for absolute positioning of elements */
+      height: 100vh; /* Set height to viewport height for full screen */
+      display: flex; /* Set display to flex for centering */
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+    }
+
+    .papers {
+      position: absolute; /* Set position to absolute to overlay on top */
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none; /* Don't capture pointer events */
+    }
+
+    .paper {
+      width: 20px;
+      height: 20px;
+      background-color: #ff6b6b; /* Set initial color of paper */
+      border-radius: 50%; /* Make it round */
+      opacity: 0; /* Hide initially */
+      animation: pop 1s ease-out forwards; /* Add pop animation */
+    }
+
+    @keyframes pop {
+      0% {
+        transform: scale(0);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0;
+      }
+    }
+
+    .btn-outline-black {
+      border-color: #004c3f;
+      color: #004c3f;
+    }
+
+    .btn-outline-black:hover {
+      background-color: #004c3f;
+      color: #fff;
+    }
+
+    /* Additional styling for a more colorful appearance */
+    .thankyou-icon svg {
+      fill: #ff6b6b; /* Change the color of the icon */
+      transition: fill 0.3s; /* Add transition effect for fill color */
+    }
+
+    .thankyou-icon:hover svg {
+      fill: #f15f5f; /* Change fill color on hover */
+    }
+
+    h2 {
+      color: #004c3f; /* Change the color of the heading */
+    }
+
+    p.lead {
+      color: #444; /* Darken the color of the lead paragraph */
+    }
+
+    .btn-outline-black {
+      background-color: transparent;
+      transition: background-color 0.3s ease; /* Add smooth transition effect */
+    }
+
+    .btn-outline-black:hover {
+      background-color: #004c3f;
+    }
+
+    /* Animation for thank you message */
+    @keyframes fade-in {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .fade-in {
+      animation: fade-in 1s ease-in-out;
+    }
+    .iframe{
+      width: 100%;
+      height: 100vh;
+      position: absolute;
+      top: 0;left: 0;
+      
+    }
   </style>
+  <script>
+    window.onload = function() {
+      if (window.history && window.history.pushState) {
+        window.history.pushState('forward', null, './#forward');
+
+        window.onpopstate = function(event) {
+          if (event.state === null) {
+            // Redirect to the cart page
+            window.location.href = '/cart';
+          }
+          window.history.pushState('forward', null, './#forward');
+        };
+      }
+    };
+  </script>
 </head>
-<body style="background-color: #fff;">
+<body>
+  <iframe class="iframe" src="https://lottie.host/embed/2e152ada-8657-4d27-8a4a-36a55564a1ed/yH3echroQg.json"></iframe>
   <div class="untree_co-section">
+    <div class="papers">
+      <div class="paper"></div>
+      <div class="paper"></div>
+      <div class="paper"></div>
+      <div class="paper"></div>
+      <div class="paper"></div>
+      <div class="paper"></div>
+    </div>
     <div class="container">
       <div class="row">
-        <div class="col-md-12 text-center pt-5">
-          <span class="display-3 thankyou-icon" style="color: #004c3f;">
+        <div class="col-md-12 text-center">
+          <span class="display-3 thankyou-icon">
             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-cart-check mb-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
               <path fill-rule="evenodd" d="M11.354 5.646a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L8 8.293l2.646-2.647a.5.5 0 0 1 .708 0z"/>
               <path fill-rule="evenodd" d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
             </svg>
           </span>
-          <h2 class="display-3 text-black">Thank you!</h2>
-          <p class="lead mb-5">Your order was successfully completed.</p>
-          <p><button onclick="window.location.href='/user/userOrder'" class="btn btn-sm btn-outline-black" style="background-color: #004c3f; color: #fff;">View Orders</button></p>
+          <h2 class="display-3 fade-in">Thank you!</h2>
+          <p class="lead mb-5 fade-in">Your order was successfully completed.</p>
+          <p class="fade-in"><a href="/orderHistory" class="btn btn-sm btn-outline-black">View Orders</a></p>
         </div>
       </div>
     </div>

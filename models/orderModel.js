@@ -17,11 +17,13 @@ const orderSchema=new mongoose.Schema({
         required:true,
     },
 
+   
+
     products:[
         {
             product:{
                 type:mongoose.Schema.Types.ObjectId,
-                ref:'Product',
+                ref:'products',
                 required:true,
             },
 
@@ -31,39 +33,11 @@ const orderSchema=new mongoose.Schema({
             },
         }
     ],
-    address:{
-        mobile:{
-            type:Number,
-            required:true
-        },
-        
-        pincode:{
-            type:Number,
-            required:true
-        },
 
-        houseName:{
-            type:String,
-        },
-
-        area:{
-            type:String,
-            required:true
-        },
-
-        landmark:{
-            type:String,
-            required:true
-        },
-
-        city:{
-            type:String,
-            required:true
-        },
-        state:{
-            type:String,
-            required:true
-        }
+  address: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Address',
+        required: true,
     },
     totals:{
         subtotal:{

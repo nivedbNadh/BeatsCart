@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>AdminDashBoared</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    <!-- Favicon
+    <!-- <link href="img/favicon.ico" rel="icon">
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- Libraries Stylesheet -->
+    <link href="/userAssets/css/owl.carousel.min.css" rel="stylesheet">
+    <link href="/userAssets/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/userAssets/css/adminbootstrap.min.css" rel="stylesheet">
+    <!-- Template Stylesheet -->
+    <link href="/userAssets/css/adminDash.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css"> --> -->
+
+
+<style>
+.container-fluid {
+    margin-left: 130px;
+    width: 88%;
+}
+</style>
+
+<body>
+
+  <div class="container-fluid position-relative bg-white p-0">
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <!-- Spinner End -->
+    <!-- Sidebar Start -->
+    <div class="sidebar p-4 bg-light">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-brand mb-4">
+                <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>DASHMIN</h3>
+            </a>
+            <div class="d-flex align-items-center mb-4">
+                <div class="position-relative">
+                    <img class="rounded-circle" src="/userAssets/img/download (1).jpeg" alt="" style="width: 40px; height: 40px;">
+                    <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+                </div>
+                <div class="ms-3">
+                    <h6 class="mb-0">Nived</h6>
+                    <span>Admin</span>
+                </div>
+            </div>
+            <div class="navbar-nav w-100">
+                <a href="/adminDash" class="nav-link active"><i class="fa fa-tachometer-alt me-2"></i> Dashboard</a>
+                <a href="productList" class="nav-link"><i class="fa fa-th me-2"></i>Products</a>
+                <a href="/categoryList" class="nav-link"><i class="fa fa-keyboard me-2"></i>Category</a>
+                <a href="/userdetails" class="nav-link"><i class="fa fa-table me-2"></i>User</a>
+                <a href="/orderManage" class="nav-link"><i class="fa fa-chart-bar me-2"></i>orders</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Pages</a>
+                    <div class="dropdown-menu bg-transparent border-0">
+                        <a href="signin.html" class="dropdown-item">Sign In</a>
+                        <a href="signup.html" class="dropdown-item">Sign Up</a>
+                        <a href="404.html" class="dropdown-item">404 Error</a>
+                        <a href="blank.html" class="dropdown-item">Blank Page</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!-- Sidebar End -->
+        <div class="container-fluid mt-3">
+          <div class="row mb-2 d-flex justify-content-start">
+            <div class="col-6 col-md-4">
+              <form action="/order" method="get">
+                <input type="text" name="search" id="searchInput" value="" class="form-control rounded-0"
+                  placeholder="Search...">
+              </form>
+            </div>
+            <div class="category-dropDownList col-3 bg-white">
+              <select class="btn btn-white col-12 text-start" name="status" id="categoryDropdown">
+                <option value="" selected>All</option>
+                <option class="text-capitalize" value="placed">placed</option>
+                <option class="text-capitalize" value="pending">pending</option>
+                <option class="text-capitalize" value="shipped">shipped</option>
+                <option class="text-capitalize" value="canceled">canceled</option>
+                <option class="text-capitalize" value="delivered">delivered</option>
+                <option class="text-capitalize" value="returned">returned</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="container-fluid mt-3">
+          <div class="table-responsive">
+            <table class="table table-hover rounded">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>OrderId</th>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody class="mb-2">
+                <% orders.forEach(order=> {%>
+
+                <tr>
+                  <td>
+                    <!-- <img src="/uploads/sample-image.jpg" style="width: 4rem;object-fit: cover;"> -->
+                  </td>
+                  <td class="fixed-td"><%= order._id %></td>
+                  <td class="fixed-td text-capitalize">
+                    <h6><%= order.products[0].product.name %></h6>
+                    <td><p class="card-text">$<%= order.totals.totalprice %></p></td>
+                  </td>
+                  </td>
+                  <td class="status text-capitalize"><%= order.status %></td>
+                  <td>
+                    <form class="update-order-form" action="/updateOrderStatus" method="POST">
+                      <input type="hidden" name="orderId" value="<%= order._id %>">
+                      <div class="justify-content-between d-flex">
+                          <select name="orderStatus" id="" class="me-1">
+                              <!-- <option value="placed" <%= order.status === 'placed' ? 'selected' : '' %>>Placed</option> -->
+                              <option value="pending" <%= order.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                              <option value="Processing" <%= order.status === 'Processing' ? 'selected' : '' %>>Processing</option>
+                              <option value="shipped" <%= order.status === 'shipped' ? 'selected' : '' %>>Shipped</option>
+                              <option value="delivered" <%= order.status === 'delivered' ? 'selected' : '' %>>Delivered</option>
+                              <option value="PaymentFailed" <%= order.status === 'PaymentFailed' ? 'selected' : '' %>>Payment Failed</option>
+                              <!-- <option value="canceled" <%= order.status === 'canceled' ? 'selected' : '' %>>Canceled</option> -->
+                          </select>
+                          <button data-id="<%= order._id %>" style="font-size:0.6rem" class="btn btn-success" <%= order.status==='Cancelled' ? 'disabled':''%>>Submit</button>
+                      </div>
+                  </form>
+                  
+                    </div>
+                    
+                  </td>
+                </tr>
+              <%}) %>
+
+              </tbody>
+            </table>
+            <tfoot class="bg-white">
+              <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-3">
+                <ul class="pagination">
+                  <li class="page-item active">
+                    <a class="page-link" href="#">1</a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link" href="#">2</a>
+                  </li>
+                </ul>
+              </nav>
+            </tfoot>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- CONTENT -->
+
+  </div>
+</body>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/js/adminOrderStatus.js"></script>
+  <script>
+
+$(document).ready(function() {
+    $('.update-order-form').on('submit', function(event) {
+        event.preventDefault();
+
+        var form = $(this);
+        var orderId = form.find('input[name="orderId"]').val();
+        var newStatus = form.find('select[name="orderStatus"]').val();
+
+
+        $.ajax({
+            url: '/updateOrderStatus',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                orderId: orderId,
+                newStatus: newStatus
+            }),
+            success: function(response) {
+                console.log('Status successfully updated:', response);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Order status updated',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                // update the status in the table without refreshing the page
+                form.closest('tr').find('.status').text(newStatus);
+
+                if(newStatus === 'Cancelled') {
+                  form.find('button').prop('disabled',true)
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log('Error updating status:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed to update status',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        });
+    });
+});
+
+
+
+
+
+
+   </script>
+
+
+</body>
+
+</html>
+
+
+ <!-- JavaScript Libraries -->
+ <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+ <script src="/userAssets/js/chart.min.js"></script>
+ <script src="/userAssets/js/easing.min.js"></script>
+ <script src="/userAssets/js/waypoints.min.js"></script>
+ <script src="/userAssets/js/owl.carousel.min.js"></script>
+ <script src="/userAssets/js/moment.min.js"></script>
+ <script src="/userAssets/js/moment-timezone.min.js"></script>
+ <script src="/userAssets/js/tempusdominus-bootstrap-4.min.js"></script>
+ <!-- Template Javascript -->
+ <script src="userAssets/js/admindash.js"></script>
+ <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>

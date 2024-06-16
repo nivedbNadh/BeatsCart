@@ -16,6 +16,7 @@ const cartController = require("../controller/cartController")
 const checkController= require("../controller/checkController")
 
 
+
 const { router } = require("./userRoute");
 userRoute.set("views", path.join(__dirname, "..", "views", "user"));
 userRoute.use(express.json());
@@ -38,7 +39,7 @@ userRoute.get("/logout", userController.userLogout);
 // userRoute.get('/productDetails',userController.loadProductDetails)
 
 
-userRoute.get("/products", userAuth.authentication, userController.products);
+userRoute.get("/products", userAuth.authentication,userAuth.userBlock, userController.products);
 userRoute.get("/productDetails/:productId",userAuth.authentication,userController.productDetails);
 
 //forgot password
@@ -95,6 +96,8 @@ userRoute.post('/addaddresscheckout',checkController.addAddressCheckout)
 // order
 userRoute.get('/successorder',checkController.successOrder)
 userRoute.post('/placeorder',checkController.orderCreate)
+userRoute.get('/orderHistory',checkController.loadOrderHistory)
+userRoute.post('/cancelOrder',checkController.cancelOrder)
 
 
 

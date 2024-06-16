@@ -4,6 +4,9 @@ const Cart = require('../models/cartModel');
 const Products = require('../models/productModel');
 const Order = require('../models/orderModel');
 const Address=require('../models/addressModel')
+const User=require('../models/userModel')
+const { v4: uuidv4 } = require('uuid'); 
+
 
 const addAddressCheckout= async(req,res)=>{
     try {
@@ -47,8 +50,7 @@ const successOrder= async(req,res)=>{
 
 
     try {
-        const email=req.session.email
-        const user=await User.find({email})
+        res.render("successorder")
 
         
     } catch (error) {
@@ -63,6 +65,7 @@ const successOrder= async(req,res)=>{
 
 
 
+
 const orderCreate = async (req, res) => {
     try {
         const orderTime = new Date().toLocaleTimeString();
@@ -70,72 +73,171 @@ const orderCreate = async (req, res) => {
         const orderDate = currentDate.format('DD-MM-YYYY');
         const userId = req.session.userId;
         const { address, paymentMethod } = req.body;
-        console.log("address",address);
-        console.log("paymentMethod",paymentMethod);
 
-        if (!userId) {
-            return res.status(401).json({ success: false, message: 'User not logged in' });
+        const addresses = await Address.findById(address)
+        if(!addresses) {
+            return res.status(400).json({success:false,message:"Address not found"})
         }
 
-        if (!address || !address.state || !address.city || !address.landmark || !address.area || !address.pincode || !address.mobile) {
-            return res.status(400).json({ success: false, message: 'Incomplete address details' });
+       
+        const cart = await Cart.findOne({ userId }).populate('products.productId');
+        if (!cart) {
+            return res.status(400).json({success:false,message:'Cart not found'})
         }
 
-        let totalPrice = 0;
-        const cart = await Cart.findOne({ userId: userId }).populate('products.productId');
-        const cartItems = cart ? cart.products : [];
+        const cartItems = cart.products.map(item => ({
+            product: item.productId,
+            quantity: item.quantity,
+            price: item.productId.price,
+        }));
 
-        if (!cartItems.length) {
-            return res.status(400).json({ success: false, message: 'Cart is empty' });
+
+        let totalPrice=0
+        for(const item of cartItems) {
+            totalPrice+=item.price * item.quantity
         }
 
-        for (const item of cartItems) {
-            const product = await Products.findById(item.productId);
-            if (!product || product.quantity < item.quantity) {
-                console.error(`Insufficient stock for product: ${item.productId}`);
-                return res.status(400).json({ success: false, message: 'Insufficient stock for one or more items' });
-            }
-        }
+        // let totalPrice = 0;
+        // for (const item of cartItems) {
+        //     const product = await Products.findById(item.product._id);
+        //     totalPrice += item.price * item.quantity;
+        // }
 
-        for (const item of cartItems) {
-            const product = await Products.findById(item.productId);
-            if (product && product.price) {
-                totalPrice += product.price * item.quantity;
-            } else {
-                console.log(`Product price not available for product: ${item.productId}`);
-            }
-        }
+        const tax=totalPrice *0.05
+        const totalPriceWithTax=totalPrice+tax
 
-        const newOrderId = new mongoose.Types.ObjectId().toString();
         const newOrderData = {
-            orderId: newOrderId,
+            orderID: uuidv4(),
             customer: userId,
-            products: cartItems.map(item => ({ product: item.productId, quantity: item.quantity })),
-            address: address,
+            products: cartItems.map(item => ({ product: item.product._id, quantity: item.quantity})),
+            address: addresses,
+           
             totals: {
                 subtotal: totalPrice,
-                totalprice: totalPrice // Ensure this field is populated
+                tax:tax,
+                totalprice: totalPriceWithTax
             },
-            orderDate: orderDate,
-            orderTime: orderTime,
-            paymentMethod: paymentMethod,
+            orderDate,
+            orderTime,
+            paymentMethod,
         };
 
-        if (paymentMethod === 'cashOnDelivery') {
+
+
+        if (paymentMethod === 'cashOnDelivery' || paymentSuccess) {
+            // update product quantities
+            for(const item of cartItems) {
+                const product=await Products.findById(item.product._id)
+                if(product.quantity >= item.quantity) {
+                    product.quantity-= item.quantity
+                    await product.save()
+                } else{
+                    return res.status(400).json({success:false,message:`Not enough stock for product:${product.name}`})
+
+                }
+            }
+
+            // Save the new order 
+            
             const newOrder = new Order(newOrderData);
             await newOrder.save();
-            await Cart.findOneAndDelete({ userId: userId }); // Clear the cart
+            await Cart.findOneAndDelete({ userId });
+
+            res.status(200).json({success:true,message:'Order created successfully'})
+        } else{
+            res.status(400).json({success:false,message:'Payment failed'})
         }
 
-        res.status(200).json({ success: true, message: 'Order created successfully' });
+
     } catch (error) {
         console.error('Error in orderCreate:', error);
         res.status(500).json({ success: false, message: 'Failed to create order' });
     }
 };
 
+  
+
+const loadOrderHistory = async (req,res)=>{
+    try {
+        const email=req.session.email
+        const userId=req.session.userId
+        console.log("emailcheckoutpage",email)
+        console.log("userIdcheckoutpage",userId)
+        const user=await User.findOne({email})
+        console.log("user in checkout page",user)
+        if(!user) {
+            return res.status(404).json({message:'User not found'})
+        }
+        const orders=await Order.find({customer:userId}).populate('products.product').populate('address')
+
+        // console.log("orders in checkout page",orders)
+
+
+        for(const order of orders)  {
+            if(order.address && typeof order.address=== ' string') {
+                order.address=await Address.findById(order.address)
+            }
+        }
+
+        // console.log("user address in order history page", orders.map(order => order.address));
+
+        return res.render('orderHistory',{user,orders})
+    } catch (error) {
+        console.error('error occured',error)
+        return res.status(500).json({ message:'internal serveer error'})
+        
+    }
+}
+
+const cancelOrder = async (req, res) => {
+    try {
+        const { orderId } = req.body;
+        const userId = req.session.userId;
+
+        if (!userId) {
+            return res.status(401).json({ success: false, message: 'Unauthorized access' });
+        }
+
+        const orderData = await Order.findById(orderId);
+        if (!orderData) {
+            return res.status(404).json({ success: false, message: 'Order not found' });
+        }
+
+        console.log('Order Data:', orderData);
+
+        // Only allow cancellation if the order not  delivered
+        if (orderData.status !== 'delivered') {
+            console.log('Cancelling order:', orderId);
+            orderData.status = 'Cancelled';
+
+            // Restore the quantities in the products database
+            for (const item of orderData.products) {
+                const product = await Products.findById(item.product);
+                if (product) {
+                    product.quantity += item.quantity;
+                    await product.save();
+                }
+            }
+
+            await orderData.save();
+            return res.status(200).json({ success: true, message: 'Order cancelled successfully' });
+        } else {
+            console.log('Order already delivered and cannot be cancelled:', orderId);
+            return res.status(400).json({ success: false, message: 'Delivered orders cannot be cancelled' });
+        }
+    } catch (error) {
+        console.error('Error cancelling order:', error);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
+
+
+
+
 module.exports={
     addAddressCheckout,
     successOrder,
-    orderCreate
+    orderCreate,
+    loadOrderHistory,
+    cancelOrder
 }

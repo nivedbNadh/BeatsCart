@@ -335,8 +335,8 @@ const userPasswordChange= async (req,res) =>{
 
     const newPassword=req.body.newPassword
     const repeatNewPassword=req.body.repeatNewPassword
-    console.log('newPassword',newPassword)
-    console.log('repeatNewPassword',repeatNewPassword)
+    // console.log('newPassword',newPassword)
+    // console.log('repeatNewPassword',repeatNewPassword)
     if(newPassword !== repeatNewPassword) {
       return res.status(400).json({error:'Password do not match '})
     }
@@ -394,13 +394,13 @@ const userPasswordChange= async (req,res) =>{
 const saveAddress = async (req,res)=>{
   try{
 
-    console.log('req.body', req.body);
+    // console.log('req.body', req.body);
     const userId=req.session.userId
-    console.log("useriduseriduseriduserid",userId)
+    // console.log("useriduseriduseriduserid",userId)
 
     const {mobile,pincode,houseName,area,city,state,landmark}=req.body
     
-    console.log('req.body', req.body)
+    // console.log('req.body', req.body)
     
       const newAddress=new Address({
         userId:userId,
@@ -413,7 +413,7 @@ const saveAddress = async (req,res)=>{
         landmark
 
       })
-      console.log('newAddress',newAddress)
+      // console.log('newAddress',newAddress)
       await newAddress.save();
       
       if(newAddress) {
@@ -432,15 +432,15 @@ const saveAddress = async (req,res)=>{
 
   const deleteAddress = async (req, res) => {
     try {
-        const addressId = req.params.id;
-        console.log(addressId, " addressId addressId addressId addressId");
-        const deletedAddress = await Address.findByIdAndDelete(addressId);
-        if (!deletedAddress) {
-            return res.status(404).send('Address not found');
-        }
-        const userId = req.session.userId;
-        await User.findByIdAndUpdate(userId, { $pull: { addresses: addressId } });
-        res.redirect('/profile');
+
+      const addressId=req.params.id
+      const deleteAddress=await Address.findByIdAndDelete(addressId)
+      if(!deleteAddress) {
+        return res.status(404).send('Address not found')
+      }
+        
+    res.status(200).json({message:'Address deleted successfully'})
+    
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal server error');
@@ -479,7 +479,7 @@ const editAddress = async (req, res) => {
   try {
     const { mobile, pincode, houseName, city, state, landmark,area } = req.body;
     const addressId = req.params.id;
-    console.log("addressId",addressId)
+    // console.log("addressId",addressId)
 
     let address = await Address.findById(addressId);
     if (!address) {
@@ -513,45 +513,41 @@ const editAddress = async (req, res) => {
 const loadCheckout = async (req, res) => {
   try {
     const email = req.session.email;
+    if (!email) {
+      return res.status(401).json({ message: 'User not logged in' });
+    }
+
     const user = await User.findOne({ email });
-    const userId=req.session.userId
-    const cart=await Cart.findOne({userId}).populate('products.productId')
-
-    
-    const addresses = await Address.find({ userId: user._id });
-    console.log(addresses, "addresses")
-
     if (!user) {
       return res.status(400).json({ message: 'User not found' });
     }
 
-    if(!cart) {
-      return res.status(404).json({message:'Cart not found '})
+    const userId = req.session.userId;
+    const cart = await Cart.findOne({ userId }).populate('products.productId');
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
     }
 
-    let subtotal=0
-    cart.products.forEach(product=>{
-      subtotal+=product.quantity * product.productId.price
-    })
+    const addresses = await Address.find({ userId: user._id });
+    const cartItems = cart.products.map(product => ({
+      productName: product.productId.name,
+      productImage: product.productId.image[0],
+      price: product.productId.price,
+      quantity: product.quantity,
+    }));
 
+    const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const tax = subtotal * 0.05;  
+    const total = subtotal + tax;
 
-    const tax=subtotal * 0.05
-    const total=subtotal+tax
-
-    const cartItems=cart.products.map(product=>({
-      productName:product.productId.name,
-      productImage:product.productId.image[0],
-      price:product.productId.price,
-      quantity:product.quantity
-    }))
-
-
-    res.render('checkout', { user, addresses, cartItems, subtotal,tax,total });
+    res.render('checkout', { user, addresses, cartItems, subtotal, tax, total });
   } catch (error) {
     console.error('Error occurred:', error);
     res.status(500).send('Internal server error');
   }
-}
+};
+
+
 
 
 // checkout address page code 

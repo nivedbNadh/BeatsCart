@@ -1,0 +1,274 @@
+<%- include('../layouts/user/header') %>
+<%- include('../layouts/user/navbar') %>
+
+<style>
+  body {
+    font-family: 'Trebuchet MS', Arial, sans-serif;
+    background-color: #ecfdff;
+  }
+
+  .mobile-profile-navigation {
+    display: none;
+  }
+
+  aside a {
+    color: #000;
+    text-decoration: none;
+  }
+
+  aside li {
+    text-align: center;
+    padding: 0.5rem;
+  }
+
+  .is-active {
+    color: #fff;
+    border: 2px solid;
+    text-align: center;
+    margin: 0;
+    background: #000;
+  }
+
+  .is-active span {
+    color: #fff;
+  }
+
+  @media (max-width: 768px) {
+    aside {
+      display: none !important;
+    }
+
+    .mobile-profile-navigation {
+      display: block;
+    }
+  }
+
+  .form-control:focus,
+  .accordion-button:focus {
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    border-color: none;
+    outline: 0;
+    box-shadow: none;
+  }
+
+  .breadcrumb-item a {
+    color: #000 !important;
+  }
+
+  .cart-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cart-container {
+    overflow-y: auto;
+    max-height: 440px;
+  }
+
+  .active>.page-link,
+  .page-link.active {
+    background-color: #000 !important;
+    border-color: azure !important;
+  }
+
+  .page-link {
+    color: #000;
+  }
+
+  .address-list {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .address-list li {
+    margin-top: 4px;
+  }
+
+  .order-detail {
+    color: #000;
+    font-weight: 300;
+    font-size: 15px;
+  }
+
+  .order-status {
+    color: white;
+    font-weight: 300;
+  }
+
+  .container-fluid {
+    margin-top: 80px; 
+  }
+
+  .card {
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+    padding: 10px; 
+    margin-top: 75px; 
+  }
+
+  .card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-header {
+    background-color: #ff003c;
+    color: #fff;
+    border-bottom: 1px solid #ddd;
+    border-radius: 10px 10px 0 0;
+    padding: 10px;
+  }
+
+  .btn {
+    border-radius: 20px;
+  }
+
+  .form-control {
+    border-radius: 20px;
+  }
+
+  .order-header {
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  .order-item {
+    margin-bottom: 15px;
+  }
+
+  .order-status span {
+    font-weight: bold;
+  }
+
+  .text-end-md {
+    text-align: end !important;
+  }
+  .noorder{
+    margin-top: 220px;
+  }
+</style>
+<body>
+  <section class="container-fluid my-3">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="cart-container">
+          <% if (orders.length > 0) { %>
+            <% orders.forEach(order => { %>
+              <div class="card mb-3">
+                <div class="card-header">
+                  <div class="row">
+                    <div class="col-md-6 order-header">
+                      Order ID: <%= order._id %>
+                    </div>
+                    <div class="col-md-6 text-end-md order-status">
+                      Status: <span><%= order.status %></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <% order.products.forEach(item => { %>
+                    <div class="row order-item">
+                      <div class="col-md-3 d-flex justify-content-center align-items-center">
+                        <i class="bi bi-box-seam" style="font-size: 2rem;"></i>
+                      </div>
+                      <div class="col-md-9 d-flex align-items-center">
+                        <div>
+                          <% if (item.product) { %>
+                            <span class="d-block text-capitalize order-detail">Name: <%= item.product.name %></span>
+                            <span class="d-block order-detail">Quantity: <%= item.quantity %></span>
+                            <span class="d-block order-detail">Price: $<%= item.product.price %></span>
+                          <% } else { %>
+                            <span class="d-block text-capitalize order-detail">Product Not Found</span>
+                          <% } %>
+                        </div>
+                      </div>
+                    </div>
+                  <% }); %>
+                  <div class="row mt-3">
+                    <div class="col-md-6">
+                      <span class="d-block order-detail">Total: $<%= order.totals.totalprice %></span>
+                      <span class="d-block order-detail">Order Date: <%= order.orderDate %></span>
+                      <span class="d-block order-detail">Order Time: <%= order.orderTime %></span>
+                    </div>
+                    <div class="col-md-6 text-end-md">
+                      <button class="btn btn-danger cancel-order-btn <%= order.status === 'Cancelled' ? 'cancelled' : '' %>"
+                        onclick="cancelOrder('<%= order._id %>')" <%= order.status === 'Delivered' ? 'disabled' : '' %>>
+                        <% if (order.status === 'Cancelled') { %>
+                          ✖ Order Cancelled
+                        <% } else if (order.status === 'Delivered') { %>
+                          ✔ Delivered
+                        <% } else { %>
+                          Cancel Order
+                        <% } %>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
+          <% } else { %>
+            <div class="text-center">
+              <h3 class="noorder">No Orders</h3>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JS Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/js/orderStatus.js"></script>
+</body>
+
+
+
+ <script>
+ function cancelOrder(orderId) {
+    $.ajax({
+        url: '/cancelOrder',
+        type: 'POST',
+        data: { orderId: orderId },
+        success: function(response) {
+            if (response.success) {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: response.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(function() {
+                    location.reload();  // Reload the page after successful cancellation
+                });
+            } else {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'info',
+                    title: response.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log('Error cancelling order', error);
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Order already delivered and cannot be cancelled',  // Display a generic error message
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+    });
+}
+
+</script> 
+
+
+
+
+
+ <%- include('../layouts/user/footer') %> 

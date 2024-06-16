@@ -13,6 +13,8 @@ const FS = require('fs');
 const Products=require('../models/productModel')
 const Category=require('../models/categoryModel')
 const Admin=require('../models/adminModel')
+const Order = require('../models/orderModel');
+
 
 
 
@@ -387,6 +389,49 @@ const productUpdate = async function (req, res) {
 
 
 
+
+
+const loadAdminManage= async (req,res)=>{
+    try {
+        
+        const orders=await  Order.find()
+        .sort({"orderDate":-1,"orderTime":-1})
+        .populate({
+            path:'products.product',
+            model:'products',
+            select:'name price description image',
+            paymentMethod:'paymentMethod'
+            })
+            . exec()
+            console.log(orders,"orders in adminController page please check it any problem ..........")
+        return res.render('orderManage',{orders})
+    } catch (error) {
+        console.error('error occured',error)
+        return res.status(500).json({error:'internal server error'})
+        
+    }
+}
+
+
+
+
+
+const updateOrderStatus =async(req,res)=>{
+    try {
+        const {orderId,newStatus}=req.body
+    const result = await Order.findOneAndUpdate({_id:orderId},{$set:{status:newStatus}})
+    
+        // console.log(req.body,",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,")
+        // console.log(result,"resultresultresultresult")
+    } catch (error) {
+        console.error('error updating status',error)
+        res.status(500).send('internal server error')
+    }
+}
+
+
+
+
 module.exports={
     adminLoging,
     adminLogingPost,
@@ -404,6 +449,8 @@ module.exports={
     categoryDelete,
     editCategory,
     productUpdate,
+    loadAdminManage,
+    updateOrderStatus
 
 }
 
