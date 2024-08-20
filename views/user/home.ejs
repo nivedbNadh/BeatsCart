@@ -61,7 +61,6 @@
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                     <div class="slider-counter"></div>
                 </div>
@@ -70,53 +69,69 @@
     </section>
     <!-- banner part start-->
 
-    <!-- feature_part start-->
-  <!--  <section class="feature_part padding_top">
+    <!-- Categories part start -->
+    <section class="categories_part section_padding" style="background-color:#ecfdff">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-8">
+                <div class="col-lg-12">
                     <div class="section_tittle text-center">
-                        <h2>Featured Category</h2>
+                        <h2 style="color: black;">Categories</h2>
                     </div>
                 </div>
             </div>
-            <div class="row align-items-center justify-content-between">
-                <div class="col-lg-7 col-sm-6">
-                    <div class="single_feature_post_text">
-                        <p>Premium Quality</p>
-                        <h3>Latest Headphones</h3>
-                        <a href="#" class="feature_btn">EXPLORE NOW <i class="fas fa-play"></i></a>
-                         <img src="/uploads/1714112291588-Rockid_Rush.jpg" alt=""> 
-                    </div>
-                </div>
-                <div class="col-lg-5 col-sm-6">
-                    <div class="single_feature_post_text">
-                        <p>Premium Quality</p>
-                        <h3>Air Pods</h3>
-                        <a href="#" class="feature_btn">EXPLORE NOW <i class="fas fa-play"></i></a>
-                        <img src="/uploads/1712812787412-img_4_mob_1560x.png" alt="">
-                    </div>
-                </div>
-                <div class="col-lg-5 col-sm-6">
-                    <div class="single_feature_post_text">
-                        <p>Premium Quality</p>
-                        <h3>Air Pods</h3>
-                        <a href="#" class="feature_btn">EXPLORE NOW <i class="fas fa-play"></i></a>
-                        <img src="/uploads/1712884485155-mobile-nav-card-fitpro (1).png" >
-                    </div>
-                </div>
-                <div class="col-lg-7 col-sm-6">
-                    <div class="single_feature_post_text">
-                        <p>Premium Quality</p>
-                        <h3>Air Pods</h3>
-                        <a href="#" class="feature_btn">EXPLORE NOW <i class="fas fa-play"></i></a>
-                        <img src="/uploads/1712884485155-mobile-nav-card-fitpro (1).png" alt="">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="categoryCarousel" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <% for (let i = 0; i < categories.length; i += 6) { %>
+                                <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
+                                    <div class="row justify-content-center">
+                                        <% for (let j = i; j < i + 6 && j < categories.length; j++) { %>
+                                            <div class="col-lg-2 col-md-4 col-sm-6">
+                                                <div class="single_category_item text-center p-3" style=" background-image: linear-gradient(16deg, #0023ad 0%, #f84040 64%, #0023ad 100%);border-radius: 10px;">
+                                                    <h4><a href="#" style="color: #ffffff; font-weight: bold;"> <%= categories[j].name %> </a></h4>
+                                                </div>
+                                                <!-- ff3368 -->
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                        <a class="carousel-control-prev" href="#categoryCarousel" role="button" data-slide="prev">
+                            <div class="leftsidearow">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </div>
+                        </a>
+                        <a class="carousel-control-next" href="#categoryCarousel" role="button" data-slide="next">
+                            <div class="arocarousel">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-    </section> -->
-    <!-- upcoming_event part start-->
+    </section>
+    
+    <style>
+        .arocarousel {
+            margin-left: 250px;
+            margin-top: -25px;
+            color: black;
+            
+        }
+        .leftsidearow{
+            margin-left: -220px;
+            margin-top: -25px;
+        }
+
+    </style>
+    
+  <!-- upcoming_event part start -->
+
 
     <!-- <style>
         #product{
@@ -149,8 +164,7 @@
                                     <div class="single_product_item">
                                         <a href="/productDetails/<%= data._id %>">
 
-                                            <button class="badge">Buy Now</button>
-                                        </a>
+                                            <!-- <button class="badge">Buy Now</button> -->
                                         <div class="product-card">
                                             
                                              <div class="product-tumb">
@@ -165,135 +179,20 @@
                                                     <div class="product-links">
                                                         <a href="#"><i class="fa fa-heart"></i></a>
                                                         <a href="#"><i class="fa fa-shopping-cart"></i></a>
-
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        
-                                        <style>
-                                            @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
-                                            
-                                            body {
-                                                font-family: 'Roboto', sans-serif;
-                                                margin: 0;
-                                                padding: 0;
-                                            }
-                                        
-                                            .product-card {
-                                                width: 250px;
-                                                height: 350px; 
-                                                position: relative;
-                                                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                                                margin: 50px auto;
-                                                background: #fff;
-                                                border-radius: 10px;
-                                                overflow: hidden;
-                                                transition: transform 0.3s ease; 
-                                            }
-                                        
-                                            .product-card:hover {
-                                                transform: translateY(-5px); 
-                                            }
-                                        
-                                            .badge {
-                                                position: absolute;
-                                                left: 20px;
-                                                top: 20px;
-                                                text-transform: uppercase;
-                                                font-size: 12px;
-                                                font-weight: 700;
-                                                background: red;
-                                                color: #fff;
-                                                padding: 4px 10px;
-                                                border-radius: 20px;
-                                            }
-                                        
-                                            .product-tumb {
-                                                height: 200px;
-                                                overflow: hidden;
-                                            }
-                                        
-                                            .product-tumb img {
-                                                width: 100%;
-                                                height: auto;
-                                                transition: transform 0.5s ease;
-                                            }
-                                        
-                                            .product-tumb img:hover {
-                                                transform: scale(1.1);
-                                            }
-                                        
-                                            .product-details {
-                                                padding: 20px;
-                                            }
-                                        
-                                            .product-catagory {
-                                                font-size: 12px;
-                                                font-weight: 700;
-                                                text-transform: uppercase;
-                                                color: #999;
-                                                margin-bottom: 8px;
-                                            }
-                                        
-                                            .product-details h4 {
-                                                font-size: 18px;
-                                                font-weight: 500;
-                                                text-transform: uppercase;
-                                                color: #333;
-                                                margin-bottom: 8px;
-                                            }
-                                        
-                                            .product-bottom-details {
-                                                overflow: hidden;
-                                                border-top: 1px solid #eee;
-                                                padding-top: 10px;
-                                            }
-                                        
-                                            .product-price {
-                                                font-size: 20px;
-                                                color: #fbb72c;
-                                                font-weight: 600;
-                                                margin-bottom: 10px;
-                                                display: inline-block; 
-                                            }
-                                        
-                                            .product-price small {
-                                                font-size: 16px;
-                                                font-weight: 400;
-                                                text-decoration: line-through;
-                                                margin-right: 5px;
-                                            }
-                                        
-                                            .product-links {
-                                                text-align: right;
-                                                display: inline-block; /* Ensure links are displayed inline */
-                                                float: right; /* Align to the right */
-                                            }
-                                        
-                                            .product-links a {
-                                                display: inline-block;
-                                                margin-left: 10px;
-                                                color: #333;
-                                                transition: 0.3s;
-                                                font-size: 20px;
-                                            }
-                                        
-                                            .product-links a:hover {
-                                                color: #fbb72c;
-                                            }
-                                        </style>
-                                     
-                                    </div>
+                                    </a>                    
                                 </div>
-                                <% }) %>
-                                             
                             </div>
-                        </div>
-                    <!-- </div> -->
+                        <% }) %>                                       
+                    </div>
                 </div>
-            </div>
+        <!-- </div> -->
         </div>
+    </div>
+</div>
     </section>
                                 
 <!-- =============================================== -->
@@ -302,170 +201,291 @@
 
 
 <!-- =============================================== -->
-
-
-
-
-
-
-
-                  
-    <!-- product_list part start-->
-
-    <!-- awesome_shop start-->
-   <!-- <section class="our_offer section_padding">
-        <div class="container">
-            <div class="row align-items-center justify-content-between">
-                <div class="col-lg-6 col-md-6">
-                    <div class="offer_img">
-                        <img src="img/offer_img.png" alt="">
-                    </div>
+<!-- Headphone Brands section start -->
+<section class="headphone-brands-section section_padding">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="section_tittle text-center">
+                    <h2>Headphone Brands</h2>
                 </div>
-                <div class="col-lg-6 col-md-6">
-                    <div class="offer_text">
-                        <h2>Weekly Sale on
-                            60% Off All Products</h2>
-                        <div class="date_countdown">
-                            <div id="timer">
-                                <div id="days" class="date"></div>
-                                <div id="hours" class="date"></div>
-                                <div id="minutes" class="date"></div>
-                                <div id="seconds" class="date"></div>
-                            </div>
-                        </div>
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="enter email address"
-                                aria-label="Recipient's username" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <a href="#" class="input-group-text btn_2" id="basic-addon2">book now</a>
-                            </div>
-                        </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="headphone-brands-carousel owl-carousel">
+                    <!-- Add your brand images here -->
+                    <div class="brand-item">
+                        <img src="/userAssets/img/boat logo.png" alt="Brand 1">
+                    </div>
+                    <div class="brand-item">
+                        <img src="/userAssets/img/apple logo.webp" alt="Brand 2">
+                    </div>
+                    <div class="brand-item">
+                        <img src="/userAssets/img/bose logo.png" alt="Brand 3">
+                    </div>
+                    <div class="brand-item">
+                        <img src="/userAssets/img/samsung logo.png" alt="Brand 4">
+                    </div>
+                    <div class="brand-item">
+                        <img src="/userAssets/img/sony logo.png" alt="Brand 5">
                     </div>
                 </div>
             </div>
         </div>
-    </section>-->
-    <!-- awesome_shop part start-->
+    </div>
+</section>
 
-    <!-- product_list part start-->
-    <section class="product_list best_seller section_padding">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-12">
-                    <div class="section_tittle text-center">
-                        <h2>Best Sellers <span>shop</span></h2>
-                    </div>
-                </div>
-            </div>
-            <div class="row align-items-center justify-content-between">
-                <div class="col-lg-12">
-                    <div class="best_product_slider owl-carousel">
-                        <div class="single_product_item">
-                            <img src="img/product/product_1.png" alt="">
-                            <div class="single_product_text">
-                                <h4>Quartz Belt Watch</h4>
-                                <h3>$150.00</h3>
-                            </div>
-                        </div>
-                        <div class="single_product_item">
-                            <img src="img/product/product_2.png" alt="">
-                            <div class="single_product_text">
-                                <h4>Quartz Belt Watch</h4>
-                                <h3>$150.00</h3>
-                            </div>
-                        </div>
-                        <div class="single_product_item">
-                            <img src="img/product/product_3.png" alt="">
-                            <div class="single_product_text">
-                                <h4>Quartz Belt Watch</h4>
-                                <h3>$150.00</h3>
-                            </div>
-                        </div>
-                        <div class="single_product_item">
-                            <img src="img/product/product_4.png" alt="">
-                            <div class="single_product_text">
-                                <h4>Quartz Belt Watch</h4>
-                                <h3>$150.00</h3>
-                            </div>
-                        </div>
-                        <div class="single_product_item">
-                            <img src="img/product/product_5.png" alt="">
-                            <div class="single_product_text">
-                                <h4>Quartz Belt Watch</h4>
-                                <h3>$150.00</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<section class="new-arrival-section">
+    <div class="container">
+        <!-- <h2 class="new-arrival-heading">New Arrival</h2> -->
+        <div class="new-arrival-image">
+            <img src="/userAssets/img/new earphone pic.webp" alt="New Arrival Image">
         </div>
-    </section>
-    <!-- product_list part end-->
+    </div>
+</section>
 
-    <!-- subscribe_area part start-->
- <!--   <section class="subscribe_area section_padding">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-7">
-                    <div class="subscribe_area_text text-center">
-                        <h5>Join Our Newsletter</h5>
-                        <h2>Subscribe to get Updated
-                            with new offers</h2>
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="enter email address"
-                                aria-label="Recipient's username" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <a href="#" class="input-group-text btn_2" id="basic-addon2">subscribe now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
-    <!--::subscribe_area part end::-->
 
-    <!-- subscribe_area part start-->
-    <section class="client_logo padding_top">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-12">
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_1.png" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_2.png" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_3.png" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_4.png" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_5.png" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_3.png" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_1.png" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_2.png" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_3.png" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_4.png" alt="">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!--::subscribe_area part end::-->
 
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
+    
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .product-card {
+        width: 250px;
+        height: 350px; 
+        position: relative;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin: 50px auto;
+        background: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s ease; 
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px); 
+    }
+
+    .badge {
+        position: absolute;
+        left: 20px;
+        top: 20px;
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: 700;
+        background: red;
+        color: #fff;
+        padding: 4px 10px;
+        border-radius: 20px;
+    }
+
+    .product-tumb {
+        height: 200px;
+        overflow: hidden;
+    }
+
+    .product-tumb img {
+        width: 100%;
+        height: auto;
+        transition: transform 0.5s ease;
+    }
+
+    .product-tumb img:hover {
+        transform: scale(1.1);
+    }
+
+    .product-details {
+        padding: 20px;
+    }
+
+    .product-catagory {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #999;
+        margin-bottom: 8px;
+    }
+
+    .product-details h4 {
+        font-size: 18px;
+        font-weight: 500;
+        text-transform: uppercase;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .product-bottom-details {
+        overflow: hidden;
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+    }
+
+    .product-price {
+        font-size: 20px;
+        color: #fbb72c;
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: inline-block; 
+    }
+
+    .product-price small {
+        font-size: 16px;
+        font-weight: 400;
+        text-decoration: line-through;
+        margin-right: 5px;
+    }
+
+    .product-links {
+        text-align: right;
+        display: inline-block; 
+        float: right; 
+    }
+
+    .product-links a {
+        display: inline-block;
+        margin-left: 10px;
+        color: #333;
+        transition: 0.3s;
+        font-size: 20px;
+    }
+
+    .product-links a:hover {
+        color: #fbb72c;
+    }
+
+    .categories_part {
+        padding-top: 60px; 
+        padding-bottom: 60px; 
+        background-color: #f9f9f9; 
+    }
+
+    .single_category_item {
+        text-align: center;
+        margin-bottom: 30px; 
+        padding: 20px; 
+        background-color: #ffffff; 
+        border-radius: 8px; 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    }
+
+    .single_category_item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); 
+    }
+
+    .single_category_item a {
+        display: block;
+        color: #333; 
+        text-decoration: none;
+    }
+
+    .single_category_item h4 {
+        font-size: 24px; 
+        margin-top: 10px; 
+    }
+
+    .section_tittle h2 {
+        font-size: 36px; 
+        margin-bottom: 40px; 
+        color: #333; 
+    }
+
+
+
+  /* Resetting margins and paddings globally */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.new-arrival-section {
+    padding: 0; 
+    text-align: center;
+}
+
+.new-arrival-image {
+    width: 99.3vw;
+    overflow: hidden; 
+    margin-left: calc(-50vw + 50%); 
+    margin-right: calc(-50vw + 50%); 
+}
+
+.new-arrival-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.new-arrival-heading {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .new-arrival-heading {
+        font-size: 1.5rem;
+    }
+}
+
+
+/* brand image css below */
+
+.headphone-brands-section {
+    padding: 60px 0;
+    background-color: white;
+}
+
+.headphone-brands-carousel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Allows the items to wrap to the next line if necessary */
+}
+
+.brand-item {
+    flex: 1 1 20%; /* Adjusts the flex-basis to fit items in one row */
+    text-align: center;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.brand-item img {
+    max-width: 100%; /* Ensures the image does not overflow the container */
+    height: auto; /* Maintains aspect ratio */
+    max-height: 150px; /* Sets a maximum height to keep images uniform */
+    object-fit: contain; /* Ensures the entire image is visible within the container */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.brand-item:hover img {
+    transform: scale(1.1); /* Slightly enlarges the image on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increases shadow for hover effect */
+}
+
+.section_tittle h2 {
+    font-size: 36px;
+    margin-bottom: 40px;
+    color: #333;
+}
+
+ </style>
     <!--::footer_part start::-->
     
 

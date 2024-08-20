@@ -33,6 +33,10 @@ category: {
     type: String,
     required: true
 },
+brand:{
+    type:String,
+    required:true
+},
 
 quantity:{
     type:Number,
@@ -43,14 +47,14 @@ status:{
     type:Boolean
 
 },
-
 is_deleted:{
     default:false,
     type:Boolean
-
 }
 
+},{
 
+    timestamps:true
 })
 module.exports=mongoose.model("products",productSchema)
 

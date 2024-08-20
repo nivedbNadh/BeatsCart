@@ -1,14 +1,12 @@
 <%-include('../layouts/user/header')%>
 
-
-
 <%-include('../layouts/user/navbar')%>
 
 <section class="product_list section_padding">
     <div class="container">
         <div class="row justify-content-center">
-              <!-- Breadcrumbs -->
-              <nav aria-label="breadcrumb">
+            <!-- Breadcrumbs -->
+            <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <% breadcrumbs.forEach(function(breadcrumb, index) { %>
                         <% if (index === breadcrumbs.length - 1) { %>
@@ -18,7 +16,7 @@
                         <% } %>
                     <% }); %>
                 </ol>
-        </nav>
+            </nav>
             <div class="col-lg-12">
                 <div class="section_tittle text-center">
                     <h2>Products<span>shop</span></h2>
@@ -26,193 +24,426 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-12">
-                <!-- <div class="product_list_slider owl-carousel"> -->
+            <!-- Sidebar -->
+            <div class="col-lg-3">
+                <div class="filter_sidebar">
+                    <h3>Filter</h3>
+                    <!-- Filter options -->
+                    <div class="filter_option">
+                        <h4>Price</h4>
+                        <form id="filter-form" class="filter-form">
+                            <label>
+                                <input type="radio" name="price" value="low-to-high" onchange="applyFilters()"> Low to High
+                            </label>
+                            <label>
+                                <input type="radio" name="price" value="high-to-low" onchange="applyFilters()"> High to Low
+                            </label>
+                        </form>
+                    </div>
+
+                    <div class="filter_option">
+                        <h4>Brand</h4>
+                        <form id="brand-form" class="filter-form">
+                            <% brands.forEach(data=>{ %>
+                                <div class="checkbox-group">
+                                    <label>
+                                        <input type="checkbox" name="brand" value="<%= data.name%>">
+                                        <%=data.name%>
+                                    </label>
+                                </div>
+                           <% }) %>
+                        </form>
+                    </div>
                     
-                    <div class="single_product_list_slider">
-                        <div class="row align-items-center justify-content-between">
-                           
+                    <div class="filter_option">
+                        <h4>Category</h4>
+                        <form id="category-form" class="filter-form">
+                            <% category.forEach(data => { %>
+                                <div class="checkbox-group">
+                                    <label>
+                                        <input type="checkbox" name="category" value="<%= data.name %>">
+                                        <%= data.name %>
+                                    </label>
+                                </div>
+                            <% }); %>
+                        </form>
+                    </div>
+                    
+
+                    
+                    <div class="filter_option">
+                        <button class="apply-btn" onclick="applyFilters()">Apply</button>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <!-- Products -->
+            <div class="col-lg-9">
+                <div class="single_product_list_slider">
+                    <div  id="products-container" class="row align-items-center justify-content-start">
                         <% products.forEach(data => { %>
-                         
-                        
-                            <div class="col-lg-3 col-sm-6 " id="product">
+                            <div class="col-lg-4 col-sm-6" id="product"> <!-- Adjust column size to display three cards per row -->
                                 <div class="single_product_item">
                                     <a href="/productDetails/<%= data._id %>"> 
-                                        <button class="badge" onclick="getProductDetails('<%= data._id %>')">Buy Now</button>
+                                        <!-- <button class="badge" onclick="getProductDetails('<%= data._id %>')">View Products</button> -->
                                         <div class="product-card">
-                                            
-                                         <div class="product-tumb"> 
-                                            <img src="/uploads/<%= data.image[0]%>" alt="Headphone">
-                                        </div>
-                                            <!-- <h1>hello</h1> -->
-                                        <div class="product-details">
-                                            <span class="product-catagory"></span>
-                                            <h4><a href="#"> <%= data.name  %> </a></h4>
-                                            <div class="product-bottom-details">
-                                                <div class="product-price"><%=data.price%></div>
-                                                <div class="product-links">
-                                                    <a href="#"><i class="fa fa-heart"></i></a>
-                                                    <a href="#"><i class="fa fa-shopping-cart"></i></a>
-                                                    
+                                            <div class="product-tumb">
+                                                <img src="/uploads/<%= data.image[0] %>" alt="Headphone">
+                                            </div>
+                                            <div class="product-details">
+                                                <span class="product-catagory"></span>
+                                                <h4><a href="#"> <%= data.name %> </a></h4>
+                                                <div class="product-bottom-details">
+                                                    <div class="product-price"><%= data.price %></div>
+                                                    <div class="product-links">
+                                                        <a href="#"><i class="fa fa-heart"></i></a>
+                                                        <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </a>
-                                
-                    
-                                    <style>
-                                        @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
-                                        
-                                        body {
-                                            font-family: 'Roboto', sans-serif;
-                                            margin: 0;
-                                            padding: 0;
-                                            background-color: #ecfdff;
-                                        }
-                                    
-                                        .product-card {
-                                            width: 250px; 
-                                            height: 350px; 
-                                            position: relative;
-                                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                                            margin: 50px auto;
-                                            background: #fff;
-                                            border-radius: 10px;
-                                            overflow: hidden;
-                                            transition: transform 0.3s ease; 
-                                        }
-                                    
-                                        .product-card:hover {
-                                            transform: translateY(-5px);
-                                        }
-                                    
-                                        .badge {
-                                            position: absolute;
-                                            left: 20px;
-                                            top: 20px;
-                                            text-transform: uppercase;
-                                            font-size: 12px;
-                                            font-weight: 700;
-                                            background: red;
-                                            color: #fff;
-                                            padding: 4px 10px;
-                                            border-radius: 20px;
-                                        }
-                                    
-                                        .product-tumb {
-                                            height: 200px;
-                                            overflow: hidden;
-                                        }
-                                    
-                                        .product-tumb img {
-                                            width: 100%;
-                                            height: auto;
-                                            transition: transform 0.5s ease;
-                                        }
-                                    
-                                        .product-tumb img:hover {
-                                            transform: scale(1.1);
-                                        }
-                                    
-                                        .product-details {
-                                            padding: 20px;
-                                        }
-                                    
-                                        .product-catagory {
-                                            font-size: 12px;
-                                            font-weight: 700;
-                                            text-transform: uppercase;
-                                            color: #999;
-                                            margin-bottom: 8px;
-                                        }
-                                    
-                                        .product-details h4 {
-                                            font-size: 18px;
-                                            font-weight: 500;
-                                            text-transform: uppercase;
-                                            color: #333;
-                                            margin-bottom: 8px;
-                                        }
-                                    
-                                        .product-bottom-details {
-                                            overflow: hidden;
-                                            border-top: 1px solid #eee;
-                                            padding-top: 10px;
-                                        }
-                                    
-                                        .product-price {
-                                            font-size: 20px;
-                                            color: #fbb72c;
-                                            font-weight: 600;
-                                            margin-bottom: 10px;
-                                            display: inline-block; /* Ensure price is displayed inline */
-                                        }
-                                    
-                                        .product-price small {
-                                            font-size: 16px;
-                                            font-weight: 400;
-                                            text-decoration: line-through;
-                                            margin-right: 5px;
-                                        }
-                                    
-                                        .product-links {
-                                            text-align: right;
-                                            display: inline-block; /* Ensure links are displayed inline */
-                                            float: right; /* Align to the right */
-                                        }
-                                    
-                                        .product-links a {
-                                            display: inline-block;
-                                            margin-left: 10px;
-                                            color: #333;
-                                            transition: 0.3s;
-                                            font-size: 20px;
-                                        }
-                                    
-                                        .product-links a:hover {
-                                            color: #fbb72c;
-                                        }
-                                    .breadcrumb {
-                                        background-color: transparent; 
-                                        padding: 0; 
-                                        margin: 0; 
-                                    }
-
-                                    .breadcrumb .breadcrumb-item {
-                                        font-size: 16px; 
-                                        color: #555; 
-                                    }
-
-                                    .breadcrumb .breadcrumb-item a {
-                                        color: #007bff; 
-                                        text-decoration: none; 
-                                        transition: color 0.3s;
-                                    }
-
-                                    .breadcrumb .breadcrumb-item a:hover {
-                                        color: #0056b3; 
-                                    }
-
-                                    .breadcrumb .breadcrumb-item.active {
-                                        color: #000; 
-                                    }
-
-                                                                    </style>
-                                 
+                                    </a>
                                 </div>
                             </div>
-                            <% }) %>
-                                         
-                        </div>
+                        <% }) %>
                     </div>
-                <!-- </div> -->
+                </div>
             </div>
         </div>
     </div>
 </section>
 
+<script>
+    function applyFilters(){
+        const form=document.getElementById('filter-form')
+        const categoryForm=document.getElementById('category-form')
 
+
+
+        // create formData objects from form
+        const formData=new FormData(form)
+        // console.log("formDataformData",formData)
+
+        // selecting all check box categories
+
+        const selectedCategories=[]
+        const checkboxes=categoryForm.querySelectorAll('input[name="category"]:checked')
+        checkboxes.forEach(checkbox=>{
+            selectedCategories.push(checkbox.value)
+        })
+        console.log(checkboxes,"checkboxescheckboxes");
+        
+
+        const filters={
+            price:formData.get('price'),
+            category:selectedCategories // sending array of categories
+        }
+        console.log(filters,"filtersfiltersfiltersfilters");
+        
+
+        fetch('/filter/',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+
+            },
+            body:JSON.stringify(filters)
+        })
+        .then(response=>response.json())
+        .then(data=>{
+            const container=document.getElementById('products-container')
+            container.innerHTML=''
+            data.products.forEach(product=>{
+                container.innerHTML+=`
+            <div class="col-lg-4 col-sm-6" id="product">
+                <div class="single_product_item">
+                    <a href="/productDetails/${product._id}">
+                        <div class="product-card">
+                            <div class="product-tumb">
+                                <img src="/uploads/${product.image[0]}" alt="Product Image">
+                                </div>
+                                <div class="product-details">
+                                    <span class="product-category"></span>
+                                    <h4><a href="#">${product.name}</a></h4>
+                                    <div class="product-bottom-details">
+                                        <div class="product-price">${product.price}</div>
+                                        <div class="product-links">
+                                            <a href="#"><i class="fa fa-heart"></i></a>
+                                             <a href="#"><i class="fa fa-shopping-cart"></i>
+                                        </div>             
+                                    </div>    
+                                </div>
+                             </div>
+                        </a>
+                    </div>
+                </div>    
+                     `;                                
+                       })
+                                            
+                          })
+                            .catch(error=> console.error('Eroor:',error))
+       }
+
+</script>
+
+<style>
+   @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+}
+
+/* Sidebar */
+/* Ensure the parent container has relative positioning */
+.row {
+    position: relative;
+}
+
+.filter_sidebar {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: absolute; 
+    left: -60px; 
+    top: 0; 
+    width: 100%; 
+    height: 1000px;
+    box-sizing: border-box; 
+}
+
+/* Adjusted for Product Cards */
+.product-card {
+    width: 100%; /* Ensure the card takes full column width */
+    height: 340px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.badge {
+    position: absolute;
+    left: 10px; /* Adjust position */
+    top: 10px; /* Adjust position */
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 700;
+    background: red;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.product-tumb {
+    height: 200px;
+    overflow: hidden;
+}
+
+.product-tumb img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.5s ease;
+}
+
+.product-tumb img:hover {
+    transform: scale(1.1);
+}
+
+.product-details {
+    padding: 20px;
+}
+
+.product-catagory {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 8px;
+}
+
+.product-details h4 {
+    font-size: 18px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.product-bottom-details {
+    overflow: hidden;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.product-price {
+    font-size: 20px;
+    color: #fbb72c;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: inline-block; /* Ensure price is displayed inline */
+}
+
+.product-price small {
+    font-size: 16px;
+    font-weight: 400;
+    text-decoration: line-through;
+    margin-right: 5px;
+}
+
+.product-links {
+    text-align: right;
+    display: inline-block; /* Ensure links are displayed inline */
+    float: right; /* Align to the right */
+}
+
+.product-links a {
+    display: inline-block;
+    margin-left: 10px;
+    color: #333;
+    transition: 0.3s;
+    font-size: 20px;
+}
+
+.product-links a:hover {
+    color: #fbb72c;
+}
+
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+.breadcrumb .breadcrumb-item {
+    font-size: 16px;
+    color: #555;
+}
+
+.breadcrumb .breadcrumb-item a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.breadcrumb .breadcrumb-item a:hover {
+    color: #0056b3;
+}
+
+.breadcrumb .breadcrumb-item.active {
+    color: #000;
+}
+
+/* Ensure three cards per row */
+@media (min-width: 992px) {
+    .col-lg-4 {
+        width: 33.3333%;
+    }
+}
+
+@media (max-width: 991px) {
+    .col-lg-4 {
+        width: 50%; /* Adjust for smaller screens if needed */
+    }
+}
+
+@media (max-width: 767px) {
+    .col-lg-4 {
+        width: 100%; /* Full width on mobile screens */
+    }
+}
+
+
+.filter_option {
+    margin-bottom: 20px; /* Add spacing between filter options */
+}
+
+.filter_option h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.filter-form label {
+    display: block;
+    margin-bottom: 10px; /* Space between labels */
+}
+
+.filter-form input[type="radio"] {
+    margin-right: 5px; /* Space between radio button and label */
+}
+
+.category-dropdown {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+}
+
+.apply-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.apply-btn:hover {
+    background-color: #0056b3;
+}
+
+
+.filter_option {
+  margin: 20px 0;
+}
+
+.filter-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkbox-group {
+  margin-bottom: 10px;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: #555;
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin-right: 10px;
+  accent-color: #ff523b; /* Optional: color for the checkbox */
+}
+
+.checkbox-group input[type="checkbox"]:checked + span {
+  font-weight: bold;
+}
+
+
+</style>
 
 
 

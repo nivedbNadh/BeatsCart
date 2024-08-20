@@ -25,12 +25,17 @@ adminRoute.get('/addProduct',adminAuth,adminController.addProduct)
 adminRoute.post('/adminProduct',adminAuth,upload.array('images', 4),  adminController.addAdminProduct);
 
 adminRoute.get('/categoryList',adminAuth,adminController.categoryList)
+adminRoute.get('/brandList',adminAuth,adminController.brandList)
 adminRoute.get('/addCategory',adminAuth,adminController.addCategory)
+adminRoute.get('/addBrands',adminAuth,adminController.addBrand)
 adminRoute.post('/adminCategory',adminAuth, adminController.addAdminCategory);
+adminRoute.post('/adminBrand',adminAuth,adminController.addAdminBrand)
 adminRoute.put('/products/:id',adminAuth,adminController.deleteProducts)
 adminRoute.get('/editProduct/:id',adminAuth,adminController.loadEditProduct)
 adminRoute.put('/category/:id',adminAuth,adminController.categoryDelete)
+adminRoute.put('/brand/:id',adminAuth,adminController.brandDelete)
 adminRoute.post('/updateCategory',adminAuth,adminController.editCategory)
+adminRoute.post('/updateBrand',adminAuth,adminController.editBrand)
 
 
 adminRoute.post('/updateproduct/:id',adminAuth, upload.array('image'), adminController.productUpdate);

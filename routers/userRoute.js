@@ -27,6 +27,7 @@ userRoute.get("/",userAuth.userExist, userController.loadHome);
 userRoute.get("/home", userAuth.userBlock,userController.loadHome);
 userRoute.get("/login", userAuth.userExist, userController.loadLogin);
 userRoute.get("/signup", userAuth.userExist, userController.signup);
+userRoute.get('/paper',userAuth.value,userController.paperget)
 
 
 // userRoute.post("/signup", userController.createUser);
@@ -98,6 +99,18 @@ userRoute.get('/successorder',checkController.successOrder)
 userRoute.post('/placeorder',checkController.orderCreate)
 userRoute.get('/orderHistory',checkController.loadOrderHistory)
 userRoute.post('/cancelOrder',checkController.cancelOrder)
+
+
+
+
+
+
+
+// search
+
+userRoute.get('/search',userController.searchProducts)
+userRoute.post('/filter',userController.filterProducts)
+
 
 
 

@@ -1,633 +1,638 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TimeGaze</title>
-  <link rel="icon" href="/image/android-chrome-512x512.png" type="image/png" alt="Site Icon">
-
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
-
-  <!-- boostrap css cdn link -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-
-  <!-- bootstrap icon cdn link -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
-
-
-  <!-- css style sheet link -->
-  <link rel="stylesheet" href="/css/header_footer.css">
-
-
-  <style>
-    .is-activeMobile {
-      background-color: white;
-      color: black !important;
-      border: 2px solid;
-    }
-
-    .mobile-profile-navigaton .text-white {
-      padding: 4px;
-    }
-
-    .mobile-profile-navigaton {
-      display: none;
-    }
-
-    aside a {
-      color: black;
-    }
-
-    @media (max-width:768px) {
-      aside {
-        display: none !important;
-      }
-
-      .mobile-profile-navigaton {
-        display: block;
-      }
-    }
-
-    aside li {
-      text-align: center;
-      padding: 0.5rem
-    }
-
-    .is-active {
-      color: white;
-      border: 2px solid;
-      text-align: center;
-      margin: 0;
-      background: black;
-    }
-
-    .is-active span {
-      color: white;
-    }
-
-    @media (min-width: 576px) {
-
-      #section-last h3 {
-        font-size: 1.3rem;
-        text-transform: capitalize;
-      }
-    }
-
-    .form-control:focus .accordian-button:focus {
-      color: var(--bs-body-color);
-      background-color: var(--bs-body-bg);
-      border-color: none;
-      outline: 0;
-      box-shadow: none;
-    }
-
-
-    .breadcrumb-item a {
-      color: rgb(0, 0, 0) !important;
-      font-size: inherit;
-    }
-
-    .cart-container::-webkit-scrollbar {
-      display: none;
-    }
-
-    .cart-container {
-
-      overflow-y: auto;
-      max-height: 440px;
-    }
-    .active>.page-link,
-    .page-link.active {
-      background-color: black !important;
-      border-color: azure !important;
-    }
-    .page-link {
-      color: black;
-    }
-  </style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filter Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+        .filter-options {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .filter-section {
+            margin-bottom: 20px;
+        }
+        .filter-section h5 {
+            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .filter-section hr {
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        .price-range {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .price-range select {
+            width: 48%;
+        }
+        .clear-all {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+        .clear-all a {
+            color: #007bff;
+            cursor: pointer;
+        }
+        .applied-filters {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .applied-filters span {
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin-right: 10px;
+            display: inline-block;
+        }
+    </style>
 </head>
-
 <body>
-  <!-- Header content can be added here directly or include via another static HTML file -->
-
-  <div class="container-fluid">
-    <nav aria-label="breadcrumb " class="p-4">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">orders</li>
-      </ol>
-    </nav>
-  </div>
-
-  <section class="container-fluid my-3">
-    <div class="row">
-      <aside class="col-md-3 p-2 bg-light-subtle">
-        <div>
-          <ul class="flex-column d-flex ">
-            <li>
-              <h4>Your account</h4>
-            </li>
-            <li class="">
-              <a href="/profile">
-                <span class="text ">Profile</span>
-              </a>
-            </li>
-
-            <li>
-              <a href="/address">
-                <span class="text">address</span>
-              </a>
-            </li>
-            <li class="is-active ">
-              <a href="orderHistory">
-                <span class="text">orders</span>
-              </a>
-            </li>
-            <li class="">
-              <a href="/wallet">
-                <span class="text">wallet</span>
-              </a>
-            </li>
-            <li>
-              <!-- <form action="/logout" method="post" class="py3 d-flex align-items-center justify-content-center">
-                <i class="bi bi-arrow-return-left text-danger"></i>
-                <button type="submit" class="btn "><span class="text-danger">LOG OUT</span></button>
-              </form> -->
-            </li>
-          </ul>
-
-        </div>
-
-      </aside>
-      <div class="mobile-profile-navigaton">
-        <div class="col-12 d-flex   container-fluid justify-content-evenly bg-dark mb-3">
-          <a href="/profile">
-            <div class="text-white">Profile</div>
-          </a>
-          <a href="/address">
-            <div class="text-white  ">address</div>
-          </a>
-          <a href="/orderHistory">
-            <div class="text-white is-activeMobile ">orders</div>
-          </a>
-          <a href="/wallet">
-            <div class="text-white ">wallet</div>
-          </a>
-        </div>
-      </div>
-      
-      <div class="col-md-9 cart-container">
-        <div class="container-fluid ">
-          <div class="row mb-2 d-flex justify-content-start">
-            <div class="col-6 col-md-4 p-0">
-              <form action="/orderHistory" method="get">
-                <input type="text" name="search" id="searchInput" value="" class="form-control rounded-0"
-                  placeholder="Search...">
-              </form>
-            </div>
-            <div class="category-dropDownList col-3 bg-white">
-              <select class="btn btn-white col-12 text-start" name="status" id="orderStatusDropdown">
-                <option value="" selected>All</option>
-                <option class="text-capitalize" value="placed">placed</option>
-                <option class="text-capitalize" value="pending">pending</option>
-                <option class="text-capitalize" value="shipped">shipped</option>
-                <option class="text-capitalize" value="canceled">canceled</option>
-                <option class="text-capitalize" value="delivered">delivered</option>
-                <option class="text-capitalize" value="returned">returned</option>
-              </select>
-            </div>        
-          </div>      
-        </div>
-        
-        <!-- Static Order Example -->
-        <div class="card mb-3 rounded-0 border p-2">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="m-1">
-                    <a href="/orderSingle?soid=orderID" class="card-body">
-                      <img src="uploads/sample-image.jpg" style="height: 48px; width: 48px;"
-                        class="img-sm rounded border" alt="Product Image">
-                    </a>
-                  </div>
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Filter Options Sidebar -->
+            <div class="col-lg-3">
+                <div class="filter-options">
+                    <h4>Filters</h4>
+                    <div class="clear-all">
+                        <a href="#">CLEAR ALL</a>
+                    </div>
+                    <div class="applied-filters">
+                        <span>Min-₹30000+ <a href="#" class="text-danger ml-2">&times;</a></span>
+                    </div>
+                    <!-- Categories -->
+                    <div class="filter-section">
+                        <h5>Categories</h5>
+                        <div>
+                            <p>Mobiles & Accessories</p>
+                            <p>Mobiles</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <!-- Price Range -->
+                    <div class="filter-section">
+                        <h5>Price</h5>
+                        <div id="price-range-slider"></div>
+                        <br>
+                        <div class="price-range">
+                            <select class="form-control" id="min-price">
+                                <option value="0">Min</option>
+                                <option value="10000">₹10000</option>
+                                <option value="20000">₹20000</option>
+                                <option value="30000">₹30000</option>
+                            </select>
+                            <select class="form-control" id="max-price">
+                                <option value="30000">₹30000+</option>
+                                <option value="40000">₹40000</option>
+                                <option value="50000">₹50000</option>
+                                <option value="60000">₹60000</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr>
+                    <!-- Add more filter sections as needed -->
+                    <div class="filter-section">
+                        <h5>Brand</h5>
+                        <!-- Example filter content -->
+                    </div>
                 </div>
-                <div class="col-md-6 d-flex align-items-center">
-                  <div>
-                    <span class="d-block text-capitalize">
-                      Sample Product Name
-                    </span>
-                  </div>
+            </div>
+            
+            <!-- Main Content Area -->
+            <div class="col-lg-9">
+                <!-- Your main content here, e.g., product listings -->
+                <div class="product-listings">
+                    <!-- Product cards or listings will go here -->
                 </div>
-              </div>
             </div>
-            <div class="col-md-4 d-flex align-items-center status text-danger">
-              <span class="me-3 text-dark">Status:</span>
-              canceled
-            </div>
-            <div class="col-md-2 d-flex align-items-center justify-content-end">
-              <div>
-                <div class="delivery-status">
-                  <div class="status-icon"></div>
-                  <button class="btn btn-dark btn-sm changeOrder" value="canceled"
-                    data-id="orderID" style="font-size: 0.6rem;" disabled>cancel</button>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-        <!-- End of Static Order Example -->
-
-        <div class="text-center">
-          \(^Д^)/<br>
-          No Orders.
-        </div>
-      </div>
     </div>
-  </section>
-  
-  <!-- Footer content can be added here directly or include via another static HTML file -->
 
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="/js/orderStatus.js"></script>
-  <script>
-    const dropDown = document.getElementById('orderStatusDropdown');
-    dropDown.addEventListener('change', function (event) {
-      event.preventDefault();
-      const checkedValues = {};
-      checkedValues.status = dropDown.value;
-      let queryString = new URLSearchParams(checkedValues).toString();
-      window.location.href = '/orderHistory?' + queryString;
-    });
-  </script>
+    <!-- jQuery and Price Range Slider Initialization -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialize Price Range Slider
+            $("#price-range-slider").slider({
+                range: true,
+                min: 0,
+                max: 100000,
+                values: [10000, 30000],
+                slide: function(event, ui) {
+                    $("#min-price").val(ui.values[0]);
+                    $("#max-price").val(ui.values[1]);
+                }
+            });
+            $("#min-price").val($("#price-range-slider").slider("values", 0));
+            $("#max-price").val($("#price-range-slider").slider("values", 1));
+
+            // Update slider values on dropdown change
+            $('#min-price, #max-price').change(function() {
+                var minPrice = parseInt($('#min-price').val());
+                var maxPrice = parseInt($('#max-price').val());
+                $("#price-range-slider").slider("values", [minPrice, maxPrice]);
+            });
+        });
+    </script>
 </body>
-
 </html>
 
 
 
 
+<!--====================================================cart page code for backup=================================================================-->
 
 
 
-
-
-
-
-<!--==============================================================ORDER HISTORY PAGE BACKUP =========================================================================================-->
-
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BeatsCart</title>
-  <link rel="icon" href="/image/android-chrome-512x512.png" type="image/png" alt="Site Icon">
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
-
-  <!-- boostrap css cdn link -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-
-  <!-- bootstrap icon cdn link -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
-
-  <!-- css style sheet link -->
-  <link rel="stylesheet" href="/css/header_footer.css">
-
-  <style>
-   .is-activeMobile {
-      background-color: #fff;
-      color: #000 !important;
-      border: 2px solid;
-    }
-
-    .mobile-profile-navigaton .text-white {
-      padding: 4px;
-    }
-
-    .mobile-profile-navigaton {
-      display: none;
-    }
-
-    aside a {
-      color: #000;
-    }
-
-    @media (max-width: 768px) {
-      aside {
-        display: none !important;
-      }
-
-      .mobile-profile-navigaton {
-        display: block;
-      }
-    }
-
-    aside li {
-      text-align: center;
-      padding: 0.5rem;
-    }
-
-    .is-active {
-      color: #fff;
-      border: 2px solid;
-      text-align: center;
-      margin: 0;
-      background: #000;
-    }
-
-    .is-active span {
-      color: #fff;
-    }
-
-    @media (min-width: 576px) {
-      #section-last h3 {
-        font-size: 1.3rem;
-        text-transform: capitalize;
-      }
-    }
-
-    .form-control:focus,
-    .accordian-button:focus {
-      color: var(--bs-body-color);
-      background-color: var(--bs-body-bg);
-      border-color: none;
-      outline: 0;
-      box-shadow: none;
-    }
-
-    .breadcrumb-item a {
-      color: #000 !important;
-      font-size: inherit;
-    }
-
-    .cart-container::-webkit-scrollbar {
-      display: none;
-    }
-
-    .cart-container {
-      overflow-y: auto;
-      max-height: 440px;
-    }
-
-    .active>.page-link,
-    .page-link.active {
-      background-color: #000 !important;
-      border-color: azure !important;
-    }
-
-    .page-link {
-      color: #000;
-    }
-
-    .address-list {
-      list-style-type: none;
-      padding: 0;
-    }
-
-    .address-list li {
-      margin-top: 4px;
-    }
-
-    .order-detail {
-      color: #000;
-      font-weight: 300;
-      font-size: 15px;
-      font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    }
-
-    .order-status {
-      color: #ff4500;
-      font-weight: 300;
-    }
-
-    .container-fluid {
-      margin-top: 20px;
-    }
-
-    .card {
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      transition: all 0.3s ease;
-    }
-
-    .card:hover {
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-header {
-      background-color: #f8f9fa;
-      border-bottom: 1px solid #ddd;
-    }
-
-    .btn {
-      border-radius: 20px;
-    }
-
-    .breadcrumb {
-      background-color: #f8f9fa;
-      border-radius: 10px;
-    }
-
-    .breadcrumb-item.active {
-      color: #6c757d;
-    }
-
-    .form-control {
-      border-radius: 20px;
-    }
-
-    .category-dropDownList .btn {
-      border-radius: 20px;
-    }
-
-    .order-header {
-      font-weight: bold;
-      font-size: 18px;
-    }
-
-    .order-item {
-      margin-bottom: 15px;
-    }
-
-    .order-status span {
-      font-weight: bold;
-    }
-
-
-  </style>
-
-</head>
-
-<body>
-  <div class="container-fluid">
-    <nav aria-label="breadcrumb " class="p-4">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">orders</li>
-      </ol>
-    </nav>
-  </div>
-
-  <!-- <section class="container-fluid my-3">
-    <div class="row">
-      <aside class="col-md-3 p-2 bg-light-subtle">
-        <div>
-          <ul class="flex-column d-flex ">
-            <li>
-              <h4>Your account</h4>
-            </li>
-            <li class="">
-              <a href="/profile">
-                <span class="text ">Profile</span>
-              </a>
-            </li>
-            <li>
-              <a href="/address">
-                <span class="text">address</span>
-              </a>
-            </li>
-            <li class="is-active ">
-              <a href="orderHistory">
-                <span class="text">orders</span>
-              </a>
-            </li>
-            <li class="">
-              <a href="/wallet">
-                <span class="text">wallet</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </aside> -->
-      <!-- <div class="mobile-profile-navigaton">
-        <div class="col-12 d-flex container-fluid justify-content-evenly bg-dark mb-3">
-          <a href="/profile">
-            <div class="text-white">Profile</div>
-          </a>
-          <a href="/address">
-            <div class="text-white">address</div>
-          </a>
-          <a href="/orderHistory">
-            <div class="text-white is-activeMobile">orders</div>
-          </a>
-          <a href="/wallet">
-            <div class="text-white">wallet</div>
-          </a>
-        </div>
-      </div> -->
-<!-- 
-      <div class="col-md-9 cart-container">
-        <div class="container-fluid">
-          <div class="row mb-2 d-flex justify-content-start">
-            <div class="col-6 col-md-4 p-0">
-              <form action="/orderHistory" method="get">
-                <input type="text" name="search" id="searchInput" value="" class="form-control rounded-0"
-                  placeholder="Search...">
-              </form>
-            </div>
-            <div class="category-dropDownList col-3 bg-white">
-              <select class="btn btn-white col-12 text-start" name="status" id="orderStatusDropdown">
-                <option value="" selected>All</option>
-                <option class="text-capitalize" value="placed">placed</option>
-                <option class="text-capitalize" value="pending">pending</option>
-                <option class="text-capitalize" value="shipped">shipped</option>
-                <option class="text-capitalize" value="canceled">canceled</option>
-                <option class="text-capitalize" value="delivered">delivered</option>
-                <option class="text-capitalize" value="returned">returned</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- Loop through the orders and display them -->
-        <% if (orders.length > 0) { %> 
-          <% orders.forEach(order => { %>
-            <div class="card mb-3 rounded-0 border p-2">
-              <div class="row">
-                <div class="col-md-6">
-                  <% order.products.forEach(item => { %> 
-                    <div class="row mb-2">
-                      <!-- <div class="col-md-3"> -->
-                        <!-- <a href="/product/" class="card-body"> -->
-                          <!-- <img src="" style="height: 48px; width: 48px;" class="img-sm rounded border" alt="Product Image"> -->
-                        <!-- </a> -->
-                      <!-- </div> -->
-                   <!-- <div class="col-md-9 d-flex align-items-center">
-                        <div>
-                            <span class="d-block text-capitalize order-detail">Name: <%= item.product.name %></span>
-                            <span class="d-block order-detail">Quantity: <%= item.quantity %></span>
-                            <span class="d-block order-detail">Price: $<%= item.product.price %></span>
-                          </div>
-                      </div>
-                    </div>
-                  <% }); %>
-                </div>
-                <div class="col-md-4 d-flex align-items-center status">
-                  <span class="me-3 text-dark">Status:</span>
-                  <%= order.status %>
-                </div>
-                <div class="col-md-2 d-flex align-items-center justify-content-end">
-                  <div>
-                    <div class="delivery-status">
-                        <div>
-                            <button class="btn btn-danger btn-sm cancelOrder" data-id="<%= order._id %>" style="font-size: 0.8rem;">Cancel</button>
-                          </div>
-                      <button class="btn btn-dark btn-sm changeOrder" value="<%= order.status %>" data-id="<%= order._id %>" style="font-size: 0.6rem;" disabled><%= order.status %></button>
-                    </div>
-                  </div>
+<div class="small-container cart-page">
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Subtotal</th>
+      </tr>
+  
+      <% if (cart && cart.products.length > 0) { %>
+        <% cart.products.forEach(product => { %>
+          <tr>
+            <td>
+              <div class="cart-info">
+                <img src="/uploads/<%= product.productId.image[0] %>" alt="" /> <!-- Assuming image URL is stored in the product model -->
+                <div>
+                  <p><%= product.productId.name %></p>
+                  <small>Price ₹<%= product.productId.price.toFixed(2) %></small>
+                  <br />
+                  <a href="#" class="remove-btn" data-product-id="<%= product.productId._id %>">Remove</a>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-12">
-                    <span class="d-block order-detail">Total: $<%= order.totals.totalprice %></span>
-                    <span class="d-block order-detail">Order Date: <%= order.orderDate %></span>
-                    <span class="d-block order-detail">Order Time: <%= order.orderTime %></span>
-                  <!-- <ul class="address-list">
-                    <li>House Name: <%= order.address.houseName %></li>
-                    <li>Area: <%= order.address.area %></li>
-                    <li>Landmark: <%= order.address.landmark %></li>
-                    <li>City: <%= order.address.city %></li>
-                    <li>State: <%= order.address.state %></li>
-                    <li>Pincode: <%= order.address.pincode %></li>
-                  </ul>   -->
-
-                   </div>
+            </td>
+            <td>
+              <div class="quantity">
+                <button class="btn-decrease" data-product-id="<%= product.productId._id %>">-</button>
+                <input type="text" value="<%= product.quantity %>" readonly />
+                <button class="btn-increase" data-product-id="<%= product.productId._id %>" <%= product.quantity >= 10 ? 'disabled' : '' %> >+</button>
               </div>
-            </div>
-          <% }); %>
-        <% } else { %>
-          <div class="text-center">
-            <br>
-            No Orders.
-          </div>
-        <% } %>
+            </td>
+            <td>₹<%= (product.quantity * product.productId.price).toFixed(2) %></td>
+          </tr>
+        <% }); %>
+      <!--cart is empty work below else case-->
+      <% } else { %>
+        <tr>
+        <td colspan="3" class="text-center">
+        <img class="cart-image" src="/uploads/empty-cart-5521508-4610092.png">
+        <div class="cart-button">
+        <a href="/products" class="btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping</a>
       </div>
+    </td>
+  </tr>
+      <% } %>
+    </table>
+    <% if(cart && cart.products.length>0){%>
+  
+    <div class="total-price">
+      <table>
+        <tr>
+          <td>Subtotal</td>
+          <td>₹ <span class="subtotal"><%= subtotal.toFixed(2) %></span></td>
+        </tr>
+        <tr>
+          <td>Tax</td>
+          <td>₹ <span class="tax"><%= (subtotal * 0.05).toFixed(2) %></span></td><!--  tax is 5% -->
+        </tr>
+        <tr>
+          <td>Total</td>
+          <td>₹ <span class="total"><%= (subtotal * 1.05).toFixed(2) %> </span></td> <!-- Total = Subtotal + Tax -->
+        </tr>
+        <tr>
+          <td>
+            <a href="/checkout"><button>Checkout</button></a>
+  
+  
+           </td>
+        </tr>
+      </table>
     </div>
-  </section>
-
- <!--- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="/js/orderStatus.js"></script>
-  <script>
-    const dropDown = document.getElementById('orderStatusDropdown');
-    dropDown.addEventListener('change', function (event) {
-      event.preventDefault();
-      const checkedValues = {};
-      checkedValues.status = dropDown.value;
-      let queryString = new URLSearchParams(checkedValues).toString();
-      window.location.href = '/orderHistory?' + queryString;
-    });
-  </script>
-</body>
-
-</html> -->
+    <%} %>
+  </div>
+  
+  <style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: "Poppins", sans-serif;
+    background-color: #ecfdff;
+  }
+  
+  .cart-page {
+    margin: 90px auto;
+    background-color: #ecfdff;
+  }
+  
+  .navbar {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  nav {
+    flex: 1;
+    text-align: right;
+  }
+  
+  nav ul {
+    display: inline-block;
+    list-style-type: none;
+  }
+  
+  nav ul li {
+    display: inline-block;
+    margin-right: 20px;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #555;
+  }
+  
+  p {
+    color: #555;
+  }
+  
+  .container {
+    max-width: 1300px;
+    margin: auto;
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+  
+  .row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  
+  .col-2 {
+    flex-basis: 50%;
+    min-width: 300px;
+  }
+  
+  .col-2 img {
+    max-width: 100%;
+    padding: 50px 0;
+  }
+  
+  .col-2 h1 {
+    font-size: 50px;
+    line-height: 60px;
+    margin: 25px 0;
+  }
+  
+  .btn {
+    display: inline-block;
+    background: green;
+    color: #ffffff;
+    padding: 8px 30px;
+    margin: 30px 0;
+    border-radius: 30px;
+    transition: background 0.5s;
+  }
+  
+  .btn:hover {
+    background: #563434;
+  }
+  
+  .header {
+    background: radial-gradient(#ecfdff, #ecfdff);
+  }
+  
+  .header .row {
+    margin-top: 70px;
+  }
+  
+  .categories {
+    margin: 70px 0;
+  }
+  
+  .col-3 {
+    flex-basis: 30%;
+    min-width: 250px;
+    margin-bottom: 30px;
+  }
+  
+  .col-3 img {
+    width: 100%;
+  }
+  
+  .small-container {
+    max-width: 1080px;
+    margin: auto;
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+  
+  .col-4 {
+    flex-basis: 25%;
+    padding: 10px;
+    min-width: 200px;
+    margin-bottom: 50px;
+    transition: transform 0.5s;
+  }
+  
+  .col-4 img {
+    width: 100%;
+  }
+  
+  .title {
+    text-align: center;
+    margin: 0 auto 80px;
+    position: relative;
+    line-height: 60px;
+    color: #555;
+  }
+  .title::after {
+    content: "";
+    background: #ff523b;
+    width: 80px;
+    height: 5px;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%);
+  }
+  
+  h4 {
+    color: #555;
+    font-weight: normal;
+  }
+  
+  .col-4 p {
+    font-size: 14px;
+  }
+  
+  .rating .fas {
+    color: #ff523b;
+  }
+  
+  .rating .far {
+    color: #ff523b;
+  }
+  
+  .col-4:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Offer */
+  
+  .offer {
+    background: radial-gradient(#fff, #ffd6d6);
+    margin-top: 80px;
+    padding: 30px 0;
+  }
+  
+  .col-2 .offer-img {
+    padding: 50px;
+  }
+  
+  /* testimonial */
+  
+  .testimonial {
+    padding-top: 100px;
+  }
+  
+  .testimonial .col-3 {
+    text-align: center;
+    padding: 40px 20px;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.5s;
+  }
+  
+  .testimonial .col-3 img {
+    width: 50px;
+    margin-top: 20px;
+    border-radius: 50%;
+  }
+  
+  .testimonial .col-3:hover {
+    transform: translateY(-10px);
+  }
+  
+  .fa.fa-quote-left {
+    font-size: 34px;
+    color: #ff523b;
+  }
+  
+  .col-3 h3 {
+    font-size: 18px;
+    color: #555;
+    font-weight: 600;
+    margin: 10px 0;
+  }
+  
+  /* brands */
+  
+  .brands {
+    margin: 100px auto;
+  }
+  
+  .col-5 {
+    width: 160px;
+  }
+  
+  .col-5 img {
+    width: 100%;
+    cursor: pointer;
+    filter: grayscale(100%);
+  }
+  
+  .col-5 img:hover {
+    filter: grayscale(0);
+  }
+  
+  /* footer */
+  
+  footer {
+    background: #000;
+    color: #fff;
+    font-size: 14px;
+    padding: 60px 0 20px;
+  }
+  
+  .footer .row {
+    margin-bottom: 20px;
+  }
+  
+  .footer p {
+    color: #8a8a8a;
+  }
+  
+  .footer h3 {
+    color: #ffffff;
+    margin-bottom: 20px;
+  }
+  
+  .footer-col-1,
+  .footer-col-2,
+  .footer-col-3,
+  .footer-col-4 {
+    min-width: 250px;
+    margin-bottom: 20px;
+  }
+  
+  .footer-col-1 {
+    flex-basis: 30%;
+  }
+  
+  .footer-col-2 {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .footer-col-2 img {
+    width: 180px;
+  }
+  
+  .footer-col-3,
+  .footer-col-4 {
+    flex-basis: 12%;
+    text-align: center;
+  }
+  
+  ul {
+    list-style-type: none;
+  }
+  
+  .app-logo {
+    margin-top: 20px;
+  }
+  
+  .footer hr {
+    border: none;
+    background: #b5b5b5;
+    height: 1px;
+    margin: 20px 0;
+  }
+  
+  .copyright {
+    text-align: center;
+  }
+  
+  .menu-icon {
+    width: 28px;
+    margin-left: 20px;
+  }
+  
+  .cart-page {
+    margin: 80px auto;
+  }
+  
+  .cart-info {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  th {
+    text-align: left;
+    padding: 5px;
+    color: #fff;
+    background: #ff523b;
+    font-weight: normal;
+  }
+  
+  td {
+    padding: 10px 5px;
+  }
+  
+  td input {
+    width: 40px;
+    height: 30px;
+    padding: 5px;
+  }
+  
+  td a {
+    color: #ff523b;
+    font-size: 12px;
+  }
+  
+  td img {
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
+  }
+  
+  .total-price {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .total-price table {
+    border-top: 3px solid #ff523b;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  td:last-child {
+    text-align: right;
+  }
+  
+  th:last-child {
+    text-align: right;
+  }
+  
+  .quantity {
+    display: flex;
+    align-items: center;
+  }
+  
+  .quantity button {
+    background-color: #ff523b;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 5px;
+  }
+  
+  .quantity button:focus {
+    outline: none;
+  }
+  
+  .quantity input {
+    width: 40px;
+    height: 30px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .cart-image{
+    width: 63%;
+      margin-left: 181px;
+      margin-top: 37px;
+      height: 430px;
+    }
+  
+  
+    .cart-button{
+      margin-left: 377px;
+      margin-top: -32px; 
+     }
+  
+  </style>
+  

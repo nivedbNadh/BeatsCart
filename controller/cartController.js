@@ -117,7 +117,7 @@ const updateCartQuantity=async (req,res) =>{
 
         const {productId,action}=req.body
         const userId = req.session.userId
-        console.log( userId,"dm    dnej     mmmkiwwensndsm,pqwkjnsd;dniensndpqjpqnsde ")
+        // console.log( userId,"dm    dnej     mmmkiwwensndsm,pqwkjnsd;dniensndpqjpqnsde ")
 
         let cart=await Cart.findOne({userId})
 

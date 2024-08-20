@@ -18,6 +18,14 @@ const userExist=(req,res,next)=>{
         next()
     }
 }
+const value = (req, res, next) => {
+    console.log('hello')
+
+    next()
+    
+};
+
+
 
 
 const userBlock =async (req,res,next)=>{
@@ -47,5 +55,6 @@ const userBlock =async (req,res,next)=>{
 module.exports={
     authentication,
     userExist,
-    userBlock
+    userBlock,
+    value
 }

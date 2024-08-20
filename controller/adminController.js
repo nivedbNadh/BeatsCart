@@ -14,6 +14,7 @@ const Products=require('../models/productModel')
 const Category=require('../models/categoryModel')
 const Admin=require('../models/adminModel')
 const Order = require('../models/orderModel');
+const brand=require('../models/BrandModel')
 
 
 
@@ -131,9 +132,12 @@ const addProduct = async(req,res)=>{
     try{
 
         const category = await Category.find({is_deleted:false})
+        const brands=await brand.find({is_deleted:false})
+        console.log(brand,"brandaddtoproduct");
+        
         console.log('category',category);
 
-        res.render('addProduct', {category})
+        res.render('addProduct', {category,brands})
 
     }catch(error){
         console.error('Error adding products:', error);
@@ -144,7 +148,7 @@ const addProduct = async(req,res)=>{
 
 const addAdminProduct = async (req, res) => {
     try {
-        const { name, description, price, category, quantity } = req.body;
+        const { name, description, price, category, quantity,brand } = req.body;
         // console.log('req.file this  is image', req.files);
         if(req.files.length<1) {
             console.error("Not enough files uploaded");
@@ -165,6 +169,7 @@ const addAdminProduct = async (req, res) => {
             description,
             price,
             category,
+            brand,
             quantity,
             image: img
         });
@@ -196,11 +201,19 @@ const categoryList = async(req,res)=>{
 }
 
 
+
+const brandList=async(req,res)=>{
+    try{
+        const brands=await brand.find({is_deleted:false}) 
+        res.render('brandlist',{brand:brands})
+    }catch(error) {
+        console.error(error)
+        res.status(500).send('Internal server error')
+    }
+}
+
 const addCategory = async(req,res)=>{
     try{
-
-        
-        
 
       return res.render('addCategory',{error:null})
 
@@ -210,6 +223,15 @@ const addCategory = async(req,res)=>{
     }
 }
 
+
+const addBrand=async(req,res)=>{
+    try{
+        return res.render('addBrands',{error:null})
+    }catch(error) {
+        console.error(error)
+        res.status(500).send('server error')
+    }
+}
 
 const addAdminCategory = async (req, res) => {
     try {
@@ -234,6 +256,24 @@ const addAdminCategory = async (req, res) => {
         res.status(500).json({ error: 'Server Error' });
     }
 };
+
+
+
+const addAdminBrand =async( req,res)=>{
+    const {brandsName}=req.body
+if(typeof brandsName!=='string'){
+    return res.status(400).json({error:'invalid brand name'})
+}    
+const existingBrand=await brand.findOne({name:brandsName})
+if(existingBrand){
+    console.log(existingBrand,"existingbrand");
+    return res.status(400).json({error:'brand name already exist'})
+    
+}
+const brands=new brand({name:brandsName})
+await brands.save()
+res.status(200).json({message:'Brand added successfully'})
+}
 
 
 const deleteProducts= async (req,res)=>{
@@ -310,6 +350,30 @@ const categoryDelete = async (req, res) => {
     }
 }
 
+
+const brandDelete=async (req,res)=>{
+try{
+    const brandId=req.params.id
+    console.log("brandIdbrandIdbrandId",brandId);
+
+    const brands=await brand.findById(brandId)
+    console.log("brands",brands)
+
+    if(!brands){
+        console.log("brand not found")
+        return res.status(404).json({message:'brand not found'})
+    }
+    brands.is_deleted=true
+    await brands.save()
+    res.json({message:'Brand deleted successfully'})
+} catch(error){
+    console.error('Error:',error)
+    res.status(500).json({message:error.message})
+}
+
+}
+
+
 const editCategory=async (req,res)=>{
     try{
     const categoryId = req.body.categoryId;
@@ -328,6 +392,30 @@ const editCategory=async (req,res)=>{
         res.status(500).json({error:"internal server error"})
 
     }
+}
+const editBrand=async(req,res)=>{
+    try{
+        const brandId=req.body.brandId
+        const brandName=req.body.brandName
+
+        console.log('brandId',brandId)
+        console.log('brandName',brandName)
+
+        const brands=await brand.findById(brandId)
+        console.log(brands,"brandsbrandsbrands")
+        if(!brands){
+           return res.status(404).json({message:'Brand not found'})
+        }
+        brands.name=brandName
+        await brands.save()
+        res.status(200).json({message:'brand updated successfully',brand:brands})
+
+
+    } catch (error){
+        console.error('Error updating brand',error)
+        res.status(500).json({error:'internal server error'})
+    }
+
 }
 
 
@@ -450,7 +538,11 @@ module.exports={
     editCategory,
     productUpdate,
     loadAdminManage,
-    updateOrderStatus
-
+    updateOrderStatus,
+    addBrand,
+    addAdminBrand,
+    brandList,
+    brandDelete,
+    editBrand
 }
 

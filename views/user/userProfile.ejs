@@ -456,9 +456,10 @@ $(document).ready(function() {
 
         var formData = $(this).serialize();
         $.post('/save-address', formData, function(response) {
-            showAlert('Address saved successfully', 'success');
+            alert('Address saved successfully', 'success');
             $('#address-form')[0].reset();
             $('#address-form').hide();
+            location.reload()
             loadAddressList();
         }).fail(function(xhr, status, error) {
             showAlert('Error saving address: ' + xhr.responseJSON.error);

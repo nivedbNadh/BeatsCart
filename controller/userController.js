@@ -3,6 +3,10 @@ const User = require("../models/userModel");
 const Product = require("../models/productModel");
 const Address=require('../models/addressModel')
 const Cart=require('../models/cartModel')
+const Category=require('../models/categoryModel')
+const brand=require('../models/BrandModel')
+
+
 // const GoogleUser = require("../models/GoogleUser");
 const mongoose=require('mongoose')
 
@@ -40,12 +44,13 @@ const loadHome = async (req, res) => {
     const email = req.session.curUser;
     const products = await Product.find({is_deleted:false});
     const user = await User.findOne({ email: email });
+    const categories=await Category.find({is_deleted:false})
 
     // console.log(user,"heres sis");
 
-    res.render("home", { error: null, user, products });
+    res.render("home", { error: null, user, products,categories});
   } catch (error) {
-    console.log("error occured");
+    console.log("error occured",error);
   }
 };
 // userMail
@@ -206,6 +211,9 @@ const getProductDetails = async (productId) => {
 const productDetails = async (req, res) => {
   try {
     const productId = req.params.productId;
+    const email=req.session.email
+    user=await User.findOne({email:email})
+
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       return res.redirect('/error')
     } else {
@@ -217,7 +225,7 @@ const productDetails = async (req, res) => {
         {name:'Products',url:'/products'},
         {name:product.name,url:req.originalUrl}
       ]
-     return res.render("productDetails", { product: [product] ,breadcrumbs});
+     return res.render("productDetails", { product: [product] ,breadcrumbs,user});
     }
   
   } catch (error) {
@@ -239,17 +247,21 @@ const products = async (req, res) => {
      user = await User.findOne({ email: email });
     }
     const products = await Product.find({is_deleted:false});
+    const category=await Category.find({is_deleted:false})
+    const brands=await brand.find({is_deleted:false})
+    // console.log(category,"llllllllllllllllllllllll");
+    
 const breadcrumbs=[
   {name:'Home',url:'/'},
   {name:'Products',url:'/products'}
 ]
-res.render("products", { error: null, user, products,breadcrumbs});
+res.render("products", { error: null, user, products,breadcrumbs,category,brands});
 
 
 
 
   } catch (error) {
-    console.error("error occured");
+    console.error("error occured",error);
   }
 };
 
@@ -574,6 +586,101 @@ if(!user) {
 
 
 
+const searchProducts=async(req,res)=>{
+
+  try {
+
+    const searchTerm=req.query.q
+    const regex=new RegExp(searchTerm,'i')
+    console.log(searchTerm,"searchTerm")
+    console.log(regex,"regex")
+
+
+        const allProducts = await Product.find();
+        // console.log(allProducts,"all products")
+
+    const products=await Product.find({
+      $or:[
+        {name:regex},
+        {description:regex},
+        {category:regex}
+
+      ],
+      
+    })
+    console.log(products,"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+    res.json(products)
+
+
+
+    
+  } catch (error) {
+
+    console.error('Error during serch:',error);
+    res.status(500).json({error:'Internal server error'})
+    
+    
+  }
+
+}
+
+
+const paperget=(req,res)=>{
+  try {
+  
+  res.render('paper')
+
+    
+  } catch (error) {
+
+    console.log('error occured',error)
+    res.status(500).json({error:'internal server'})
+  }
+}
+
+
+
+
+const filterProducts= async (req,res)=>{
+  try{
+    const {price,category}=req.body
+    // console.log(price,category,"jssssssssxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxjjjjjjjjjjjxj");
+    
+
+    let query={}
+    // console.log("queryqueryqueryqueryqueryqueryqueryqueryqueryquery",query);
+    
+
+    if(Array.isArray(category) && category.length >0) {
+      query.category={$in:category}
+    }
+    // console.log("querysecondquerysecond",query)
+
+    
+    let products=Product.find(query)
+    // console.log("productsproducts1",products)
+
+    if(price) {
+      products=products.sort(price==='low-to-high' ? {price:1}:{price:-1})
+      
+      
+    }
+    // console.log("productsproductsproducts",products);
+
+
+
+    const result=await products.exec()
+    // console.log("resultresultresult",result)
+    
+    // console.log(result,"resultsresultsresults")
+    res.json({products:result})
+
+  } catch (error) {
+    res.status(500).json({message:'Error filtering products',error})
+  }
+}
+
+
 
 module.exports = {
   loadHome,
@@ -600,5 +707,8 @@ module.exports = {
   loadEditAddress,
   editAddress,
   loadCheckout,
-  loadCheckoutAddress 
+  loadCheckoutAddress ,
+  searchProducts,
+  paperget,
+  filterProducts
 };

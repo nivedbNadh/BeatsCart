@@ -6,7 +6,14 @@ const Order = require('../models/orderModel');
 const Address=require('../models/addressModel')
 const User=require('../models/userModel')
 const { v4: uuidv4 } = require('uuid'); 
+const Razorpay = require("razorpay");
+const crypto=require('crypto')
+const {RAZORPAY_KEY_ID,RAZORPAY_KEY_SECRET}=process.env
 
+const razorpay=new Razorpay({
+    key_id:process.env.RAZORPAY_KEY_ID,
+    key_secret:process.env.RAZORPAY_KEY_SECRET
+})
 
 const addAddressCheckout= async(req,res)=>{
     try {
@@ -164,7 +171,7 @@ const loadOrderHistory = async (req,res)=>{
         console.log("emailcheckoutpage",email)
         console.log("userIdcheckoutpage",userId)
         const user=await User.findOne({email})
-        console.log("user in checkout page",user)
+        // console.log("user in checkout page",user)
         if(!user) {
             return res.status(404).json({message:'User not found'})
         }

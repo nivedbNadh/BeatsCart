@@ -125,19 +125,18 @@
     }
   </style>
   <script>
-    window.onload = function() {
-      if (window.history && window.history.pushState) {
-        window.history.pushState('forward', null, './#forward');
+  window.onload = function() {
+  if (window.history && window.history.replaceState) {
+    // Replace the current state with the success page
+    window.history.replaceState(null, null, window.location.href);
 
-        window.onpopstate = function(event) {
-          if (event.state === null) {
-            // Redirect to the cart page
-            window.location.href = '/cart';
-          }
-          window.history.pushState('forward', null, './#forward');
-        };
-      }
+    window.onpopstate = function(event) {
+      // Redirect to the cart page when back button is pressed
+      window.location.href = '/cart';
     };
+  }
+};
+
   </script>
 </head>
 <body>
