@@ -5,12 +5,22 @@ const Address=require('../models/addressModel')
 const Cart=require('../models/cartModel')
 const Category=require('../models/categoryModel')
 const brand=require('../models/BrandModel')
-
+const Coupon=require('../models/couponModel')
+const Wishlist=require('../models/wishListModel')
+const ProductOffer=require('../models/productOfferModel')
+const CategoryOffer=require('../models/categoryOfferModel')
+const RecentlyViewed =require('../models/recentlyModel')
+const crypto = require('crypto'); 
+const Wallet=require('../models/walletModel')
+const Order=require('../models/orderModel')
 
 // const GoogleUser = require("../models/GoogleUser");
 const mongoose=require('mongoose')
-
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
+const path = require('path');
 const bcrypt = require("bcrypt");
+const { categoryOfferSaving } = require("./adminController");
 
 // const createUser = async (req, res) => {
 //   const { name, email, password, confirmpassword } = req.body;
@@ -42,17 +52,129 @@ const bcrypt = require("bcrypt");
 const loadHome = async (req, res) => {
   try {
     const email = req.session.curUser;
+    const userId=req.session.userId
     const products = await Product.find({is_deleted:false});
     const user = await User.findOne({ email: email });
     const categories=await Category.find({is_deleted:false})
 
-    // console.log(user,"heres sis");
+    const arrivals=await Product.find({is_deleted:false}).sort({createdAt:-1})
 
-    res.render("home", { error: null, user, products,categories});
+    const newArrivals=arrivals.slice(0,4)
+    // console.log(newArrivals,'newArrivals')
+
+
+    const currentDate=new Date()
+    const productOffers=await ProductOffer.find({
+      startDate:{$lte:currentDate},
+      endDate:{$gte:currentDate}
+    })
+// console.log('productOffershome',productOffers)
+
+
+    const categoryOffers=await CategoryOffer.find({
+      startDate:{$lte:currentDate},
+      endDate:{$gte:currentDate}
+    })
+
+
+
+    const offerMap=new Map()
+    // console.log('offerMapofferMap',offerMap)
+    productOffers.forEach(offer=>{
+      offerMap.set(offer.productId.toString(),offer)
+      // console.log('offerMap',offerMap)
+      // console.log('offer.productId',offer.productId)
+    })
+
+
+const categoryOfferMap=new Map()
+categoryOffers.forEach(offer=>{
+  categoryOfferMap.set(offer.categoryId.toString(),offer)
+})
+
+
+
+    const productsWithOffers=products.map(product=>{
+      const productId = product._id ? product._id.toString() : null;
+      const categoryId = product.categoryId ? product.categoryId.toString() : null;
+
+      // if(!categoryId){
+      //   return {
+      //     ...product._doc,
+      //     discountedPrice:null,
+      //     originalPrice:product.price,
+      //     hasOffer:false
+      //   }
+      // }
+
+
+      const offer=offerMap.get(product._id.toString())
+      // console.log('offer',offer)
+      // console.log('product._id......',product._id)
+      if(offer){
+        const discountAmount=(product.price*offer.discount)/100
+        const discountedPrice=product.price-discountAmount
+
+        // console.log('offerhome',offer)
+
+        return{
+          ...product._doc,
+          discountedPrice,
+          originalPrice:product.price,
+          hasOffer:true
+        }
+      }else{
+
+        const categoryOffer=categoryOfferMap.get(categoryId)
+        if(categoryOffer){
+          const discountAmount=(product.price* categoryOffer.discount)/100
+          const discountedPrice=product.price-discountAmount
+
+          // console.log('discountAmount',discountAmount)
+          // console.log('discountedPrice',discountedPrice)
+
+          return {
+            ...product._doc,
+            discountedPrice,
+            originalPrice:product.price,
+            hasOffer:true,
+            offerType:'category',
+            categoryDiscount:categoryOffer.discount
+
+          }
+
+        }
+    }  
+
+        return{
+          ...product._doc,
+          discountedPrice:null,
+          originalPrice:product.price,
+          hasOffer:false
+        }
+    })
+    // console.log('productsWithOffers',productsWithOffers)
+    let recentlyViewedProducts = [];
+    if (user) {
+      const recentlyViewed = await RecentlyViewed.findOne({ userId: user._id });
+      if (recentlyViewed && recentlyViewed.products.length > 0) {
+        recentlyViewedProducts = await Product.find({
+          _id: { $in: recentlyViewed.products }
+        }).lean();
+        
+        recentlyViewedProducts.sort((a, b) =>
+          recentlyViewed.products.indexOf(a._id) - recentlyViewed.products.indexOf(b._id)
+        );
+      }
+    }
+// console.log('recentProducts',recentProducts)
+
+    res.render("home", { error: null, user, products:productsWithOffers,categories,newArrivals,recentlyViewedProducts});
   } catch (error) {
     console.log("error occured",error);
   }
 };
+
 // userMail
 
 const loadLogin = async (req, res) => {
@@ -91,8 +213,14 @@ const loadOtp = async (req, res) => {
   }
 };
 
+
+
+const generateReferralCode = () => {
+  return crypto.randomBytes(4).toString('hex'); 
+};
+
 const createLogin = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, referralCode } = req.body;
 
   try {
     const userLog = await User.findOne({ email: email });
@@ -105,7 +233,56 @@ const createLogin = async (req, res) => {
     if (!passwordValid) {
       return res.render("login", { error: "Invalid email or password" });
     }
-    req.session.userlogged= true;
+
+    if (referralCode) {
+      const referredUser = await User.findOne({ referralCode: referralCode });
+      console.log('referredUser', referredUser);
+
+      if (referredUser) {
+        let wallet = await Wallet.findOne({ user: referredUser._id });
+
+        if (wallet) {
+          wallet.balance += 100;
+          wallet.transaction.push({
+            transactionType:'credit',
+            description:'Referral reward',
+            timestamp:new Date()
+          })
+          await wallet.save()
+         
+        } else {
+          await Wallet.create({
+            user: referredUser._id,
+            balance: 100,
+            transaction:[{
+            transactionType: 'credit',
+            description: 'Referral reward',
+            referralDate: new Date(),
+            transactionId: generateTransactionId(),
+            
+          }]
+          });
+        }
+      }
+    }
+
+    if (!userLog.referralCode) {
+      let referralCode;
+      let referralExists = true;
+
+      do {
+        referralCode = generateReferralCode();
+        const existingUser = await User.findOne({ referralCode: referralCode });
+        if (!existingUser) {
+          referralExists = false;
+        }
+      } while (referralExists);
+
+      userLog.referralCode = referralCode;
+      await userLog.save();
+    }
+
+    req.session.userlogged = true;
     req.session.curUser = email;
     req.session.email = email;
     req.session.userId = userLog._id;
@@ -116,6 +293,11 @@ const createLogin = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+const generateTransactionId = () => {
+  return crypto.randomBytes(16).toString('hex');
+};
+
 
 const loadForgot = async (req, res) => {
   try {
@@ -219,13 +401,72 @@ const productDetails = async (req, res) => {
     } else {
       const product = await Product.findById(productId);
 
-      
+      const currentDate=new Date()
+      const offer=await ProductOffer.findOne({
+        productId:productId,
+        startDate:{$lte:currentDate},
+        endDate:{$gte:currentDate},
+      })
+
+
+      let categoryOffer
+      if(product.categoryId){
+        categoryOffer=await CategoryOffer.findOne({
+          categoryId:product.categoryId,
+          startDate:{$lte:currentDate},
+          endDate:{$gte:currentDate}
+        })
+      }
+
+      let finalPrice=product.price
+      if(offer){
+        const discountAmount=(product.price*offer.discount)/100
+        finalPrice=product.price-discountAmount
+      } else if(categoryOffer){
+        const discountAmount=(product.price*categoryOffer.discount)/100
+        finalPrice=product.price-discountAmount
+      }
+
+      let recentlyViewed; // Declare outside to ensure it's accessible
+
+    if (user) {
+      recentlyViewed = await RecentlyViewed.findOne({ userId: user._id });
+
+      if (!recentlyViewed) {
+        recentlyViewed = new RecentlyViewed({
+          userId: user._id,
+          products: [product._id] // Create with the current product
+        });
+      } else {
+        // Ensure that `recentlyViewed.products` is an array of ObjectIds
+        if (!Array.isArray(recentlyViewed.products)) {
+          recentlyViewed.products = [];
+        }
+
+        // Check if the product is already in the recently viewed list
+        const productExists = recentlyViewed.products.some((pId) => pId.equals(product._id));
+        if (!productExists) {
+          recentlyViewed.products.unshift(product._id);
+
+          // Ensure the array does not exceed the maximum length
+          if (recentlyViewed.products.length > 8) { // Assuming maximum  length is 8
+            recentlyViewed.products.pop(); // Remove from the end
+          }
+
+          recentlyViewed.updatedAt = Date.now();
+        }
+      }
+
+      await recentlyViewed.save();
+    }
+    console.log(recentlyViewed,'recentlyViewed')
+
       // breadcrumbs
       const breadcrumbs=[{name:'home',url:'/'},
         {name:'Products',url:'/products'},
         {name:product.name,url:req.originalUrl}
       ]
-     return res.render("productDetails", { product: [product] ,breadcrumbs,user});
+     return res.render("productDetails", { product: [product] ,finalPrice,breadcrumbs,user});
     }
   
   } catch (error) {
@@ -246,24 +487,99 @@ const products = async (req, res) => {
     const email = req.session.email
      user = await User.findOne({ email: email });
     }
-    const products = await Product.find({is_deleted:false});
+
+// pagination 
+
+const perPage=6
+const page=parseInt(req.query.page)||1
+
+const totalProducts=await Product.countDocuments({is_deleted:false})
+
+    const products = await Product.find({is_deleted:false})
+    .skip((page-1)*perPage)
+    .limit(perPage)
+
     const category=await Category.find({is_deleted:false})
     const brands=await brand.find({is_deleted:false})
     // console.log(category,"llllllllllllllllllllllll");
+
+
+    const currentDate=new Date()
+    const productOffers=await ProductOffer.find({
+      startDate:{$lte:currentDate},
+      endDate:{$gte:currentDate}
+    })
+
+    // console.log('productOffers',productOffers)
+
+const categoryOffers=await CategoryOffer.find({
+  startDate:{$lte:currentDate},
+  endDate:{$gte:currentDate}
+})
+
+
+
+    const offerMap=new Map()
+    productOffers.forEach(offer=>{
+      offerMap.set(offer.productId.toString(),offer)
+      // console.log('offer.productId',offer.productId)
+    })
+
+    const categoryOfferMap=new Map()
+    categoryOffers.forEach(offer=>{
+      categoryOfferMap.set(offer.categoryId.toString(),offer)
+    })
+
+
+    const productWithOffers=products.map(product=>{
+      const offer=offerMap.get(product._id.toString())
+      // console.log('product._id',product._id)
+
+
+      // let discount=0
+      let discountedPrice=product.price
+      let hasOffer=false
+
+
+      if(offer){
+         discountAmount=(product.price*offer.discount)/100
+        discountedPrice=product.price-discountAmount
+        hasOffer=true
+      }
+
+      if(!hasOffer && product.categoryId){
+        const categoryOffer=categoryOfferMap.get(product.categoryId._id.toString())
+        if(categoryOffer){
+        discountAmount=(product.price * categoryOffer.discount)/100
+        discountedPrice=product.price-discountAmount
+        hasOffer=true
+      }
+    }
+        return {
+          ...product._doc,
+          discountedPrice,
+          originalPrice:product.price,
+          hasOffer
+        }
+      })
+      // console.log('productWithOffers',productWithOffers)
+
+      
     
 const breadcrumbs=[
   {name:'Home',url:'/'},
   {name:'Products',url:'/products'}
 ]
-res.render("products", { error: null, user, products,breadcrumbs,category,brands});
 
-
-
+const totalPages=Math.ceil(totalProducts/perPage)
+res.render("products", { error: null, user, products:productWithOffers,breadcrumbs,category,brands,currentPage:page,totalPages});
 
   } catch (error) {
     console.error("error occured",error);
   }
 };
+
+
 
 const userLogout = (req, res) => {
   req.session.destroy((err) => {
@@ -541,18 +857,75 @@ const loadCheckout = async (req, res) => {
     }
 
     const addresses = await Address.find({ userId: user._id });
-    const cartItems = cart.products.map(product => ({
-      productName: product.productId.name,
-      productImage: product.productId.image[0],
-      price: product.productId.price,
-      quantity: product.quantity,
-    }));
+
+    const currentDate = new Date();
+    
+    // Fetch all active offers for the products in the cart
+    const productOffers = await ProductOffer.find({
+      // productId: { $in: cart.products.map(p => p.productId._id) },
+      startDate: { $lte: currentDate },
+      endDate: { $gte: currentDate },
+    });
+
+
+   const categoryIds=cart.products
+   .map(p=>p.productId.categoryId)
+   .filter(categoryId=>categoryId)
+
+
+   const categoryOffers=await CategoryOffer.find({
+    categoryId:{$in:categoryIds},
+    startDate:{$lte:currentDate},
+    endDate:{$gte:currentDate}
+   })
+
+
+    const cartItems = cart.products.map(product => {
+      if (!product.productId) {
+        console.error('ProductId is undefined for:', product);
+        return {
+          productName: 'Unknown',
+          productImage: 'default.jpg',
+          price: 0,
+          quantity: product.quantity,
+        };
+      }
+
+      const originalPrice = product.productId.price;
+
+      // Find the offer for the current product
+      const offer = productOffers.find(
+        offer => offer.productId.toString() === product.productId._id.toString()
+      );
+
+      const categoryOffer=offer
+      ? null
+      :categoryOffers.find(
+        offer=>offer.categoryId.toString()===product.productId.categoryId?.toString()
+      )
+
+      const productPrice = offer
+        ? originalPrice - (originalPrice * (offer.discount / 100))
+        :categoryOffer
+        ? originalPrice-(originalPrice*(categoryOffer.discount/100))
+        :originalPrice
+
+      return {
+        productName: product.productId.name,
+        productImage: product.productId.image[0],
+        price: productPrice,
+        quantity: product.quantity,
+      };
+    });
 
     const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const tax = subtotal * 0.05;  
     const total = subtotal + tax;
 
-    res.render('checkout', { user, addresses, cartItems, subtotal, tax, total });
+    req.session.originalTotal = total;
+
+    const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID;
+    res.render('checkout', { user, addresses, cartItems, subtotal, tax, total, RAZORPAY_KEY_ID });
   } catch (error) {
     console.error('Error occurred:', error);
     res.status(500).send('Internal server error');
@@ -603,7 +976,8 @@ const searchProducts=async(req,res)=>{
       $or:[
         {name:regex},
         {description:regex},
-        {category:regex}
+        {category:regex},
+        {brand:regex}
 
       ],
       
@@ -643,19 +1017,30 @@ const paperget=(req,res)=>{
 
 const filterProducts= async (req,res)=>{
   try{
-    const {price,category}=req.body
-    // console.log(price,category,"jssssssssxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxjjjjjjjjjjjxj");
+    const {price,category,brand,searchResults}=req.body
+    // console.log("jssssssssxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxjjjjjjjjjjjxj",searchResults);
     
 
     let query={}
     // console.log("queryqueryqueryqueryqueryqueryqueryqueryqueryquery",query);
     
 
+if (searchResults && searchResults.length>0){
+  query._id={$in:searchResults.map(product=>product._id)}
+}
+
+
+
     if(Array.isArray(category) && category.length >0) {
       query.category={$in:category}
     }
-    // console.log("querysecondquerysecond",query)
 
+
+    // console.log('categoryquery')
+ if(Array.isArray(brand) && brand.length>0){
+  query.brand={$in:brand}
+  }
+  console.log('query',query)
     
     let products=Product.find(query)
     // console.log("productsproducts1",products)
@@ -670,15 +1055,364 @@ const filterProducts= async (req,res)=>{
 
 
     const result=await products.exec()
-    // console.log("resultresultresult",result)
-    
-    // console.log(result,"resultsresultsresults")
-    res.json({products:result})
+    console.log("resultresultresult",result)
 
+
+    
+    const currentDate = new Date();
+    const productsWithFinalPrices = await Promise.all(result.map(async product => {
+      const offer = await ProductOffer.findOne({
+        productId: product._id,
+        startDate: { $lte: currentDate },
+        endDate: { $gte: currentDate },
+      });
+
+      let categoryOffer;
+      if (product.categoryId) {
+        categoryOffer = await CategoryOffer.findOne({
+          categoryId: product.categoryId,
+          startDate: { $lte: currentDate },
+          endDate: { $gte: currentDate }
+        });
+      }
+
+      let finalPrice = product.price;
+      if (offer) {
+        const discountAmount = (product.price * offer.discount) / 100;
+        finalPrice = product.price - discountAmount;
+      } else if (categoryOffer) {
+        const discountAmount = (product.price * categoryOffer.discount) / 100;
+        finalPrice = product.price - discountAmount;
+      }
+
+      return {
+        ...product.toObject(), 
+        finalPrice 
+      };
+    }));
+
+    res.json({ products: productsWithFinalPrices });
   } catch (error) {
-    res.status(500).json({message:'Error filtering products',error})
+    res.status(500).json({ message: 'Error filtering products', error });
+  }
+};
+
+
+const loadCoupon=async (req,res)=>{
+  try {
+
+    const coupons= await Coupon.find({status:true})
+    console.log('couponDatacouponDatacouponDatacouponDatacouponData',coupons)
+    res.render('coupon',{coupons})
+    
+  } catch (error) {
+
+    console.error('error occured')
+    res.status(500).json({message:'internal server error'})
+    
   }
 }
+
+
+
+
+const loadWishList=async (req,res)=>{
+  try {
+    const email=req.session.email
+    const userId=req.session.userId
+    const user=User.findOne({email})
+
+    const wishlistItems = await Wishlist.find({ userId }).populate('productId').exec();
+    const products = wishlistItems.map(item => item.productId).filter(product => product !== undefined);
+    
+    console.log('wishlistItems',products)
+    res.render('wishList',{products,user})
+
+    
+  } catch (error) {
+    console.error('error occured',error)
+    res.status(500).json({message:'Internal server error'})
+    
+  }
+}
+
+
+const addToWishlist=async(req,res)=>{
+  try {
+    const productId=req.params.productId
+    const userId=req.session.userId
+    // console.log('productId',productId)
+    // console.log('userId',userId)
+
+    // check if the product is already in the wishlist 
+    const existingWishListItem=await Wishlist.findOne({userId,productId})
+    if(existingWishListItem){
+      return res.status(400).json({message:'Product already in wish list'})
+
+    }
+// console.log('existingWishListItem',existingWishListItem)
+    const newWishlistItem=new Wishlist({
+      userId,
+      productId
+    })
+    await newWishlistItem.save()
+    res.status(200).json({message:'Product added to wishlist'})
+
+  } catch (error) {
+    console.error('Error adding product to wishlist:',error)
+    res.status(500).json({message:'Server error'})
+  }
+}
+
+const deleteProductFromWishlist = async (req, res) => {
+  const productId = req.params.id.trim(); 
+
+  console.log('Received Product ID:', productId);
+
+  // Validate the product ID format
+  if (!mongoose.Types.ObjectId.isValid(productId)) {
+    return res.status(400).json({ message: 'Invalid product ID' });
+  }
+
+  try {
+    const objectId = new mongoose.Types.ObjectId(productId);
+
+    // find and delete the product from the wishlist
+    const result = await Wishlist.findOneAndDelete({ productId: objectId});
+
+    console.log('Delete result:', result);
+
+    if (!result) {
+      return res.status(404).json({ message: 'Product not found in wishlist' });
+    }
+
+    res.status(200).json({ message: 'Product removed from wishlist' });
+  } catch (error) {
+    console.error('Error removing product from wishlist:', error);
+    res.status(500).json({ message: 'Failed to remove product from wishlist' });
+  }
+};
+
+
+
+
+
+const loadWallet=async(req,res)=>{
+  try {
+
+    const email=req.session.email
+    const user=await User.findOne({email})
+
+    if(!user){
+      return res.status(404).json({message:'User not found'})
+    }
+
+    const wallet=await Wallet.findOne({user:user._id})
+    console.log(wallet,'wallet')
+    if(!wallet){
+    return  res.render('walletHistory',{user,wallet:null})
+    }
+    console.log('userId',user)
+
+   return res.render('walletHistory',{user,wallet})
+    
+  } catch (error) {
+    console.error('An error occured',error)
+    res.status(500).json({message:'internal server error'})
+  }
+}
+
+
+
+
+
+const loadOrderDetails=async(req,res)=>{
+  try {
+
+    const orderId=req.params.orderId
+
+    console.log('orderId',orderId)
+
+
+
+    if(!mongoose.Types.ObjectId.isValid(orderId)){
+      return res.status(400).json({error:'Invalid Id format'})
+    }
+
+    const order=await Order.findById(orderId).
+    populate('products.product')
+    .populate('customer')
+    .populate('address')
+
+    if(!order){
+      return res.status(404).send('Order not found')
+    }
+
+    res.render('orderDetails',{order})
+
+    // console.log('order',order)
+    
+  } catch (error) {
+    console.error('an error occured',error)
+    res.status(500).json({message:"Internal servre error"})
+    
+  }
+}
+
+
+
+const generateInvoice = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+
+    const order = await Order.findById(orderId)
+      .populate('products.product')  
+      .populate('customer')          
+      .populate('address');          
+
+    if (!order) {
+      return res.status(404).send('Order not found');
+    }
+
+    const currentDate = new Date();
+    const productOffers = await ProductOffer.find({
+      startDate: { $lte: currentDate },
+      endDate: { $gte: currentDate }
+    });
+
+    const offerMap = new Map();
+    productOffers.forEach(offer => {
+      offerMap.set(offer.productId.toString(), offer);
+    });
+
+    const doc = new PDFDocument({ margin: 50 });
+    const invoicePath = path.join(__dirname, 'invoice.pdf');
+    const stream = fs.createWriteStream(invoicePath);
+    doc.pipe(stream);
+
+    doc
+      .fontSize(20)
+      .text('INVOICE', { align: 'right' })
+      .moveDown(0.5)
+      .fontSize(10)
+      .text('BeatsCart', { align: 'right' });
+
+    doc
+      .moveDown(0.5)
+      .text('16501 Collins Ave, Sunny Isles Beach, FL 33160, India', { align: 'right' })
+      .text('676503, Cochin, India', { align: 'right' });
+
+    doc
+      .moveDown()
+      .strokeColor('#aaaaaa')
+      .lineWidth(1)
+      .moveTo(50, 150)
+      .lineTo(550, 150)
+      .stroke();
+
+    const user = order.customer;
+    doc
+      .moveDown()
+      .fontSize(12)
+      .font('Helvetica-Bold')
+      .text(user.name || user.username || user.email, 50, 160)
+      .moveDown(0.5)
+      .fontSize(10)
+      .font('Helvetica')
+      .text(`${order.address?.street || 'Street not available'}, ${order.address?.city || 'City not available'}, ${order.address?.state || 'State not available'}, ${order.address?.pincode || 'Pincode not available'}`);
+
+    doc
+      .moveUp(2)
+      .fontSize(10)
+      .text(`Date: ${new Date(order.orderDate).toLocaleDateString()}`, { align: 'right' });
+
+    doc
+      .moveDown()
+      .strokeColor('#aaaaaa')
+      .lineWidth(1)
+      .moveTo(50, doc.y + 10)
+      .lineTo(550, doc.y + 10)
+      .stroke();
+
+    const headerY = doc.y + 20;
+    doc
+      .fontSize(12)
+      .font('Helvetica-Bold')
+      .text('Products', 50, headerY)
+      .text('Quantity', 200, headerY)  
+      .text('Original Price', 300, headerY)
+      .text('Product Offer', 400, headerY) 
+      .text('Subtotal', 490, headerY);
+
+    doc
+      .moveDown(0.5)
+      .strokeColor('#dddddd')
+      .lineWidth(0.5)
+      .moveTo(50, doc.y)
+      .lineTo(550, doc.y)
+      .stroke();
+
+    let currentY = doc.y + 10;
+    let subtotal = 0;
+
+    order.products.forEach(item => {
+      const product = item.product;
+      const offer = offerMap.get(product._id.toString());
+
+      let originalPrice = product.price;
+      let productSubtotal = originalPrice * item.quantity;
+      let discountedPrice = null;
+      let offerText = '0'; 
+
+      if (offer) {
+        const discountAmount = (originalPrice * offer.discount) / 100;
+        discountedPrice = originalPrice - discountAmount;
+        productSubtotal = discountedPrice * item.quantity;
+        offerText = `₹${discountedPrice.toFixed(2)}`; 
+      }
+
+      subtotal += productSubtotal;
+
+      doc
+        .fontSize(10)
+        .font('Helvetica')
+        .text(product.name, 50, currentY)
+        .text(item.quantity, 200, currentY)  
+        .text(`₹${originalPrice.toFixed(2)}`, 300, currentY)
+        .text(offerText, 400, currentY)  
+        .text(`₹${productSubtotal.toFixed(2)}`, 490, currentY);
+
+      currentY += 20;  
+    });
+
+    const tax = subtotal * 0.05;  
+    const total = subtotal + tax;
+
+    doc
+      .moveDown(2)
+      .font('Helvetica-Bold')
+      .text(`Subtotal: ₹${subtotal.toFixed(2)}`, 400)
+      .text(`Tax (5%): ₹${tax.toFixed(2)}`, 400)
+      .text(`Total Price: ₹${total.toFixed(2)}`, 400);
+
+    doc.end();
+
+    stream.on('finish', () => {
+      res.download(invoicePath, 'invoice.pdf', (err) => {
+        if (err) {
+          console.error('Error sending file', err);
+          res.status(500).send('Error generating invoice');
+        }
+      });
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal server error');
+  }
+};
+
+
 
 
 
@@ -710,5 +1444,12 @@ module.exports = {
   loadCheckoutAddress ,
   searchProducts,
   paperget,
-  filterProducts
+  filterProducts,
+  loadCoupon,
+  loadWishList,
+  addToWishlist,
+  deleteProductFromWishlist,
+  loadWallet,
+  loadOrderDetails,
+  generateInvoice
 };

@@ -115,6 +115,8 @@
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 <!-- bootstrap css script tag -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -218,7 +220,6 @@ $('#usersTable').on('click', '.edit-category', function() {
             categoryName: categoryName
         };
     
-        // AJAX request to the backend
         fetch('/updateCategory', {
             method: 'POST',
             headers: {
@@ -229,11 +230,9 @@ $('#usersTable').on('click', '.edit-category', function() {
         .then(response => {
             if (response.ok) {
 
-                // Category updated successfully
                 console.log('Category updated successfully');
                 location.reload();
             } else {
-                // Error handling
                 console.error('Failed to update category');
                 alert('Failed to update category. Please try again.');
             }

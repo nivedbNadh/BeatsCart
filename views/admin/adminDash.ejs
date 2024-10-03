@@ -1,386 +1,567 @@
-<%-include('../layouts/admin/adminNav')%>
+<%- include('../layouts/admin/adminDashNav') %>
 
-
-
-        <!-- Content Start -->
-        <div class="content">
-            <!-- Navbar Start -->
-            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
-                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
-                    <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
-                </a>
-                <a href="#" class="sidebar-toggler flex-shrink-0">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <form class="d-none d-md-flex ms-4">
-                    <input class="form-control border-0" type="search" placeholder="Search">
-                </form>
-                <div class="navbar-nav align-items-center ms-auto">
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="fa fa-envelope me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Message</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                    <div class="ms-2">
-                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                    <div class="ms-2">
-                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                    <div class="ms-2">
-                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-center">See all message</a>
-                        </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="fa fa-bell me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Notificatin</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">
-                                <h6 class="fw-normal mb-0">Profile updated</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item">
-                                <h6 class="fw-normal mb-0">New user added</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item">
-                                <h6 class="fw-normal mb-0">Password changed</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-center">See all notifications</a>
-                        </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">John Doe</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">My Profile</a>
-                            <a href="#" class="dropdown-item">Settings</a>
-                            <a href="#" class="dropdown-item">Log Out</a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <!-- Navbar End -->
-
-
-            <!-- Sale & Revenue Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-line fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Today Sale</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-bar fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Total Sale</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-area fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Today Revenue</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-pie fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Total Revenue</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Sale & Revenue End -->
-
-
-            <!-- Sales Chart Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-12 col-xl-6">
-                        <div class="bg-light text-center rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Worldwide Sales</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <canvas id="worldwide-sales"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-xl-6">
-                        <div class="bg-light text-center rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Salse & Revenue</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <canvas id="salse-revenue"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Sales Chart End -->
-
-
-            <!-- Recent Sales Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-light text-center rounded p-4">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0">Recent Salse</h6>
-                        <a href="">Show All</a>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table text-start align-middle table-bordered table-hover mb-0">
-                            <thead>
-                                <tr class="text-dark">
-                                    <th scope="col"><input class="form-check-input" type="checkbox"></th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Invoice</th>
-                                    <th scope="col">Customer</th>
-                                    <th scope="col">Amount</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <!-- Recent Sales End -->
-
-
-            <!-- Widgets Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-light rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                <h6 class="mb-0">Messages</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <img class="rounded-circle flex-shrink-0" src="/userAssets/img/download (1).jpeg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <img class="rounded-circle flex-shrink-0" src="/userAssets/img/download (1).jpeg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <img class="rounded-circle flex-shrink-0" src="/userAssets/img/download (1).jpeg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center pt-3">
-                                <img class="rounded-circle flex-shrink-0" src="/userAssets/img/download (1).jpeg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-light rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Calender</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <div id="calender"></div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-light rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">To Do List</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <div class="d-flex mb-2">
-                                <input class="form-control bg-transparent" type="text" placeholder="Enter task">
-                                <button type="button" class="btn btn-primary ms-2">Add</button>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox" checked>
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span><del>Short task goes here...</del></span>
-                                        <button class="btn btn-sm text-primary"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center pt-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-           
-
-
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+<!-- Main Content Area -->
+<div class="content">
+    <!-- Dashboard Chart -->
+    <div class="dashboard-graph-container">
+        <canvas id="myChart"></canvas>
     </div>
-    
-    <!-- kit.fontawesome -->
-    <script src="https://kit.fontawesome.com/0756794e98.js" crossorigin="anonymous"></script>
 
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/userAssets/js/chart.min.js"></script>
-    <script src="/userAssets/js/easing.min.js"></script>
-    <script src="/userAssets/js/waypoints.min.js"></script>
-    <script src="/userAssets/js/owl.carousel.min.js"></script>
-    <script src="/userAssets/js/moment.min.js"></script>
-    <script src="/userAssets/js/moment-timezone.min.js"></script>
-    <script src="/userAssets/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- Form Section -->
+    <div class="form-container">
+        <div class="form-group">
+            <label for="time-interval">Select Time Interval:</label>
+            <select id="time-interval" class="form-select">
+                <option value="daily">Daily</option>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+            </select>
+        </div>
 
-    <!-- Template Javascript -->
-    <script src="userAssets/js/admindash.js"></script>
+        <div class="form-group">
+            <label for="start-date">Start Date:</label>
+            <input type="date" id="start-date" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="end-date">End Date:</label>
+            <input type="date" id="end-date" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="option-selecting">Select Option:</label>
+            <select id="option-selecting" class="form-select">
+                <option value="PDF">PDF</option>
+                <option value="excel">Excel</option>
+            </select>
+        </div>
+
+        <div class="download-button-container">
+            <button class="download-btn" id="download-btn">Download</button>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="container">
+        <h3 style="text-align: center;">Top Selling Products</h3>
+        <table id="usersTable" class="table table-bordered table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Product Name</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (topSellingProducts.length > 0) { %>
+                    <% topSellingProducts.forEach((product, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= product.productName %></td>
+                            <td><%= product.totalQuantity %></td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="3">No products sold yet</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container">
+        <h3 style="text-align: center;">Top Selling Categories</h3>
+        <table id="categoryTable" class="table table-bordered table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Category Name</th>
+                    <th>Quantity Sold</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (topSellingCategories.length > 0) { %>
+                    <% topSellingCategories.forEach((category, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= category._id %></td>
+                            <td><%= category.totalQuantity %></td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="3">No categories sold yet</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container">
+        <h3 style="text-align: center;">Top Selling Brands</h3>
+        <table id="brandTable" class="table table-bordered table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Brand Name</th>
+                    <th>Quantity Sold</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (topSellingBrands.length > 0) { %>
+                    <% topSellingBrands.forEach((brand, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= brand.brandName %></td>
+                            <td><%= brand.totalQuantity %></td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="3">No brands sold yet</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- <style>
+.dashboard-graph-container {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-container {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-top: -10px; 
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.download-section {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+.download-section .form-group {
+    flex: 1;
+}
+
+.download-button-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-pdf {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.btn-pdf:hover {
+    background-color: #45a049;
+}
+
+.container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#usersTable {
+    width: 100%;
+}
+
+#usersTable th, #usersTable td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.btn-primary, .btn-danger {
+    margin: 0 5px;
+}
+
+.download-btn {
+    background-color: #28a745;
+    color: white;
+    margin-left: 20px; 
+    height: 50px; 
+    width: 120px;
+}
+
+.download-btn:hover {
+    background-color: #218838;
+}
+
+@media (max-width: 768px) {
+    .form-container .row > div {
+        margin-bottom: 15px;
+    }
+
+    .container {
+        padding: 0 15px;
+    }
+
+    #usersTable {
+        font-size: 10px;
+    }
+}
+
+</style>
+
+ -->
+
+ <style>
+    table {
+    width: 85%; 
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto; 
+}
+
+.table {
+    background-color: #f9f9f9;
+}
+
+.table-bordered {
+    border: 1px solid #ddd;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+thead {
+    font-weight: bold;
+}
+
+tbody tr {
+    background-color: #fff;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+td, th {
+    vertical-align: middle;
+}
+
+td[colspan="3"] {
+    text-align: center;
+    font-style: italic;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    margin-left: auto;
+    margin-right: auto; 
+}
+
+@media (max-width: 768px) {
+    .table {
+        font-size: 14px;
+    }
+}
+
+.download-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.download-btn:hover {
+    background-color: #0056b3;
+}
+
+
+.form-container {
+    max-width: 1050px;
+    margin: 20px auto; 
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+}
+
+.form-group {
+    margin-bottom: 20px; 
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.form-control, .form-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.download-button-container {
+    text-align: center;
+}
+
+.download-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.download-btn:hover {
+    background-color: #218838;
+}
+
+@media (max-width: 768px) {
+    .form-container {
+        padding: 15px;
+    }
+
+    .form-control, .form-select {
+        font-size: 14px;
+    }
+
+    .download-btn {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+}
+
+
+ </style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.js"></script>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            let chartInstance;
+
+            const xValues = JSON.parse('<%- xValues %>');
+            const yValues = JSON.parse('<%- JSON.stringify(yValues) %>');
+
+            const dateValues = xValues.map(date => new Date(date));
+
+            updateChart('daily');
+
+            document.getElementById('time-interval').addEventListener('change', function () {
+                updateChart(this.value);
+            });
+
+            function updateChart(timeInterval) {
+                let aggregatedData = aggregateData(timeInterval);
+
+                const timeFormat = {
+                    'monthly': { unit: 'month', tooltipFormat: 'MMM YYYY' },
+                    'yearly': { unit: 'year', tooltipFormat: 'YYYY' },
+                    'daily': { unit: 'day', tooltipFormat: 'MMM DD, YYYY' }
+                };
+
+                const { unit, tooltipFormat } = timeFormat[timeInterval];
+
+                const ctx = document.getElementById('myChart').getContext('2d')
+
+                if (chartInstance) {
+                    chartInstance.destroy();
+                }
+
+                chartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: aggregatedData.x,
+                        datasets: [{
+                            label: 'Delivered Orders',
+                            fill: false,
+                            lineTension: 0.3,
+                            backgroundColor: "#15cda8",
+                            borderColor: "#4edd8a",
+                            data: aggregatedData.y,
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#4edd8a',
+                            pointBorderColor: '#ffffff',
+                            pointHoverRadius: 6,
+                            pointHoverBackgroundColor: '#15cda8',
+                            pointHoverBorderColor: '#ffffff',
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: { unit, tooltipFormat },
+                                title: { display: true, text: 'Date', color: '#333', font: { size: 14 } },
+                                grid: { display: false },
+                            },
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: '#333',
+                                    font: { size: 12 }
+                                },
+                                title: { display: true, text: 'Number of Orders', color: '#333', font: { size: 14 } },
+                                grid: { color: '#e9ecef' },
+                            }
+                        },
+                        elements: { point: { radius: 4 } },
+                        plugins: {
+                            tooltip: { intersect: false, mode: 'index' },
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    color: '#333',
+                                    font: { size: 14 }
+                                }
+                            }
+                        },
+                        responsive: true,
+                        maintainAspectRatio: true,
+                    }
+                });
+            }
+
+            function aggregateData(timeInterval) {
+    const aggregatedX = [];
+    const aggregatedY = [];
+    const dataMap = {};
+
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth() + 1; // month is zero based thats why 1
+
+    dateValues.forEach((date, index) => {
+        let key;
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1; // Add 1 to get the 1-based month
+
+        if (timeInterval === 'yearly') {
+            key = year;
+        } else if (timeInterval === 'monthly') {
+            // Filtering  data only include  from the current year up to the current month
+            if (year === currentYear && month <= currentMonth) {
+                key = `${year}-${String(month).padStart(2, '0')}`;
+            } else {
+                return; // Skiping  data not in the current year or after the current month
+            }
+        } else {
+            key = date.toISOString().split('T')[0];
+
+            if (timeInterval === 'daily' && key !== today.toISOString().split('T')[0]) {
+                return; // Skiping  data not from today for daily
+            }
+        }
+
+        if (!dataMap[key]) {
+            dataMap[key] = 0;
+        }
+        dataMap[key] += yValues[index];
+    });
+
+    for (const [key, value] of Object.entries(dataMap)) {
+        aggregatedX.push(key);
+        aggregatedY.push(value);
+    }
+
+    return { x: aggregatedX, y: aggregatedY };
+}
+        })
+    </script>
+
+    <script>
+        document.getElementById('download-btn').addEventListener('click',async()=>{
+            const startDate=document.getElementById('start-date').value
+           const endDate= document.getElementById('end-date').value
+           const format=document.getElementById('option-selecting').value
+           console.log('format',format)
+
+           console.log(startDate,'startDate')
+           console.log(endDate,'endDate')
+
+           if (!startDate || !endDate) {
+        Toastify({
+            text: 'Please select both start and end dates.',
+            duration: 5000,
+            close: true,
+            gravity: 'top',
+            position: 'center',
+            backgroundColor: 'orange',
+        }).showToast();
+        return; 
+    }
+
+
+
+           let url = '/download-sales-report';
+    if (format === 'excel') {
+        url = '/download-excel-report'; 
+    }
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ startDate, endDate })
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = format === 'excel' ? 'sales_report.xlsx' : 'sales_report.pdf';
+        link.click();
+    })
+    .catch(error => console.error('Error:', error));
+        })
+    </script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
+
 </body>
 
 </html>

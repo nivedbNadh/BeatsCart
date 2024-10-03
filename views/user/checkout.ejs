@@ -6,27 +6,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BeatsCart</title>
   <link rel="icon" href="/image/android-chrome-512x512.png" type="image/png" alt="Site Icon">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  
+
   <style>
-
-
+    body {
+      background-color: #f0f3f5;
+      font-family: 'Poppins', sans-serif;
+    }
 
     table td {
-      font-size: 0.6rem;
+      font-size: 0.8rem;
     }
 
     table th {
-      font-size: 0.8rem;
+      font-size: 1rem;
     }
 
     .cart-container {
       overflow-y: auto;
-      min-height: 200px; /* Adjusted this to allow growing */
+      min-height: 200px;
     }
 
     .form-control:focus {
-      color: var(--bs-body-color);
-      background-color: var(--bs-body-bg);
-      border-color: none;
       outline: 0;
       box-shadow: none;
     }
@@ -34,7 +38,6 @@
     .btn-close:focus {
       outline: 0;
       box-shadow: none;
-      border-color: none;
     }
 
     .inputfiled-size {
@@ -48,6 +51,7 @@
     .flex-container {
       display: flex;
       flex-wrap: wrap;
+      gap: 20px;
     }
 
     .flex-item {
@@ -56,12 +60,120 @@
     }
 
     .border {
-      border: 1px solid black;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     }
+
+    .bg-white {
+      background-color: #ffffff;
+    }
+
+    .coupon-section {
+      margin-bottom: 20px;
+    }
+
+    .coupon-section input {
+      border: 1px solid #ccc;
+      padding: 10px;
+      width: 100%;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+
+    .coupon-section button {
+      background-color: #7158fe;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .coupon-section button:hover {
+      background-color: #9d4de6;
+    }
+
+    .address-section {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      background-color: #fff;
+      padding: 15px;
+      margin-bottom: 10px;
+    }
+
+    .address-section input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    .address-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .address-section li {
+      line-height: 1.5;
+      color: #333;
+    }
+
+    .order-summary {
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      background-color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .order-summary table {
+      width: 100%;
+    }
+
+    .order-summary h5 {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .payment-options {
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      background-color: #fff;
+    }
+
+    .payment-options h5 {
+      font-size: 1rem;
+      margin-bottom: 15px;
+    }
+
+    .payment-options label {
+      margin-left: 10px;
+      font-size: 0.9rem;
+    }
+
+    .payment-options button {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .payment-options button:hover {
+      background-color: #218838;
+    }
+
+#removeCoupon {
+  margin-right: 10px; /* Add some space between the Remove button and the input field */
+}
+
   </style>
 </head>
 
-<body style="background-color: white;">
+<body>
   <!-- header -->
   <%- include('../layouts/user/header') %>
   <%- include('../layouts/user/navbar') %>
@@ -72,7 +184,7 @@
       <div class="container-fluid flex-container">
         <div class="flex-item">
           <!-- items in cart -->
-          <div class="d-flex border mb-1 bg-white p-2">
+          <div class="d-flex border mb-1 bg-white p-3">
             <div class="cart-container">
               <h6 class="text-dark my-4">Items in cart</h6>
               <!-- single cart Item -->
@@ -98,8 +210,8 @@
 
         <div class="flex-item">
           <!-- order summary -->
-          <div class="border p-3 bg-white mb-3">
-            <h5 class="text-dark my-4">Order summary</h5>
+          <div class="order-summary">
+            <h5 class="text-dark">Order summary</h5>
             <table class="table">
               <tr>
                 <td>Subtotal</td>
@@ -110,32 +222,56 @@
                 <td>₹<%=tax.toFixed(2) %></td>
               </tr>
               <tr>
+                <td>Discount</td>
+                <td>₹<span id="discountAmount">0.00</span></td>
+              </tr>
+              <tr>
                 <td>Total</td>
-                <td>₹<%=total.toFixed(2) %></td>
+                <td>₹<span id="totalAmount"><%= total.toFixed(2) %></span></td>
+              </tr>
+              <tr>
+                
               </tr>
             </table>
+
+            <!-- Coupon Apply Section -->
+            <div class="coupon-section">
+              <div class="d-flex w-100">
+                <input type="text" id="couponCode" placeholder="Enter Coupon Code">
+              <button type="button" id="applyCoupon">Apply</button>
+              </div>
+              <!-- <button type="button" id="removeCoupon" style="display: none;">Remove</button> -->
+
+              <a id="removeCoupon" style="display: none; text-decoration: none; font-size: 13px; float: right;" href="#">Remove</a>
+              <br>   
+              <a id="couponPage" style=" text-decoration: none; font-size: 13px; float: right;" href="/coupon">Available Coupons</a>
+
+
+            </div>
           </div>
+
           <!-- payment option -->
-          <div class="border p-3 bg-white">
+          <div class="payment-options">
             <form action="" data-id="" class="payment" novalidate>
-              <h5 class="form-label form-fontSize" style="font-size: 0.9rem;">Payment Option</h5>
+              <h5 class="form-label form-fontSize">Payment Option</h5>
               <div class="ms-2">
                 <div class="d-flex align-items-center mb-2">
-                  <input type="radio" name="PaymentOption" id="wallet" autocomplete="off" value="wallet">
-                  <label for="wallet" class="ms-2">Wallet</label>
+                  <input type="radio" name="PaymentOption" id="wallet" autocomplete="off" value="Wallet">
+                  <label for="wallet">Wallet</label>
                 </div>
                 <div class="d-flex align-items-center mb-2">
-                  <input type="radio" name="PaymentOption" id="onlinePayment" autocomplete="off" value="onlinePayment">
-                  <label for="onlinePayment" class="ms-2">Online Payment</label>
+                  <input type="radio" name="PaymentOption" id="onlinePayment" autocomplete="off" value="razorpay">
+                  <label for="onlinePayment">Online Payment</label>
                 </div>
                 <div class="d-flex align-items-center mb-2">
                   <input type="radio" name="PaymentOption" id="cashOnDelivery" autocomplete="off" value="cashOnDelivery">
-                  <label for="cashOnDelivery" class="ms-2">Cash on Delivery</label>
+                  <label for="cashOnDelivery">Cash on Delivery</label>
                 </div>
               </div>
+              <small id="codError" class="text-danger" style="display: none;">Cash on Delivery is only available for orders below ₹1000.</small>
               <small class="text-danger"></small>
               <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-dark m-2" id="orderButton" style="font-size: 0.6rem;">Place order</button>
+                <button type="button" class="btn btn-dark m-2" id="orderButton" style="font-size: 0.8rem;">Place order</button>
               </div>
             </form>
           </div>
@@ -143,16 +279,14 @@
 
         <!-- address -->
         <div class="flex-item">
-          <div style="padding-left: 410px; margin-bottom: 4px;">
-            <div>
-              <a href="checkAddress" style="color: white; text-decoration: none;">
-                <button style="border: 1px solid rgb(231, 231, 231); background-color: rgb(28, 94, 114); color: white; border-radius: 3px;">Add Address</button>
-              </a>
-            </div>
+          <div class="d-flex justify-content-end mb-3">
+            <a href="checkAddress" style="color: white; text-decoration: none;">
+              <button style="border: 1px solid rgb(231, 231, 231); background-color: rgb(28, 94, 114); color: white; border-radius: 3px;">Add Address</button>
+            </a>
           </div>
           <div>
             <% addresses.forEach((address, index) => { %>
-            <div style="border: 1px solid rgb(225, 225, 225); border-radius: 4px; width: 500px; padding-left: 20px; margin-left: 15px;">
+            <div class="address-section">
               <div class="d-flex flex-column">
                 <div>
                   <input type="radio" name="address" id="address<%= index %>" autocomplete="off" value="<%= address._id %>">
@@ -164,13 +298,16 @@
                 <ul>
                   <li><%= address.houseName %>, <%= address.area %>, <%= address.landmark %>, <%= address.city %> <%= address.state %>, <%= address.pincode %></li>
                 </ul>
+                <div class="mt-2">
+                  <a href="/user/editAddress/<%= address._id %>"><i class="fa-solid fa-pen-to-square" style="color: black;"></i></a>
+                  &nbsp;&nbsp;&nbsp;
+                  <a href="/user/removeAddress/<%= address._id %>" class="text-danger"><i class="fa-solid fa-trash"></i></a>
+                </div>
               </div>
             </div>
-            <br>
-            <% }) %>
+            <% }); %>
           </div>
         </div>
-        <!-- address -->
       </div>
     </section>
   </section>
@@ -179,30 +316,42 @@
 
 </html>
 
-
-
-
-
-
-
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
 
-  document.addEventListener('DOMContentLoaded', function() {
+// RAZORPAY IS NOT WORKING PROPERLY THAT CODE IS BELOW 
+document.addEventListener('DOMContentLoaded', function() {
     const orderButton = document.getElementById('orderButton');
 
   orderButton.addEventListener('click', function() {
       const selectedAddress = document.querySelector('input[name="address"]:checked');
       const selectedPayment = document.querySelector('input[name="PaymentOption"]:checked');
-
+      const discountingg= document.getElementById('discountAmount')
+       console.log('discountingg',discountingg);
+  
       if (!selectedAddress) {
-          alert('Please select an address.');
-          return;
+        Toastify({
+                text: "Please slelect an address",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: 'center',
+                backgroundColor: "#FF5A5F",
+            }).showToast();       
+               return;
       }
 
       if (!selectedPayment) {
-          alert('Please select a payment method.');
-          return;
+        Toastify({
+            text: "Please select a Payment Method",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: 'center',
+            backgroundColor: "#FF5A5F",
+        }).showToast();
+        return;
       }
 
       const orderData = {
@@ -219,44 +368,334 @@
           ]
       };
 
-      console.log('requestData', orderData);
 
       placeOrder(orderData);
   });
 });
 
 function placeOrder(orderData) {
+  
   fetch('/placeorder', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
       },
       body: JSON.stringify(orderData)
+
+      
+    })
+  .then(response=>{
+   
+    if(!response.ok) {
+      return response.json().then(errorData=>{
+        throw new Error(errorData.message||'Network response was not ok ')
+      })
+      
+    }
+    return response.json()
+
+    console.log(response.json())
+
   })
-  .then(response => {
-      if (response.ok) {
-        return response.json() // used to parse the json data
-      } else {
-          return response.json().then(data => {
-              alert('Failed to place order. Please try again.');
-              throw new Error(data.message || 'Failed to place order')
-              });
-            }
-        })
 
   .then(data=>{
-    if(data.success) {
+   
+    if(data.success && orderData.paymentMethod==='razorpay'){
+      const options={
+        key:'<%=RAZORPAY_KEY_ID%>',
+        amount:data.amount *100,
+        currency:data.currency,
+        name:'BeatsCart',
+        description:'Order payment',
+        order_id:data.razorpayOrderId,
+
+        handler:function (response) {
+          console.log('Razorpay payment response:', response);
+
+          fetch('/verifyPayment',{
+            method:'POST',
+            headers:{
+              'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+              OrderId:response.razorpay_order_id,
+              paymentId:response.razorpay_payment_id,
+              signature:response.razorpay_signature
+              
+            })
+          })
+          
+
+        
+          .then(response=>response.json())
+          .then(data=>{
+            if(data.success){
+              window.location.href='/successorder'
+            } else{
+              alert("payment verification failed")
+            }
+          })
+          .catch(error=>{
+            console.error('Error:',error)
+            alert('Failed to verify payment.please try again later')
+          })
+        },
+
+        prefill:{
+          name:'<%= user.name %>',
+          email:'<%=user.email %>',
+          contact:'<%= user.contact %> '
+        },
+        them:{
+          color:'#3399cc'
+        },
+
+        modal:{
+          ondismiss:function(){
+            fetch('/handlePaymentFailure',{
+              method:'POST',
+              headers:{
+                'Content-Type':'application/json'
+
+              },
+              body:JSON.stringify({orderId:data.razorpayOrderId})
+            })
+            .then(()=>{
+              window.location.href='orderHistory'
+            })
+            .catch(error=>{
+              console.error('Error handling payment failure:',error)
+              alert('An error occured redirecting to home ')
+              window.location.href='/'
+            })
+          }
+        }
+        
+      }
+      console.log('options',options)
+      const rzp1=new Razorpay(options)
+      rzp1.open()
+
+      console.log(',................................jjjjjjjjjjjjdddddddddddddddddd')
+console.log('options',options)
+    } else if(orderData.paymentMethod==='cashOnDelivery'){
+      alert('order placed successfully')
       window.location.href='/successorder'
+    } else if(orderData.paymentMethod==='Wallet'){
+      if(data.success){
+      Toastify({
+            text: "order placed successfully",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: 'center',
+            backgroundColor: "#FF5A5F",
+        }).showToast();
+        window.location.href='/successorder'
+
+      } else{
+              Toastify({
+            text: data.message || 'Order failed. Please try again later.',
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: 'center',
+            backgroundColor: "#FF5A5F",
+      }).showToast();
+    }
+  }else{
+    alert(data.message || 'Order failed. Please try again later');
+
+  }
+  })
+  .catch(error => {
+        console.error('Error:', error);
+        Toastify({
+            text: error.message || 'Order failed. Please try again later.',
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: 'center',
+            backgroundColor: "#FF5A5F",
+        }).showToast();
+    });
+    
+}
+  </script>
+
+
+
+
+<script>
+ 
+
+  // Coupon apply
+  document.getElementById('applyCoupon').addEventListener('click', async () => {
+    const couponCode = document.getElementById('couponCode').value;
+    const total = parseFloat(document.getElementById('totalAmount').innerText);
+
+    if (!couponCode) {
+      Toastify({
+        text:"Please enter a coupon code",
+        duration:3000,
+        close:true,
+        position:'center',
+        gravity:'top',
+        backgroundColor:"#FF5A5F",
+      }).showToast()
+      return;
+    }
+
+    try {
+      const response = await fetch('/apply-coupon', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ couponCode, total })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        document.getElementById('totalAmount').innerText = result.newTotal.toFixed(2);
+        document.getElementById('discountAmount').innerText = result.discountAmount.toFixed(2);
+
+        Toastify({
+          text:'Coupon applied successfully',
+          duration:3000,
+          close:true,
+          gravity:'top',
+          position:'center',
+          backgroundColor:"#4CAF50",
+        }).showToast()
+
+        // change the button text to applied
+        const applyButton=document.getElementById('applyCoupon')
+        applyButton.innerText='Applied'
+        // disabling button to prevent re apply
+        applyButton.disabled=true
+
+        // show the remove button
+        const removeButton=document.getElementById('removeCoupon')
+        removeButton.style.display='inline-block'
+
+      } else {
+        Toastify({
+          text:result.message,
+          duration:3000,
+          close:true,
+          gravity:'top',
+          position:'center',
+          backgroundColor:"#FF5A5F",
+        }).showToast()
+      }
+    } catch (error) {
+      console.error('Error applying coupon:', error);
+      Toastify({
+            text: "An error occurred. Please try again.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: 'center',
+            backgroundColor: "#FF5A5F",
+        }).showToast();
+         }
+  });
+
+
+// Remove coupon code 
+
+document.getElementById('removeCoupon').addEventListener('click',async()=>{
+  try {
+    const response=await fetch('/remove-coupon',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      }
+    })
+
+    const result=await response.json()
+
+    if(result.success) {
+     document.getElementById('totalAmount').innerText=result.originalTotal
+     document.getElementById('couponCode').value=''
+      // reset the apply butten
+      const applyButton=document.getElementById('applyCoupon')
+      applyButton.innerText='Apply'
+      applyButton.disabled=false
+
+      // hide the remove button
+
+      const removeButton=document.getElementById('removeCoupon')
+      
+      removeButton.style.display='none'
+
+      Toastify({
+                text: "Coupon removed successfully",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: 'center',
+                backgroundColor: "red",
+            }).showToast();
     } else{
-      alert('Failed to place order .please try again')
+      Toastify({
+                text: "Failed to remove coupon",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: 'center',
+                backgroundColor: "#FF5A5F",
+            }).showToast();    }
+    
+  } catch (error) {
+    console.error('Error removing coupon',error)
+    Toastify({
+            text: "An error occurred. Please try again.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: 'center',
+            backgroundColor: "#FF5A5F",
+        }).showToast();    
+  }
+})
+
+
+
+
+
+
+
+
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded',function(){
+
+const totalAmount=parseFloat(document.getElementById('totalAmount').innerText)
+const codRadioButton=document.getElementById('cashOnDelivery')
+const codErrorMessage=document.getElementById('codError')
+const orderButton=document.getElementById('orderButton')
+
+document.querySelectorAll('input[name="PaymentOption"]').forEach(function(PaymentOption){
+  PaymentOption.addEventListener('change',function(){
+    if(codRadioButton.checked){
+      if(totalAmount>1000){
+        codErrorMessage.style.display='block'
+        orderButton.disabled=true
+      } else{
+        codErrorMessage.style.display='none'
+        orderButton.disabled=false
+      }
+    } else{
+      codErrorMessage.style.display='none'
+      orderButton.disabled=false
     }
   })
-  
-  .catch(error => {
-    console.error('Error:', error);
-    alert('Failed to place order. Please try again later.');
-    });
-    }
-  
-  
-  </script>
+})
+
+
+  })
+</script>

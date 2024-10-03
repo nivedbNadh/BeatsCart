@@ -7,11 +7,11 @@
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
-      background-color: #ecfdff; /* Set a warm background color */
+      background-color: #ecfdff; 
     }
 
     .thankyou-icon {
-      animation: bounce 1s infinite; /* Add a bouncing animation */
+      animation: bounce 1s infinite; 
     }
 
     @keyframes bounce {
@@ -27,15 +27,15 @@
     }
 
     .untree_co-section {
-      position: relative; /* Set position to relative for absolute positioning of elements */
-      height: 100vh; /* Set height to viewport height for full screen */
-      display: flex; /* Set display to flex for centering */
-      justify-content: center; /* Center horizontally */
-      align-items: center; /* Center vertically */
+      position: relative; 
+      height: 100vh; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center;
     }
 
     .papers {
-      position: absolute; /* Set position to absolute to overlay on top */
+      position: absolute; 
       top: 0;
       left: 0;
       width: 100%;
@@ -43,16 +43,16 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      pointer-events: none; /* Don't capture pointer events */
+      pointer-events: none; 
     }
 
     .paper {
       width: 20px;
       height: 20px;
-      background-color: #ff6b6b; /* Set initial color of paper */
-      border-radius: 50%; /* Make it round */
-      opacity: 0; /* Hide initially */
-      animation: pop 1s ease-out forwards; /* Add pop animation */
+      background-color: #ff6b6b; 
+      border-radius: 50%;
+      opacity: 0;
+      animation: pop 1s ease-out forwards; 
     }
 
     @keyframes pop {
@@ -76,34 +76,32 @@
       color: #fff;
     }
 
-    /* Additional styling for a more colorful appearance */
     .thankyou-icon svg {
-      fill: #ff6b6b; /* Change the color of the icon */
-      transition: fill 0.3s; /* Add transition effect for fill color */
+      fill: #ff6b6b; 
+      transition: fill 0.3s; 
     }
 
     .thankyou-icon:hover svg {
-      fill: #f15f5f; /* Change fill color on hover */
+      fill: #f15f5f; 
     }
 
     h2 {
-      color: #004c3f; /* Change the color of the heading */
+      color: #004c3f; 
     }
 
     p.lead {
-      color: #444; /* Darken the color of the lead paragraph */
+      color: #444; 
     }
 
     .btn-outline-black {
       background-color: transparent;
-      transition: background-color 0.3s ease; /* Add smooth transition effect */
+      transition: background-color 0.3s ease; 
     }
 
     .btn-outline-black:hover {
       background-color: #004c3f;
     }
 
-    /* Animation for thank you message */
     @keyframes fade-in {
       0% {
         opacity: 0;
@@ -127,11 +125,9 @@
   <script>
   window.onload = function() {
   if (window.history && window.history.replaceState) {
-    // Replace the current state with the success page
     window.history.replaceState(null, null, window.location.href);
 
     window.onpopstate = function(event) {
-      // Redirect to the cart page when back button is pressed
       window.location.href = '/cart';
     };
   }

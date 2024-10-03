@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Coupon</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="date"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-group input[type="number"].percentage {
+            padding-right: 35px; /* Adjust space for the % icon */
+        }
+        .form-group .percentage-icon {
+            position: absolute;
+            top: 38px; /* Adjusted to align with input field */
+            right: 10px;
+            font-size: 16px;
+            color: #555;
+        }
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 15px;
+            }
+            .form-group input[type="text"],
+            .form-group input[type="number"],
+            .form-group input[type="date"] {
+                width: calc(100% - 12px);
+            }
+            .form-group .percentage-icon {
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Create Coupon</h2>
+        <form id="couponForm">
+            <div class="form-group">
+                <label for="couponName">Coupon Name</label>
+                <input type="text" id="couponName" name="couponName" >
+                <div id="couponNameError" class="error"></div>
+            </div>
+            <div class="form-group">
+                <label for="couponCode">Coupon Code</label>
+                <input type="text" id="couponCode" name="couponCode" >
+                <div id="couponCodeError" class="error"></div>
+            </div>
+            <div class="form-group">
+                <label for="minPurchaseAmount">Minimum Purchase Amount</label>
+                <input type="number" id="minPurchaseAmount" name="minPurchaseAmount" >
+                <div id="minPurchaseAmountError" class="error"></div>
+            </div>
+            <div class="form-group">
+                <label for="discountAmount">Discount Amount</label>
+                <input type="number" id="discountAmount" name="discountAmount" class="percentage" >
+                <span class="percentage-icon">%</span>
+                <div id="discountAmountError" class="error"></div>
+            </div>
+            <div class="form-group">
+                <label for="maxdiscountAmount">Maximum Discount Amount</label>
+                <input type="number" id="maxDiscountAmount" name="maxDiscountAmount" class="number" >
+                <div id="maxDiscountAmountError" class="error"></div>
+            </div>
+            <div class="form-group">
+                <label for="startDate">Start Date</label>
+                <input type="date" id="startDate" name="startDate" >
+                <div id="startDateError" class="error"></div>
+            </div>
+            <div class="form-group">
+                <label for="expiryDate">Expiry Date</label>
+                <input type="date" id="expiryDate" name="expiryDate" >
+                <div id="expiryDateError" class="error"></div>
+            </div>
+            <div class="form-group">
+                <button type="submit">Create Coupon</button>
+            </div>
+        </form>
+    </div>
+
+<script>
+    document.getElementById('couponForm').addEventListener('submit', async function(event){
+        event.preventDefault();
+
+        // Clear previous error messages
+        clearErrors();
+
+        // Fetch form values
+        const couponName = document.getElementById('couponName').value.trim();
+        const couponCode = document.getElementById('couponCode').value.trim();
+        const minPurchaseAmount = parseFloat(document.getElementById('minPurchaseAmount').value.trim());
+        const discountAmount = parseFloat(document.getElementById('discountAmount').value.trim());
+        const maxDiscountAmount=parseFloat(document.getElementById('maxDiscountAmount').value.trim())
+        const startDate = document.getElementById('startDate').value.trim();
+        const expiryDate = document.getElementById('expiryDate').value.trim();
+        const today = new Date().toISOString().split('T')[0]; 
+
+        let isValid = true;
+
+        if (!couponName) {
+            showError('couponNameError', 'Coupon Name is required.');
+            isValid = false;
+        }
+
+        
+        if (!couponCode) {
+            showError('couponCodeError', 'Coupon Code is required.');
+            isValid = false;
+        }
+
+        if (isNaN(minPurchaseAmount) || minPurchaseAmount < 500) {
+            showError('minPurchaseAmountError', 'Minimum Purchase Amount should be at least 500.');
+            isValid = false;
+        }
+
+        if (isNaN(discountAmount) || discountAmount <= 0 || discountAmount >= 100) {
+            showError('discountAmountError', 'Discount Amount should be greater than 0% and less than 100%.');
+            isValid = false;
+        }
+
+        if(!maxDiscountAmount){
+            showError('maxDiscountAmountError','Maximum Discount Amount is required')
+            isValid=false
+        }
+
+        if (!startDate) {
+            showError('startDateError', 'Start Date is required.');
+            isValid = false;
+        } else if (startDate < today) {
+            showError('startDateError', 'Start Date cannot be in the past.');
+            isValid = false;
+        }
+
+        if (!expiryDate) {
+            showError('expiryDateError', 'Expiry Date is required.');
+            isValid = false;
+        } else if (expiryDate < today) {
+            showError('expiryDateError', 'Expiry Date cannot be in the past.');
+            isValid = false;
+        } else if (expiryDate <= startDate) {
+            showError('expiryDateError', 'Expiry Date must be after Start Date.');
+            isValid = false;
+        }
+
+        if (!isValid) {
+            return;
+        }
+
+        const couponData = {
+            couponName,
+            couponCode,
+            minPurchaseAmount,
+            discountAmount,
+            maxDiscountAmount,
+            startDate,
+            expiryDate
+        };
+
+        try {
+            const response = await fetch('/addCoupons', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(couponData)
+            });
+
+            if (response.ok) {
+                window.location.href = '/couponList';
+            } else {
+                alert('Failed to create coupon. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error', error);
+            alert('An error occurred. Please try again.');
+        }
+    });
+
+    // function to display error messages
+    function showError(elementId, message){
+        let errorElement = document.getElementById(elementId);
+        if (errorElement) {
+            errorElement.textContent = message;
+        }
+    }
+
+    // function to clear all error messages
+    function clearErrors(){
+        const errorElements = document.querySelectorAll('.error');
+        errorElements.forEach(elem => {
+            elem.textContent = '';
+        });
+    }
+</script>
+
+</body>
+</html>

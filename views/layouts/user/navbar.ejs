@@ -66,8 +66,10 @@
             <div class="row align-items-center">
                 <div class="col-lg-12">
                     <nav class="navbar navbar-expand-lg navbar-light">
-                        <a class="navbar-brand" href="index.html"> <img src="/userAssets/" alt="logo"> </a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        <a class="navbar-brand" href="index.html">
+                            <img src="/uploads/beatscartlogo-removebg-preview.png" alt="logo" style="height: 60px; width: auto; margin-left: -17px; ">
+                          </a>
+                                                  <button class="navbar-toggler" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                             <span class="menu_icon"><i class="fas fa-bars"></i></span>
@@ -129,8 +131,8 @@
                                             <a class="dropdown-item" href="/userProfile">Profile</a>
                                             <a class="dropdown-item" href="/orderHistory">My Order</a>
                                             <a class="dropdown-item" href="/cart">Cart</a>
-                                            <a class="dropdown-item" href="/">Coupon</a>
-                                            <a class="dropdown-item" href="/">walletHistory</a>
+                                            <a class="dropdown-item" href="/coupon">Coupon</a>
+                                            <a class="dropdown-item" href="/wishlist">Wishlist</a>
                                             <a class="dropdown-item" href="/logout">Logout</a>
                                         <%}%>
 
@@ -173,7 +175,7 @@
         </div>
         
 
-        <div id="search-results" style="background-color: #ecfdff;"></div>
+        <!-- <div id="search-results" style="background-color: #ecfdff;"></div> -->
 
 
 
@@ -194,70 +196,89 @@
 
 
 <script>
-    function debounce(func,wait) {
-        let timeout;
-        return function (...args) {
-            const context=this;
-            clearTimeout(timeout)
-            timeout=setTimeout(()=> func.apply(context,args),wait)
-        }
+
+    let searchResults=[]
+   function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    }
+}
+
+const debounceSearch = debounce(function (event) {
+    searchProducts(event);
+}, 300);
+
+
+async function searchProducts(event) {
+    event.preventDefault();
+
+    const query = document.getElementById('search_input').value.trim();
+
+    if (query.trim() === '') {
+        displayResults([]); 
+        return;
     }
 
-    const debounceSearch=debounce(function(event){
-        searchProducts(event)
-    },300)
+    try {
+        const response = await fetch(`/search?q=${encodeURIComponent(query)}`);
+        const products = await response.json();
+        console.log('productsproductsproductsproducts',products)
 
-    async function searchProducts(event){
-        event.preventDefault()
-
-        const query=document.getElementById('search_input').value.trim()
-
-        if(query.trim()===''){
-            displayResults([])
-            return
-        }
-
-        try {
-            const response = await fetch(`/search?q=${encodeURIComponent(query)}`);
-            const products=await response.json()
-
-            displayResults(products)
-            console.log(response,"responseresponseresponse")
-            console.log(products,"productsproductsproductsproducts")
-
-
-        } catch (error) {
-            console.error('Error fetching search results:',error)
-            
-        }
+        searchResults=products
+        displayResults(products);
+    } catch (error) {
+        console.error('Error fetching search results:', error);
     }
+}
 
-    function displayResults(products) {
-        const resultsDiv=document.getElementById('search-results')
-        resultsDiv.innerHTML=''
 
-        if(products.length === 0){
-            resultsDiv.innerHTML='<p>No products found.</p>'
-            return
-        }
 
-        products.forEach(product => {
-            const productDiv=document.createElement('div')
-            productDiv.className='product'
-            
 
-            const imageUrl=Array.isArray(product.image) ? `/uploads/${product.image[0]}` : product.image
-            console.log(imageUrl,"..............................................................");
 
-            productDiv.innerHTML=`
-               <a href="/productDetails/${product._id }"> 
-            <img src="${imageUrl}"alt="${product.name}">
-            <h3>${product.name}</h3>
-            <p>Price:$${product.price}</p>
-            
-                        </a>
-            `
-            resultsDiv.appendChild(productDiv)
-        });
-    }
+
+
+
+// function displayResults(products) {
+//     const container = document.getElementById('products-container');
+//     container.innerHTML = ''; 
+
+//     if (products.length === 0) {
+//         container.innerHTML = '<p>No products found.</p>';
+//         return;
+//     }
+
+//     products.forEach(product => {
+//         const productDiv = document.createElement('div');
+//         productDiv.className = 'col-lg-4 col-sm-6';
+
+//         const imageUrl = Array.isArray(product.image) ? `/uploads/${product.image[0]}` : product.image;
+
+//         productDiv.innerHTML = `
+//             <div class="single_product_item">
+//                 <a href="/productDetails/${product._id}">
+//                     <div class="product-card">
+//                         <div class="product-tumb">
+//                             <img src="${imageUrl}" alt="${product.name}">
+//                         </div>
+//                         <div class="product-details">
+//                             <h4><a href="#">${product.name}</a></h4>
+//                             <div class="product-bottom-details">
+//                                 <div class="product-price">$${product.price}</div>
+//                                 <div class="product-links">
+//                                     <a href="#"><i class="fa fa-heart"></i></a>
+//                                     <a href="#"><i class="fa fa-shopping-cart"></i></a>
+//                                 </div>
+//                             </div>
+//                         </div>
+//                     </div>
+//                 </a>
+//             </div>
+//         `;
+//         container.appendChild(productDiv);
+//     });
+// }
+
 </script>

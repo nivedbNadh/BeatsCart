@@ -37,11 +37,14 @@
                             <div class="col-md-12 form-group p_star">
                                 <input type="password" class="form-control" id="password" name="password" value=""
                                     placeholder="Password">
+                                    <span toggle="#password" class="fa fa-fw fa-eye field-icon toggle-password" style="position:absolute;right:10px;top:12px;cursor:pointer;"></span>
+
                                 <p id="passwordError" class="text-danger"></p>
                             </div>
                             <div class="col-md-12 form-group p_star">
                                 <input type="password" class="form-control" id="Confirmpassword" name="confirmpassword" value=""
                                     placeholder="Confirmpassword">
+                                    <span toggle="#Confirmpassword" class="fa fa-fw fa-eye field-icon toggle-password" style="position:absolute;right:10px;top:12px;cursor:pointer;"></span>
                                 <p id="confirmPasswordError" class="text-danger"></p>
                             </div>
                             <div class="col-md-12 form-group">
@@ -140,7 +143,22 @@
             signupForm.submit();
         }
     });
-});
+    document.querySelectorAll('.toggle-password').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const input = document.querySelector(this.getAttribute('toggle'));
+                if (input.type === "password") {
+                    input.type = "text";
+                    this.querySelector('i').classList.remove('fa-eye');
+                    this.querySelector('i').classList.add('fa-eye-slash');
+                } else {
+                    input.type = "password";
+                    this.querySelector('i').classList.remove('fa-eye-slash');
+                    this.querySelector('i').classList.add('fa-eye');
+                }
+            });
+        });
+    });
+
 
 </script>
 

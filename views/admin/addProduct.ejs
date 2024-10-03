@@ -95,16 +95,21 @@
         <% category.forEach(Category => { %>
             <option value="<%= Category.name %>"><%= Category.name %></option>
         <% }) %>
-    </select><br><br>
+    </select>
+    <br>
     <span class="error-message" id="category-error"></span><br>
 
+    <br>
     <select id="brand" name="brand" required>
         <option value="" disabled selected>choose brand</option>
         <% brands.forEach(brand=>{%>
             <option value="<%=brand.name%>"><%=brand.name%></option>
        <% }) %>
 
-    </select><br><br><br>
+    </select><br>
+    <span class="error-message" id="brand-error"></span><br>
+
+    <br><br>
 
     <label for="quantity">Quantity:</label><br>
     <input type="number" id="quantity" name="quantity" min="1" required><br>

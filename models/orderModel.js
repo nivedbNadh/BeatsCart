@@ -50,25 +50,33 @@ const orderSchema=new mongoose.Schema({
         }
     },
     orderDate:{
-        type:String,
+        type:Date,
         required:true
     },
-    orderTime:{
-        type:String,
+    deliveryDate:{
+        type:Date,
         required:true
     },
     status:{
         type:String,
-        enum:['pending','Processing','Shipped','Delivered','Cancelled','PaymentFailed'],
+        enum:['pending','Processing','Shipped','Delivered','Cancelled','PaymentFailed','Pending Payment','Returned'],
         default:"pending"
 
     },
     paymentMethod:{
         type:String,
-        enum:['Wallet','Razorpay','cashOnDelivery'],
+        enum:['Wallet','razorpay','cashOnDelivery'],
         required:true
-    }
+    },
+
+
+
+    razorpayOrderId: {  
+        type: String
+    },
 })
+
+
 
 
 

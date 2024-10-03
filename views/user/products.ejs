@@ -1,7 +1,8 @@
 <%-include('../layouts/user/header')%>
 
 <%-include('../layouts/user/navbar')%>
-
+<div class="page-wrapper">
+    <div class="main-content">
 <section class="product_list section_padding">
     <div class="container">
         <div class="row justify-content-center">
@@ -24,59 +25,57 @@
             </div>
         </div>
         <div class="row">
-            <!-- Sidebar -->
-            <div class="col-lg-3">
-                <div class="filter_sidebar">
-                    <h3>Filter</h3>
-                    <!-- Filter options -->
-                    <div class="filter_option">
-                        <h4>Price</h4>
-                        <form id="filter-form" class="filter-form">
-                            <label>
-                                <input type="radio" name="price" value="low-to-high" onchange="applyFilters()"> Low to High
-                            </label>
-                            <label>
-                                <input type="radio" name="price" value="high-to-low" onchange="applyFilters()"> High to Low
-                            </label>
-                        </form>
-                    </div>
+          <!-- Sidebar -->
+       <div class="col-lg-3">
+        <div class="filter_sidebar">
+        <h3>Filter</h3>
 
-                    <div class="filter_option">
-                        <h4>Brand</h4>
-                        <form id="brand-form" class="filter-form">
-                            <% brands.forEach(data=>{ %>
-                                <div class="checkbox-group">
-                                    <label>
-                                        <input type="checkbox" name="brand" value="<%= data.name%>">
-                                        <%=data.name%>
-                                    </label>
-                                </div>
-                           <% }) %>
-                        </form>
-                    </div>
-                    
-                    <div class="filter_option">
-                        <h4>Category</h4>
-                        <form id="category-form" class="filter-form">
-                            <% category.forEach(data => { %>
-                                <div class="checkbox-group">
-                                    <label>
-                                        <input type="checkbox" name="category" value="<%= data.name %>">
-                                        <%= data.name %>
-                                    </label>
-                                </div>
-                            <% }); %>
-                        </form>
-                    </div>
-                    
+        <!-- Filter options -->
+        <div class="filter_option">
+            <h4>Price</h4>
+            <form id="filter-form" class="filter-form">
+                <label>
+                    <input type="radio" name="price" value="low-to-high" onchange="applyFilters()"> Low to High
+                </label>
+                <label>
+                    <input type="radio" name="price" value="high-to-low" onchange="applyFilters()"> High to Low
+                </label>
+            </form>
+        </div>
 
-                    
-                    <div class="filter_option">
-                        <button class="apply-btn" onclick="applyFilters()">Apply</button>
+        <div class="filter_option">
+            <h4>Brand</h4>
+            <form id="brand-form" class="filter-form scrollable-section">
+                <% brands.forEach(data=>{ %>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" name="brand" value="<%= data.name %>">
+                            <%= data.name %>
+                        </label>
                     </div>
-                    
-                </div>
-            </div>
+                <% }) %>
+            </form>
+        </div>
+        
+        <div class="filter_option">
+            <h4>Category</h4>
+            <form id="category-form" class="filter-form scrollable-section">
+                <% category.forEach(data => { %>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" name="category" value="<%= data.name %>">
+                            <%= data.name %>
+                        </label>
+                    </div>
+                <% }); %>
+            </form>
+        </div>
+
+        <div class="filter_option">
+            <button class="apply-btn" onclick="applyFilters()">Apply</button>
+        </div>
+    </div>
+</div>
 
             <!-- Products -->
             <div class="col-lg-9">
@@ -95,7 +94,15 @@
                                                 <span class="product-catagory"></span>
                                                 <h4><a href="#"> <%= data.name %> </a></h4>
                                                 <div class="product-bottom-details">
-                                                    <div class="product-price"><%= data.price %></div>
+                                                    <div class="product-price">
+                                                        <% if(data.hasOffer) { %>
+                                                            <span style="text-decoration: line-through; margin-right: 30px;"><%= Math.round(data.originalPrice) %></span>
+                                                            <span style="color:goldenrod; font-weight:bold"><%= Math.round(data.discountedPrice) %></span>
+                                                        <% } else { %>
+                                                            <%= Math.round(data.originalPrice) %>
+                                                        <% } %>
+                                                    </div>
+                                                    
                                                     <div class="product-links">
                                                         <a href="#"><i class="fa fa-heart"></i></a>
                                                         <a href="#"><i class="fa fa-shopping-cart"></i></a>
@@ -112,12 +119,42 @@
             </div>
         </div>
     </div>
+
+    <!-- Pagination Links -->
+    <div class="pagination-wrapper">
+        <ul class="pagination">
+            <% if (currentPage > 1) { %>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+                </li>
+            <% } %>
+
+            <% for (let i = 1; i <= totalPages; i++) { %>
+                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                </li>
+            <% } %>
+
+            <% if (currentPage < totalPages) { %>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+                </li>
+            <% } %>
+        </ul>
+    </div>
+</section>
+</div>
+
+<%-include('../layouts/user/footer')%>
+</div>
+
 </section>
 
 <script>
     function applyFilters(){
         const form=document.getElementById('filter-form')
         const categoryForm=document.getElementById('category-form')
+        const brandForm=document.getElementById('brand-form')
 
 
 
@@ -132,12 +169,20 @@
         checkboxes.forEach(checkbox=>{
             selectedCategories.push(checkbox.value)
         })
-        console.log(checkboxes,"checkboxescheckboxes");
-        
+        console.log(selectedCategories,"selectedCategories");
+
+        const selectBrands=[]
+        const brandCheckboxes=brandForm.querySelectorAll('input[name="brand"]:checked')
+        brandCheckboxes.forEach(checkbox=>{
+            selectBrands.push(checkbox.value)
+        })
+        console.log(selectBrands,'selectBrands')
 
         const filters={
             price:formData.get('price'),
-            category:selectedCategories // sending array of categories
+            category:selectedCategories ,// sending array of categories and brands
+            brand:selectBrands,
+            searchResults
         }
         console.log(filters,"filtersfiltersfiltersfilters");
         
@@ -152,7 +197,63 @@
         })
         .then(response=>response.json())
         .then(data=>{
-            const container=document.getElementById('products-container')
+
+            displayResults(data.products)
+        })
+        .catch(error=>console.error('Error:',error))
+
+    }
+    function displayResults(products) {
+  const container = document.getElementById('products-container');
+  container.innerHTML = '';
+
+  if (products.length === 0) {
+    container.innerHTML = '<p>No Products found.</p>';
+    return;
+  }
+
+  products.forEach(product => {
+    const productDiv = document.createElement('div');
+    productDiv.className = 'col-lg-4 col-sm-6';
+
+    const imageUrl = Array.isArray(product.image) ? `/uploads/${product.image[0]}` : product.image;
+
+    productDiv.innerHTML = `
+      <div class="single_product_item">
+          <a href="/productDetails/${product._id}">
+              <div class="product-card">
+                  <div class="product-tumb">
+                      <img src="${imageUrl}" alt="${product.name}">
+                  </div>
+                  <div class="product-details">
+                      <h4><a href="#">${product.name}</a></h4>
+                      <div class="product-bottom-details">
+                          <div class="product-price">
+                              ${product.hasOffer ? `
+                                  <span style="text-decoration: line-through; margin-right: 10px;">₹${product.price.toFixed(2)}</span>
+                                  <span style="color: goldenrod; font-weight: bold;">₹${product.finalPrice.toFixed(2)}</span>
+                              ` : `₹${product.price.toFixed(2)}`}
+                          </div>
+                          <div class="product-links">
+                              <a href="#"><i class="fa fa-heart"></i></a>
+                              <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </a>
+      </div>
+    `;
+    container.appendChild(productDiv);
+  });
+}
+
+</script>
+
+
+<!--old filter codde below before implemented interconnect filter-->
+
+            <!-- const container=document.getElementById('products-container')
             container.innerHTML=''
             data.products.forEach(product=>{
                 container.innerHTML+=`
@@ -181,11 +282,8 @@
                      `;                                
                        })
                                             
-                          })
-                            .catch(error=> console.error('Eroor:',error))
-       }
+                            .catch(error=> console.error('Eroor:',error)) -->
 
-</script>
 
 <style>
    @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
@@ -197,28 +295,16 @@ body {
     background-color: white;
 }
 
-/* Sidebar */
-/* Ensure the parent container has relative positioning */
-.row {
-    position: relative;
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
-.filter_sidebar {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: absolute; 
-    left: -60px; 
-    top: 0; 
-    width: 100%; 
-    height: 1000px;
-    box-sizing: border-box; 
-}
 
-/* Adjusted for Product Cards */
 .product-card {
-    width: 100%; /* Ensure the card takes full column width */
+    width: 100%; 
     height: 340px;
     position: relative;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -234,8 +320,8 @@ body {
 
 .badge {
     position: absolute;
-    left: 10px; /* Adjust position */
-    top: 10px; /* Adjust position */
+    left: 10px;
+    top: 10px; 
     text-transform: uppercase;
     font-size: 12px;
     font-weight: 700;
@@ -291,7 +377,7 @@ body {
     color: #fbb72c;
     font-weight: 600;
     margin-bottom: 10px;
-    display: inline-block; /* Ensure price is displayed inline */
+    display: inline-block; 
 }
 
 .product-price small {
@@ -303,8 +389,8 @@ body {
 
 .product-links {
     text-align: right;
-    display: inline-block; /* Ensure links are displayed inline */
-    float: right; /* Align to the right */
+    display: inline-block; 
+    float: right; 
 }
 
 .product-links a {
@@ -344,7 +430,6 @@ body {
     color: #000;
 }
 
-/* Ensure three cards per row */
 @media (min-width: 992px) {
     .col-lg-4 {
         width: 33.3333%;
@@ -353,19 +438,136 @@ body {
 
 @media (max-width: 991px) {
     .col-lg-4 {
-        width: 50%; /* Adjust for smaller screens if needed */
+        width: 50%;
     }
 }
 
 @media (max-width: 767px) {
     .col-lg-4 {
-        width: 100%; /* Full width on mobile screens */
+        width: 100%; 
     }
 }
 
 
+
+
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1; /* Ensures the content takes up the available space */
+}
+
+.footer_part {
+    flex-shrink: 0; /* Prevents the footer from shrinking */
+}
+
+
+
+/* General styles for the sidebar */
+.filter_sidebar {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    max-height: 95vh; /* Ensures the sidebar doesn't exceed the height of the viewport */
+    overflow-y: auto; /* Sidebar becomes scrollable if the content exceeds the height */
+}
+
+/* Filter Option styles */
 .filter_option {
-    margin-bottom: 20px; /* Add spacing between filter options */
+    margin-bottom: 20px;
+}
+
+.filter_option h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.filter_option label {
+    display: block;
+    font-size: 16px;
+    color: #555;
+}
+
+.apply-btn {
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.apply-btn:hover {
+    background-color: #555;
+}
+
+/* Scrollable section for large lists (Brand, Category) */
+.scrollable-section {
+    max-height: 200px; /* Set a fixed height for the scrollable area */
+    overflow-y: auto; /* Make it scrollable vertically */
+    padding-right: 10px; /* Adds space to avoid scrollbar overlap */
+}
+
+/* For smaller screens (mobile responsiveness) */
+@media (max-width: 768px) {
+    .col-lg-3 {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .filter_sidebar {
+        padding: 10px;
+    }
+
+    .filter_option h4 {
+        font-size: 14px;
+    }
+
+    .filter_option label {
+        font-size: 12px;
+    }
+
+    .apply-btn {
+        padding: 6px;
+        font-size: 12px;
+    }
+
+    .scrollable-section {
+        max-height: 150px; /* Smaller height for mobile screens */
+    }
+}
+
+
+
+.row {
+    position: relative;
+}
+
+.filter_sidebar {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: absolute; 
+    left: -60px; 
+    top: 0; 
+    width: 100%; 
+    height: 880px;
+    box-sizing: border-box; 
+}
+
+
+.filter_option {
+    margin-bottom: 20px; 
 }
 
 .filter_option h4 {
@@ -377,11 +579,11 @@ body {
 
 .filter-form label {
     display: block;
-    margin-bottom: 10px; /* Space between labels */
+    margin-bottom: 10px; 
 }
 
 .filter-form input[type="radio"] {
-    margin-right: 5px; /* Space between radio button and label */
+    margin-right: 5px;
 }
 
 .category-dropdown {
@@ -435,12 +637,36 @@ body {
 
 .checkbox-group input[type="checkbox"] {
   margin-right: 10px;
-  accent-color: #ff523b; /* Optional: color for the checkbox */
+  accent-color: #ff523b; 
 }
 
 .checkbox-group input[type="checkbox"]:checked + span {
   font-weight: bold;
 }
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination .page-item {
+    margin: 0 5px;
+}
+
+.pagination .page-link {
+    padding: 10px 15px;
+    color: #000;
+    border: 1px solid #ddd;
+    text-decoration: none;
+}
+
+.pagination .active .page-link {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
 
 
 </style>
@@ -487,7 +713,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
             })
             .then(response => {
-                console.log('Product ID sent to backend:', productId);
+                // console.log('Product ID sent to backend:', productId);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -496,4 +722,3 @@ document.addEventListener('DOMContentLoaded', function() {
     </script>
         
 
-        <%-include('../layouts/user/footer')%>

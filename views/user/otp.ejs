@@ -26,7 +26,7 @@
                     <input type="text" name="otp4" maxlength="1" required onkeyup="moveFocus(this)">
                 </div>
                 <button type="submit">Verify</button>
-                <a href="#" id="resend-otp">Resend OTP</a>
+                <a href="#" id="resend-otp" class="btn" style="pointer-events: none; color: grey;">Resend OTP</a>
             </form>
             
         <div class="pop-up" id="pop-up">
@@ -63,6 +63,9 @@
                     updateCountdown()
                 } else{
                     clearInterval(countdownInterval)
+                    resendButton.style.pointerEvents='auto'
+                    resendButton.style.color=''
+
                 }
             },1000)
         }
@@ -83,7 +86,10 @@
                 if(response.ok){
                     alert("otp resent successfully")          
                     timeLeft=120
-                    startCountdown()                                                                                                                                             
+                    startCountdown()              
+                    resendButton.style.pointerEvents='none'
+                    resendButton.style.color='grey'   
+                    startCountdown()                                                                                                                            
                 }else{
                     throw new Error("Failed to resend otp ")
                 }

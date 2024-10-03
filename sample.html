@@ -1,274 +1,290 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Coupon Code Web Design</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        .container {
+            width: 100%;
+            height: 100vh;
+            background: #f0fff3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .coupon-card {
+            background: linear-gradient(135deg, #7158fe, #9d4de6);
+            color: #fff;
+            text-align: center;
+            padding: 20px 40px; /* Padding unchanged */
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            position: relative;
+            max-width: 400px; /* Increased max-width */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .coupon-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.637);
+        }
+        .logo {
+            width: 52px;
+            border-radius: 8px;
+            margin-bottom: 9px;
+        }
+        .coupon-card h3 {
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.3;
+            margin-bottom: 15px;
+        }
+        .coupon-card p {
+            font-size: 13px;
+            color: #d4e1f1;
+            margin-top: 10px;
+        }
+        .coupon-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px auto;
+            width: fit-content;
+        }
+        #cpnCode {
+            border: 1px dashed #fff;
+            padding: 6px 12px;
+            border-right: 0;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        #cpnBtn {
+            border: 1px solid #fff;
+            background: #fff;
+            padding: 6px 12px;
+            color: #7158fe;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        #cpnBtn:hover {
+            background: #9d4de6;
+            color: #fff;
+        }
+        .circle1, .circle2 {
+            background: #f0fff3;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: -1;
+        }
+        .circle1 {
+            left: -15px;
+        }
+        .circle2 {
+            right: -15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="coupon-card">
+        <img src="https://i.postimg.cc/KvTqpZq9/uber.png" class="logo" alt="Logo">
+        <h3>20% Flat Off on All Rides Within the City<br>Using HDFC Credit Card</h3>
+        <div class="coupon-row">
+            <span id="cpnCode">STEALDEAL20</span>
+            <span id="cpnBtn">Copy Code</span>
+        </div>
+        <p>Valid Till: 20 Dec, 2021</p>
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+    </div>
+</div>
+
+<script>
+    var cpnBtn = document.getElementById("cpnBtn");
+    var cpnCode = document.getElementById("cpnCode");
+
+    cpnBtn.onclick = function() {
+        navigator.clipboard.writeText(cpnCode.innerHTML);
+        cpnBtn.innerHTML = "COPIED";
+        setTimeout(function() {
+            cpnBtn.innerHTML = "Copy Code";
+        }, 3000);
+    }
+</script>
+
+</body>
+</html> -->
+
+
+
+
+
+ <!-- <div>
+    <canvas id="myChart"></canvas>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <script>
+    const ctx = document.getElementById('myChart');
+  
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [{
+          label: '# of Votes',
+          data: [12, 19, 3, 5, 2, 3],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>  -->
+
+<!-- 
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Report Chart</title>
+  <style>
+    #chart-container {
+      margin-bottom: 20px; /* Adjust margin as needed */
+    }
+    .input-container {
+      margin-top: 20px; /* Space between chart and inputs */
+    }
+    input {
+      margin-right: 10px; /* Space between input fields */
+    }
+  </style>
+</head>
+<body>
+  <div id="chart-container">
+    <canvas id="myChart"></canvas>
+  </div>
+
+  <div class="input-container">
+    <select id="select1">
+        <option value="" disabled selected>Select Option 1</option>
+        <option value="option1">Daily</option>
+        <option value="option2">weekly </option>
+        <option value="option3">monthly</option>
+        <option value="option3">yearly</option>
+      </select>    <input type="date" id="input2" placeholder="Input 2">
+    <input type="date" id="input3" placeholder="Input 3">
+  </div>
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [{
+          label: '# of Votes',
+          data: [12, 19, 3, 5, 2, 3],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script> -->
+<!-- </body>
+</html> -->
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Order History</title>
-<link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet Not Found</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+        }
+        h1 {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+        p {
+            color: #34495e;
+            margin-bottom: 1.5rem;
+        }
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
 </head>
 <body>
-  <div id="orders">
-    <!-- Orders will be dynamically inserted here -->
-  </div>
-  <div id="no-orders" class="hidden">
-    <div class="no-orders-content">
-      <div class="icon-container">
-        <svg viewBox="0 0 24 24" class="icon">
-          <circle cx="12" cy="12" r="10"></circle>
-          <text x="50%" y="50%" text-anchor="middle" alignment-baseline="middle" font-size="10px" fill="#ffffff">!</text>
-        </svg>
-      </div>
-      <p>No orders found.</p>
+    <div class="container">
+        <div class="icon">💼</div>
+        <h1>Wallet Not Found</h1>
+        <p>We're sorry, but we couldn't find the wallet you're looking for. It may have been moved, deleted, or never existed.</p>
+        <a href="#" class="btn">Go Back</a>
     </div>
-  </div>
-
-  <script src="script.js"></script>
 </body>
 </html>
-
-
-<style>
- body {
-  font-family: 'Arial', sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  background-color: #f2f2f2;
-}
-
-#orders {
-  /* Styles for your orders container */
-}
-
-#no-orders {
-  text-align: center;
-  animation: fadeIn 0.5s ease both;
-}
-
-.no-orders-content {
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.icon-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 80px;
-  height: 80px;
-  background-color: #ff5733;
-  border-radius: 50%;
-  margin: 0 auto 20px auto;
-}
-
-.icon {
-  width: 50px;
-  height: 50px;
-}
-
-.hidden {
-  display: none;
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-</style>
-
-<script>
- // Simulate checking for orders
-const orders = []; // Replace with actual logic to fetch orders
-
-// Check if there are orders
-if (orders.length === 0) {
-  document.getElementById('no-orders').classList.remove('hidden');
-} else {
-  document.getElementById('orders').innerHTML = '<p>Your order history:</p>'; // Example of adding orders dynamically
-}
-
-
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--=========================backup my home page template best sellers code below======================-->
-
-
-               
-    <!-- product_list part start-->
-
-    <!-- awesome_shop start-->
-   <!-- <section class="our_offer section_padding">
-        <div class="container">
-            <div class="row align-items-center justify-content-between">
-                <div class="col-lg-6 col-md-6">
-                    <div class="offer_img">
-                        <img src="img/offer_img.png" alt="">
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6">
-                    <div class="offer_text">
-                        <h2>Weekly Sale on
-                            60% Off All Products</h2>
-                        <div class="date_countdown">
-                            <div id="timer">
-                                <div id="days" class="date"></div>
-                                <div id="hours" class="date"></div>
-                                <div id="minutes" class="date"></div>
-                                <div id="seconds" class="date"></div>
-                            </div>
-                        </div>
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="enter email address"
-                                aria-label="Recipient's username" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <a href="#" class="input-group-text btn_2" id="basic-addon2">book now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>-->
-    <!-- awesome_shop part start-->
-
-    <!-- product_list part start-->
-    <!-- <section class="product_list best_seller section_padding">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-12">
-                    <div class="section_tittle text-center">
-                        <h2>Best Sellers <span>shop</span></h2>
-                    </div>
-                </div>
-            </div>
-            <div class="row align-items-center justify-content-between">
-                <div class="col-lg-12">
-                    <div class="best_product_slider owl-carousel">
-                        <div class="single_product_item">
-                            <img src="img/product/product_1.png" alt="">
-                            <div class="single_product_text">
-                                <h4>Quartz Belt Watch</h4>
-                                <h3>$150.00</h3>
-                            </div>
-                        </div>
-                        <div class="single_product_item">
-                            <img src="img/product/product_2.png" alt="">
-                            <div class="single_product_text">
-                                <h4>Quartz Belt Watch</h4>
-                                <h3>$150.00</h3>
-                            </div>
-                        </div>
-                        <div class="single_product_item">
-                            <img src="img/product/product_3.png" alt="">
-                            <div class="single_product_text">
-                                <h4>Quartz Belt Watch</h4>
-                                <h3>$150.00</h3>
-                            </div>
-                        </div>
-                        <div class="single_product_item">
-                            <img src="img/product/product_4.png" alt="">
-                            <div class="single_product_text">
-                                <h4>Quartz Belt Watch</h4>
-                                <h3>$150.00</h3>
-                            </div>
-                        </div>
-                        <div class="single_product_item">
-                            <img src="img/product/product_5.png" alt="">
-                            <div class="single_product_text">
-                                <h4>Quartz Belt Watch</h4>
-                                <h3>$150.00</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
-    <!-- product_list part end-->
-
-    <!-- subscribe_area part start-->
- <!--   <section class="subscribe_area section_padding">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-7">
-                    <div class="subscribe_area_text text-center">
-                        <h5>Join Our Newsletter</h5>
-                        <h2>Subscribe to get Updated
-                            with new offers</h2>
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="enter email address"
-                                aria-label="Recipient's username" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <a href="#" class="input-group-text btn_2" id="basic-addon2">subscribe now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
-    <!--::subscribe_area part end::-->
-
-    <!-- subscribe_area part start-->
-    <!-- <section class="client_logo padding_top">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-12">
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_1.png" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_2.png" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_3.png" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_4.png" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_5.png" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_3.png" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_1.png" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_2.png" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_3.png" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="img/client_logo/client_logo_4.png" alt="">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
-    <!--::subscribe_area part end::-->

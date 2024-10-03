@@ -24,6 +24,12 @@
     <!-- Template Stylesheet -->
     <link href="/userAssets/css/adminDash.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css"> --> -->
 
 
@@ -108,8 +114,9 @@
               <thead>
                 <tr>
                   <th></th>
-                  <th>OrderId</th>
+                  <th>User Name</th>
                   <th>Product</th>
+                  <th>quantity</th>
                   <th>Price</th>
                   <th>Status</th>
                   <th>Action</th>
@@ -122,10 +129,11 @@
                   <td>
                     <!-- <img src="/uploads/sample-image.jpg" style="width: 4rem;object-fit: cover;"> -->
                   </td>
-                  <td class="fixed-td"><%= order._id %></td>
+                  <td class="fixed-td"><%= order.customerDetails.name%></td>
                   <td class="fixed-td text-capitalize">
-                    <h6><%= order.products[0].product.name %></h6>
-                    <td><p class="card-text">$<%= order.totals.totalprice %></p></td>
+                    <h6><%= order.productDetails.name %></h6>
+                    <td><%= order.products.quantity %></td>
+                    <td><p class="card-text">₹<%= order.totalPrice %></p></td>
                   </td>
                   </td>
                   <td class="status text-capitalize"><%= order.status %></td>
@@ -145,13 +153,10 @@
                           <button data-id="<%= order._id %>" style="font-size:0.6rem" class="btn btn-success" <%= order.status==='Cancelled' ? 'disabled':''%>>Submit</button>
                       </div>
                   </form>
-                  
                     </div>
-                    
                   </td>
                 </tr>
               <%}) %>
-
               </tbody>
             </table>
             <tfoot class="bg-white">
@@ -175,6 +180,16 @@
   </div>
 </body>
 
+
+
+
+<!-- Toastify CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+<!-- Toastify JS -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="/js/adminOrderStatus.js"></script>
@@ -188,7 +203,6 @@ $(document).ready(function() {
         var orderId = form.find('input[name="orderId"]').val();
         var newStatus = form.find('select[name="orderStatus"]').val();
 
-
         $.ajax({
             url: '/updateOrderStatus',
             method: 'POST',
@@ -198,29 +212,32 @@ $(document).ready(function() {
                 newStatus: newStatus
             }),
             success: function(response) {
-                console.log('Status successfully updated:', response);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Order status updated',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+              console.log('Status successfully updated:', response);
 
-                // update the status in the table without refreshing the page
-                form.closest('tr').find('.status').text(newStatus);
+                Toastify({
+                    text: "Successfully updated status!",
+                    duration: 3000, 
+                    close: true, 
+                    gravity: "top", 
+                    position: "center",
+                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)", 
+                }).showToast();
 
-                if(newStatus === 'Cancelled') {
-                  form.find('button').prop('disabled',true)
-                }
+                setTimeout(() => {
+                    location.reload();
+                }, 3000); 
             },
             error: function(xhr, status, error) {
                 console.log('Error updating status:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Failed to update status',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+
+                Toastify({
+                    text: "Failed to update status",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "center",
+                    backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)", 
+                }).showToast();
             }
         });
     });

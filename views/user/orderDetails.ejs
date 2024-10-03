@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Details</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> <!-- FontAwesome -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+</head>
+<body>
+    <div class="order-details-container">
+        <!-- Top Row: Order ID and Order Status -->
+        <div class="top-row">
+            <div class="order-id">
+                <h3><i class="fas fa-receipt"></i> Order ID: <%= order._id %></h3>
+            </div>
+            <div class="order-status">
+                <span>Status: <strong><%= order.status %></strong></span>
+               
+                <button id="download-invoice" class="download-invoice">
+                    <i class="fas fa-file-download"></i> Download Invoice
+                </button>
+            </div>
+        </div>
+    
+        <!-- Middle Row: Customer Details and Order Info -->
+        <div class="middle-row">
+            <div class="customer-details">
+                <h4><i class="fas fa-user"></i> Customer</h4>
+                <p>Name: <%= order.customer.name %></p>
+                <p>Email: <%= order.customer.email %></p>
+                <p>Phone: <%= order.address.mobile %></p>
+            </div>
+            <div class="order-info">
+                <h4><i class="fas fa-info-circle"></i> Order Info</h4>
+                <p>Total Items: <%= order.products.length %></p>
+                <p>Total: $<%= order.totals.totalprice.toFixed(2) %></p>
+                <p>Order Date: <%= new Date(order.orderDate).toLocaleDateString() %></p>
+                <p>Delivery Date: <%= new Date(order.deliveryDate).toLocaleDateString() %></p>
+            </div>
+        </div>
+    
+        <!-- Bottom Row: Payment Details and Delivery Address -->
+        <div class="bottom-row">
+            <div class="payment-details">
+                <h4><i class="fas fa-credit-card"></i> Payment</h4>
+                <p>Payment Type: <%= order.paymentMethod %></p>
+                <p>Payment Status: <%= order.status %></p>
+                <p>Name: <%= order.customer.name %></p>
+                <p>Phone: <%= order.address.mobile %></p>
+                <% if (order.status === 'PaymentFailed') { %>
+                  <button id="retry-payment" class="retry-payment">
+                    <i class="fas fa-credit-card"></i> Retry Payment
+                  </button>
+                <% } %>
+                
+            </div>
+            <div class="delivery-address">
+                <h4><i class="fas fa-map-marker-alt"></i> Delivery Address</h4>
+                <p>Name: <%= order.customer.name %></p>
+                <p>Address: <%= order.address.area %>, <%= order.address.city %>, <%= order.address.landmark %>, <%= order.address.pincode %>, <%= order.address.houseName %></p>
+                <p>Phone: <%= order.address.mobile %></p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+<script>
+    document.getElementById('download-invoice').addEventListener('click',()=>{
+        const orderId='<%=order._id%>'
+        fetch(`/generate-invoice/${orderId}`,{
+            method:'GET',
+            headers:{
+                'Content-Type':'application/pdf'
+            }
+        })
+
+        .then(response=>response.blob())
+        .then(blob=>{
+            const url=window.URL.createObjectURL(blob)
+            const a=document.createElement('a')
+
+            a.href=url
+            a.download=`invoice-${orderId}.pdf`;
+            document.body.appendChild(a)
+            a.click()
+            a.remove()
+            window.URL.revokeObjectURL(url)
+        })
+        .catch(error=>console.error('Error downloading invoice:',error))
+    })
+</script>
+
+
+<script>
+  document.getElementById('retry-payment').addEventListener('click', function () {
+  fetch('/retryPayment', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ orderId: '<%=order._id%>' })
+  })
+    .then(response => response.json())
+    .then(data => {
+      var options = {
+        key: data.key,
+        amount: data.amount,
+        currency: 'INR',
+        name: 'BeatsCart',
+        description: 'Order Payment',
+        order_id: data.order_id,
+        handler: function (response) {
+          fetch('/handlePaymentSuccess', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpayOrderId: response.razorpay_order_id, 
+              razorpaySignature: response.razorpay_signature, 
+              orderId: data.order_id
+            })
+          })
+            .then(() => {
+              window.location.href = '/successorder';
+            })
+            .catch(error => {
+              console.error('Error during payment verification:', error);
+              alert('Payment verification failed.');
+            });
+        },
+        modal: {
+          ondismiss: function () {
+            alert('Payment was cancelled.');
+          }
+        }
+      };
+
+      var rzp = new Razorpay(options);
+      rzp.open();
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Failed to initiate payment retry.');
+    });
+});
+
+</script>
+
+
+
+
+<style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+.order-details-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 25px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 50px;
+}
+
+/* Top, middle, and bottom row structure */
+.top-row, .middle-row, .bottom-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.top-row .order-id, .top-row .order-status {
+  flex-basis: 48%;
+}
+
+.middle-row, .bottom-row {
+  margin-top: 20px;
+}
+
+.order-id h3 {
+  color: #333;
+}
+
+.order-status {
+  text-align: right;
+}
+
+.order-status span {
+  font-size: 18px;
+  margin-right: 20px;
+}
+
+.download-invoice {
+  margin-left: 15px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.download-invoice:hover {
+  text-decoration: underline;
+}
+
+.download-icon {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+
+/* Individual sections */
+.middle-row .customer-details, .middle-row .order-info,
+.bottom-row .payment-details, .bottom-row .delivery-address {
+  flex-basis: 48%;
+}
+
+h4 {
+  margin-bottom: 10px;
+  color: #444;
+}
+
+p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.order-info p, .payment-details p, .delivery-address p {
+  padding-left: 10px;
+}
+
+.bottom-row {
+  border-bottom: none;
+}
+
+/* Icons */
+h3 i, h4 i {
+  color: #007bff;
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+p i {
+  color: #007bff;
+  margin-right: 5px;
+}
+</style>

@@ -1,0 +1,178 @@
+
+    <style>
+       
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    padding-top: 80px; 
+}
+
+.container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding-top: 20px; 
+}
+
+.coupon-card {
+    background: linear-gradient(135deg, #7158fe, #9d4de6);
+    color: #fff;
+    text-align: center;
+    padding: 20px 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    position: relative;
+    max-width: 400px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.coupon-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.637);
+}
+
+.logo {
+    width: 52px;
+    border-radius: 8px;
+    margin-bottom: 9px;
+}
+
+.coupon-card h3 {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.3;
+    margin-bottom: 15px;
+}
+
+.coupon-card p {
+    font-size: 13px;
+    color: #d4e1f1;
+    margin-top: 10px;
+}
+
+.coupon-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 15px auto;
+    width: fit-content;
+}
+
+.cpnCode {
+    border: 1px dashed #fff;
+    padding: 6px 12px;
+    border-right: 0;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.cpnBtn {
+    border: 1px solid #fff;
+    background: #fff;
+    padding: 6px 12px;
+    color: #7158fe;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.cpnBtn:hover {
+    background: #9d4de6;
+    color: #fff;
+}
+
+.circle1, .circle2 {
+    background: #f0fff3;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: -1;
+}
+
+.circle1 {
+    left: -15px;
+}
+
+.circle2 {
+    right: -15px;
+}
+
+
+.btn-checkout {
+    background-color: #28a745; /* A nice green shade */
+    color: white;
+    font-size: 18px; /* Increase font size */
+    padding: 15px 30px; /* Add padding for a larger button */
+    border-radius: 8px; /* Rounded corners */
+    border: none; /* Remove border */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-bottom: 200px;
+    margin-left: 526px;
+  }
+
+  .btn-checkout:hover {
+    background-color: #218838;
+    transform: scale(1.05); /* Slight zoom on hover */
+  }
+
+  .btn-checkout:active {
+    background-color: #1e7e34; /* Further darken on click */
+    transform: scale(0.98); /* Slight shrink on click */
+  }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <% coupons.forEach(function(data) { %>
+            <div class="coupon-card">
+                <img src="/uploads/1714112291588-Rockid_Rush.jpg" class="logo" alt="Logo">
+                <h3><%= data.discountAmount %>% off all products minimum purchase amount <%= data.minPurchaseAmount %><br>Apply below coupon code</h3>
+                <div class="coupon-row">
+                    <span class="cpnCode"><%= data.couponCode %></span>
+                    <span class="cpnBtn">Copy Code</span>
+                </div>
+                <p>Valid Till: <%= new Date(data.expiryDate).toISOString().slice(0,10) %></p>
+                <div class="circle1"></div>
+                <div class="circle2"></div>
+            </div>
+        <% }); %>
+        <a href="/checkout">
+            <button class="btn-checkout">Go to Checkout</button>
+        </a>
+    </div>
+
+
+
+<script>
+    var copyButtons = document.querySelectorAll('.cpnBtn');
+
+    copyButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var couponCode = this.previousElementSibling.innerText;
+
+            navigator.clipboard.writeText(couponCode);
+
+            this.innerText = "COPIED";
+
+            setTimeout(() => {
+                this.innerText = "Copy Code";
+            }, 3000);
+        });
+    });
+</script>
+

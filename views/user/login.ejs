@@ -33,7 +33,17 @@
                                     <% } %>
                                     <input type="password" class="form-control" id="password" name="password" value=""
                                         placeholder="Password">
+                                        <span toggle="#password" class="fa fa-fw fa-eye field-icon toggle-password" style="position:absolute;right:10px;top:12px;cursor:pointer;"></span>
+
+                                        <!--New field for referral code-->
+                                        <div class="col-md-12 form-group p_star">
+                                            <input type="text" class="form-control" id="referralCode"  name="referralCode"  value=""
+                                            placeholder="Referral code(optional)">
+                                        </div>
+
                                        
+
+
                                 </div>
                                 <div class="col-md-12 form-group">
                                     <div class="creat_account d-flex align-items-center">
@@ -53,7 +63,12 @@
         </div>
     </section>
 
+<style>
+    .form-group.p_star#referralCode {
+    margin-top: 20px;
+}
 
+</style>
     
     <!--================login_part end =================-->
     
@@ -76,6 +91,20 @@
     
     
     
-    
+    <script>
 
-   
+    document.querySelectorAll('.toggle-password').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const input = document.querySelector(this.getAttribute('toggle'));
+            if (input.type === "password") {
+                input.type = "text";
+                this.querySelector('i').classList.remove('fa-eye');
+                this.querySelector('i').classList.add('fa-eye-slash');
+            } else {
+                input.type = "password";
+                this.querySelector('i').classList.remove('fa-eye-slash');
+                this.querySelector('i').classList.add('fa-eye');
+            }
+        });
+    });
+</script>

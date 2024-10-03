@@ -79,11 +79,13 @@
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="/adminDash" class="nav-link active"><i class="fa fa-tachometer-alt me-2"></i> Dashboard</a>
-                    <a href="productList" class="nav-link"><i class="fa fa-th me-2"></i>Products</a>
-                    <a href="/categoryList" class="nav-link"><i class="fa fa-keyboard me-2"></i>Category</a>
-                    <a href="/userdetails" class="nav-link"><i class="fa fa-table me-2"></i>User</a>
-                    <a href="chart.html" class="nav-link"><i class="fa fa-chart-bar me-2"></i>orders</a>
+                    <a href="productList" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Produc</a>
+                    <a href="/categoryList" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Categor</a>
+                    <a href="/userdetails" class="nav-item nav-link"><i class="fa fa-table me-2"></i>User</a>
+                    <a href="/orderMange" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Orders</a>
+                    <a href="/brandList" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Brand</a>
+                    <a href="/couponList" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Coupon</a>
+                    <a href="/productOffer" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>ProductOffer</a>           
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Pages</a>
                         <div class="dropdown-menu bg-transparent border-0">
@@ -99,14 +101,14 @@
         <!-- Sidebar End -->
         <!-- Content Start -->
         <div class="container">
-            <h2>DataTables Example</h2>
+            <h2>Product List</h2>
             <a href="addProduct"><button style="margin-left: 340px; border: none; background-color: burlywood;">Add product</button></a>
             <table id="usersTable" class="table table-striped table-bordered" style="width:100%">
                 <thead class="thead-dark">
                     <tr>
                         <th>No</th>
                         <th>ProductName</th>
-                        <th>Description</th>
+                        <!-- <th>Description</th> -->
                         <th>Image</th>
                         <th>Price</th>
                         <th>Category</th>
@@ -123,7 +125,7 @@
                     <tr>
                         <th><%=index+1%></th>
                         <th><%=Products.name%></th>
-                        <th><%=Products.description%></th>
+                        <!-- <th><%=Products.description%></th> -->
                         <td><img src="/uploads/<%= Products?.image[0] %>" style="max-width: 40px; max-height: 40px;" alt="Product Image"></td>
                         <th><%=Products.price%>/-</th>
                         <th><%=Products.category%></th>

@@ -1,0 +1,147 @@
+<%- include('../layouts/user/header') %>
+<%- include('../layouts/user/navbar') %>
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600|Roboto:300,400');
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background: linear-gradient(to top, white white 100%);
+}
+
+.container {
+  width: 100%;
+  padding: 40px 0px 40px 0px;
+}
+
+nav.navbar {
+  margin-top: -40px; 
+}
+
+h2 {
+  margin-top: 40px; 
+  color: #000;
+  font-weight: bold;
+  margin-left: 115px;
+}
+
+.wallet {
+  margin: 40px auto;
+  border-radius: 5px;
+  background-color: #E3F2FD; 
+  padding-bottom: 20px;
+  max-width: 900px;
+  min-width: 800px;
+}
+
+.right-trans {
+  background-color: #FFFFFF;
+  width: 100%;
+  height: initial;
+  padding: 25px 40px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: end;
+}
+
+h1 {
+  color: #7d818e;
+  margin-right: 20px;
+  font-weight: 400;
+  font-size: 25px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+h4 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: bold;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.right-trans h1,
+.right-trans #balance {
+  font-family: 'Open Sans', sans-serif;
+  display: inline-block;
+}
+
+#balance {
+  line-height: 34px;
+  font-size: 30px;
+  font-weight: 600;
+  color: green;
+}
+
+.wallet-history {
+  padding: 20px;
+}
+
+.row.header {
+  font-weight: bold;
+  color: #000;
+}
+
+hr {
+  width: 90%;
+  border: 1px solid #000;
+  margin: auto;
+}
+
+.center-image {
+  display: block;
+  margin: 0 auto; /* Center the image horizontally */
+  max-width: 50%; /* Adjust the max width as needed */
+  height: auto; /* Maintain aspect ratio */
+}
+
+</style>
+
+<div class="container">
+  <h2>My Wallet</h2>
+
+<% if(!wallet){%>
+  <img src="/uploads/walletscreenshot.png" class="center-image" alt="Wallet Screenshot">
+  <%} else{%>
+
+  <div class="wallet bg-light">
+    <div class="right-trans bg-white p-3">
+      <h1>Current Balance:</h1>
+      <h4 id="balance"><span>&#8377;</span> <%= wallet.balance.toFixed(2) %></h4>
+    </div>
+    <hr style="width: 90%; border: 1px solid #000; margin: auto;">
+    <div class="row header mt-3">
+      <div class="col-sm-5"><p class="fw-bold text-center">Description</p></div>
+      <div class="col-sm-3"><p class="fw-bold text-center">Date</p></div>
+      <div class="col-sm-2"><p class="fw-bold text-center">Transaction Type</p></div>
+      <!-- <div class="col-sm-2"><p class="fw-bold text-center">Amount</p></div> -->
+    </div>
+
+    <div class="wallet-history mt-4">
+      <% if (wallet.transaction && wallet.transaction.length > 0) { %>
+        <% wallet.transaction.forEach(function(data) { %>
+          <div class="row my-3">
+            <div class="col-sm-5">
+              <p class="mb-0 text-center"><%= data.description %></p>
+            </div>
+            <div class="col-sm-3">
+              <p class="mb-0 text-center"><%= new Date(data.timestamp).toLocaleDateString() %></p>
+            </div>
+            <div class="col-sm-2 <%= data.transactionType === 'credit' ? 'text-success' : 'text-danger' %>">
+              <p class="mb-0 text-center"><%= data.transactionType %></p>
+            </div>
+            <div class="col-sm-2">
+            </div>
+          </div>
+          <hr>
+        <% }) %>
+      <% } else { %>
+        <p>No transactions found.</p>
+      <% } %>
+    </div>
+  </div>
+  <%}%>
+</div>
+
+
+
+<%- include('../layouts/user/footer') %>

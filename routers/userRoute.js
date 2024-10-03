@@ -80,7 +80,7 @@ userRoute.post('/submit-address/:id', userController.editAddress);
 
 
 // cart
-userRoute.get("/cart",userAuth.authentication,cartController.cart)
+userRoute.get("/cart",userAuth.authentication,userAuth.userBlock,cartController.cart)
 userRoute.post("/addToCart/:productId", userAuth.authentication, cartController.addToCart);
 userRoute.delete("/remove-from-cart/:productId",cartController.cartDelete)
 userRoute.put('/update-cart-quantity',userAuth.authentication,cartController.updateCartQuantity)
@@ -89,18 +89,23 @@ userRoute.put('/update-cart-quantity',userAuth.authentication,cartController.upd
 
 // checkout
 
-userRoute.get('/checkout',userController.loadCheckout)
-userRoute.get('/checkAddress',userController.loadCheckoutAddress)
-userRoute.post('/addaddresscheckout',checkController.addAddressCheckout)
+userRoute.get('/checkout',userAuth.authentication,userAuth.userBlock,userController.loadCheckout)
+userRoute.get('/checkAddress',userAuth.authentication,userController.loadCheckoutAddress)
+userRoute.post('/addaddresscheckout',userAuth.authentication,checkController.addAddressCheckout)
 
 
 // order
-userRoute.get('/successorder',checkController.successOrder)
+userRoute.get('/successorder',userAuth.authentication, checkController.successOrder)
 userRoute.post('/placeorder',checkController.orderCreate)
-userRoute.get('/orderHistory',checkController.loadOrderHistory)
-userRoute.post('/cancelOrder',checkController.cancelOrder)
+userRoute.get('/orderHistory',userAuth.authentication, userAuth.userBlock,checkController.loadOrderHistory)
+userRoute.post('/cancelOrder',userAuth.authentication, checkController.cancelOrder)
+userRoute.post('/verifyPayment',checkController.verifyPayment)
 
 
+// coupon
+
+userRoute.post('/apply-coupon',userAuth.authentication,checkController.applyCoupon)
+userRoute.post('/remove-coupon',checkController.removeCoupon)
 
 
 
@@ -113,11 +118,39 @@ userRoute.post('/filter',userController.filterProducts)
 
 
 
+// coupon
+
+userRoute.get('/coupon',userController.loadCoupon)
 
 
 
 
+// wishlist
+userRoute.get('/wishList',userAuth.authentication,userController.loadWishList)
+userRoute.post('/addToWishlist/:productId',userController.addToWishlist)
+userRoute.delete('/removeFromWishlist/:id',userController.deleteProductFromWishlist)
 
+
+
+// Wallet history
+userRoute.get('/walletHistory',userAuth.authentication,userController.loadWallet)
+
+
+// return order
+userRoute.post('/returnOrder',checkController.returnOrder)
+
+
+// orderDetails page
+
+userRoute.get('/orderDetails/:orderId', userAuth.authentication, userController.loadOrderDetails);
+
+userRoute.get('/generate-invoice/:id',userController.generateInvoice)
+
+
+
+// razorpay failed
+userRoute.post('/handlePaymentFailure',checkController.paymentFailure)
+userRoute.post('/retryPayment',checkController.retryPayment)
 
 
 

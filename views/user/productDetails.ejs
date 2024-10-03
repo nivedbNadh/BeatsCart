@@ -36,7 +36,17 @@
           <h1 class="product-title">Product Name: <%= product[0].name %></h1>
           <h1 id="product-id" data-id="<%= product[0].id %>"></h1>
 
-          <p class="product-price">Price: <span>&#8377</span><%= product[0].price %></p>
+          <p class="product-price">
+            Price: <span>&#8377</span>
+            <% if(finalPrice!== product[0].price){%>
+              <span><%=Math.floor(finalPrice)%></span>
+              <!-- <del>&#8377;<%=product[0].price%></del> -->
+
+           <% } else{%>
+            <span><%=product[0].price%></span>
+
+          <% }%>
+           </p>
           <p class="product-description">Description:<%= product[0].description %></p>
 
 
@@ -55,12 +65,12 @@
 
               <button class="btn btn-primary ml-3 add-to-cart-btn">Add to Cart</button>
             </a>
-            <a href="#"><i class="fas fa-heart wishlist-icon"></i></a>
+            <button class="btn btn-primary ml-3 add-to-wishlist-btn">Add to Wishlist</button>
           </div>
         </div>
       </div>
     </div>
-    
+
     <!-- Small card section -->
     <div class="row other-images">
       <% for (let i = 1; i < product[0].image.length; i++) { %>
@@ -89,8 +99,7 @@
       margin: 0 auto; 
       overflow: hidden; 
     }
-    
-    .product-image img {
+        .product-image img {
       width: 100%; 
       height: auto; 
       display: block; 
@@ -207,12 +216,228 @@
     </style>
 
  <!--::footer_part start::-->
- <%-include('../layouts/user/footer')%>
- <!--::footer_part end::-->
+ <footer class="footer_part">
+  <div class="container">
+      <div class="row justify-content-around">
+          <!-- Top Products Section -->
+          <div class="col-sm-6 col-lg-2">
+              <div class="single_footer_part">
+                  <h4 class="footer_title">Top Products</h4>
+                  <ul class="list-unstyled footer_links">
+                      <li><a href="#">Managed Website</a></li>
+                      <li><a href="#">Manage Reputation</a></li>
+                      <li><a href="#">Power Tools</a></li>
+                      <li><a href="#">Marketing Service</a></li>
+                  </ul>
+              </div>
+          </div>
+          <!-- Quick Links Section -->
+          <div class="col-sm-6 col-lg-2">
+              <div class="single_footer_part">
+                  <h4 class="footer_title">Quick Links</h4>
+                  <ul class="list-unstyled footer_links">
+                      <li><a href="#">Jobs</a></li>
+                      <li><a href="#">Brand Assets</a></li>
+                      <li><a href="#">Investor Relations</a></li>
+                      <li><a href="#">Terms of Service</a></li>
+                  </ul>
+              </div>
+          </div>
+          <!-- Features Section -->
+          <div class="col-sm-6 col-lg-2">
+              <div class="single_footer_part">
+                  <h4 class="footer_title">Features</h4>
+                  <ul class="list-unstyled footer_links">
+                      <li><a href="#">Jobs</a></li>
+                      <li><a href="#">Brand Assets</a></li>
+                      <li><a href="#">Investor Relations</a></li>
+                      <li><a href="#">Terms of Service</a></li>
+                  </ul>
+              </div>
+          </div>
+          <!-- Resources Section -->
+          <div class="col-sm-6 col-lg-2">
+              <div class="single_footer_part">
+                  <h4 class="footer_title">Resources</h4>
+                  <ul class="list-unstyled footer_links">
+                      <li><a href="#">Guides</a></li>
+                      <li><a href="#">Research</a></li>
+                      <li><a href="#">Experts</a></li>
+                      <li><a href="#">Agencies</a></li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- Footer Bottom Section -->
+  <div class="copyright_part">
+      <div class="container">
+          <div class="row align-items-center">
+              <!-- Social Icons -->
+              <div class="col-lg-12 text-center">
+                  <div class="footer_icon social_icon">
+                      <ul class="list-unstyled">
+                          <li><a href="#" class="single_social_icon"><i class="fab fa-facebook-f"></i></a></li>
+                          <li><a href="#" class="single_social_icon"><i class="fab fa-twitter"></i></a></li>
+                          <li><a href="#" class="single_social_icon"><i class="fas fa-globe"></i></a></li>
+                          <li><a href="#" class="single_social_icon"><i class="fab fa-behance"></i></a></li>
+                      </ul>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</footer>
+
+<style>
+ .footer_part {
+    font-family: 'Arial', sans-serif;
+    color: #fff;
+    background-color: #2c2c2c;
+    padding: 20px 0;
+    width: 98.6vw; 
+    position: absolute;
+    margin-left: -73.4px;
+}
+
+
+.footer_part .container {
+    max-width: 100%; 
+    padding: 0 20px; 
+}
+  .footer_title {
+      font-size: 14px; 
+      color: #f1c40f;
+      margin-bottom: 8px; 
+      text-transform: uppercase;
+  }
+  .footer_links li {
+      margin-bottom: 6px; 
+  }
+  .footer_links li a {
+      color: #dcdcdc;
+      text-decoration: none;
+      transition: color 0.3s;
+      font-size: 13px; 
+  }
+  .footer_links li a:hover {
+      color: #f1c40f;
+  }
+  .single_footer_part {
+      margin-bottom: 15px; 
+  }
+  .footer_icon ul {
+      padding-left: 0;
+      margin: 0;
+  }
+  .footer_icon ul li {
+      display: inline-block;
+      margin-right: 6px; 
+  }
+  .single_social_icon {
+      font-size: 16px; 
+      color: #fff;
+      transition: color 0.3s;
+  }
+  .single_social_icon:hover {
+      color: #f1c40f;
+  }
+  .copyright_part {
+    background-color: #1a1a1a;
+    padding: 10px 0;
+    font-size: 13px;
+    width: 100%; 
+    position: relative;
+    margin-bottom: 20px; 
+}
+  .footer_icon.social_icon ul {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  @media (max-width: 992px) {
+      .footer_part {
+          padding: 15px 0;
+      }
+      .copyright_part {
+          text-align: center;
+          padding: 10px 0;
+      }
+  }
+</style>
+
+<!--::footer_part end::--> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ <!-- jquery plugins here-->
+ <script src="/userAssets/js/jquery-1.12.1.min.js"></script>
+ <!-- popper js -->
+ <script src="/userAssets/js/popper.min.js"></script>
+ <!-- bootstrap js -->
+ <script src="/userAssets/js/bootstrap.min.js"></script>
+ <!-- easing js -->
+ <script src="/userAssets/js/jquery.magnific-popup.js"></script>
+ <!-- swiper js -->
+ <script src="/userAssets/js/swiper.min.js"></script>
+ <!-- swiper js -->
+ <script src="/userAssets/js/masonry.pkgd.js"></script>
+ <!-- particles js -->
+ <script src="/userAssets/js/owl.carousel.min.js"></script>
+ <script src="/userAssets/js/jquery.nice-select.min.js"></script>
+ <!-- slick js -->
+ <script src="/userAssets/js/slick.min.js"></script>
+ <script src="/userAssets/js/jquery.counterup.min.js"></script>
+ <script src="/userAssets/js/waypoints.min.js"></script>
+ <script src="/userAssets/js/contact.js"></script>
+ <script src="/userAssets/js/jquery.ajaxchimp.min.js"></script>
+ <script src="/userAssets/js/jquery.form.js"></script>
+ <script src="/userAssets/js/jquery.validate.min.js"></script>
+ <script src="/userAssets/js/mail-script.js"></script>
+ <!-- custom js -->
+ <script src="/userAssets/js/custom.js"></script> 
+</body>
+
+
+
+
+
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+ var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+ (function(){
+ var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+ s1.async=true;
+ s1.src='https://embed.tawk.to/6617ead31ec1082f04e14b15/1hr6mqjg1';
+ s1.charset='UTF-8';
+ s1.setAttribute('crossorigin','*');
+ s0.parentNode.insertBefore(s1,s0);
+ })();
+ </script>
+ <!--End of Tawk.to Script-->
+
+
+
+
+</body>
+
+</html> <!--::footer_part end::-->
 
 </body>
 </html>
 
+<!-- Toastify CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+<!-- Toastify JS -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 
 <script>
@@ -270,10 +495,63 @@ document.addEventListener("DOMContentLoaded", function() {
 
       // Redirect to the same page
       window.location.href = window.location.href; // This will reload the page
-    })
+     
+
+  })
     .catch(error => {
       console.error('Error adding product to cart:', error);
     });
   });
 </script>
+<script>
 
+// product add to wishlist
+document.querySelector('.add-to-wishlist-btn').addEventListener('click',function(){
+  const productId=document.getElementById('product-id').dataset.id
+  // console.log('productId',productId)
+
+fetch('/addToWishlist/'+productId,{
+  method:'POST',
+  headers:{
+    'Content-Type':'application/json'
+  }
+})
+.then(response=>{
+  if(!response.ok) {
+    throw new Error('Network response was not ok' +response.statusText)
+  }
+  
+  return response.json()
+})
+.then(data=>{
+  console.log('success',data)
+
+  // change button text to go to wish list
+
+  const WishlistBtn=document.querySelector('.add-to-wishlist-btn')
+  WishlistBtn.textContent='Go to Wishlist'
+
+  // updating button function to redirect wishlist page 
+
+  WishlistBtn.addEventListener('click',function(){
+    window.location.href='/wishlist'
+  })
+
+
+// showing success message
+  Toastify({
+                text: "Product add to Wishlist",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: 'center',
+                backgroundColor: "green",
+            }).showToast();})
+.catch(error=>{
+  console.error('Error adding product to wishlist:',error)
+})
+
+
+})
+
+</script>

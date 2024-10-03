@@ -16,6 +16,7 @@ adminRoute.use(express.urlencoded({extended:true}))
 
 adminRoute.get('/adminlogin',adminExist,adminController.adminLoging)
 adminRoute.get('/adminDash',adminAuth,adminController.adminDashBoard)
+
 adminRoute.post('/adminLogPost',adminController.adminLogingPost)
 adminRoute.get('/userdetails',adminAuth,adminController.loadUserDetails)
 adminRoute.post('/blockAndUnblock',adminAuth,adminController.blockUser)
@@ -35,7 +36,7 @@ adminRoute.get('/editProduct/:id',adminAuth,adminController.loadEditProduct)
 adminRoute.put('/category/:id',adminAuth,adminController.categoryDelete)
 adminRoute.put('/brand/:id',adminAuth,adminController.brandDelete)
 adminRoute.post('/updateCategory',adminAuth,adminController.editCategory)
-adminRoute.post('/updateBrand',adminAuth,adminController.editBrand)
+adminRoute.post('/updateBrand/:id',adminAuth,adminController.editBrand)
 
 
 adminRoute.post('/updateproduct/:id',adminAuth, upload.array('image'), adminController.productUpdate);
@@ -47,6 +48,46 @@ adminRoute.post('/updateproduct/:id',adminAuth, upload.array('image'), adminCont
 
 adminRoute.get('/orderMange',adminAuth,adminController.loadAdminManage)
 adminRoute.post('/updateOrderStatus',adminAuth,adminController.updateOrderStatus)
+
+
+
+// coupon 
+
+adminRoute.get('/addCoupon', adminAuth, adminController.loadAddCouponPage);
+adminRoute.get('/couponList',adminAuth,adminController.couponListPage)
+adminRoute.post('/addCoupons',adminAuth,adminController.addCouponToDB)
+adminRoute.get('/editCoupon/:id',adminAuth,adminController.loadEditCoupon)
+adminRoute.post('/updateCoupon/:id',adminAuth,adminController.updateCoupon)
+adminRoute.patch('/deleteCoupon/:id',adminAuth,adminController.couponDelete)
+
+
+
+// Product offer
+adminRoute.get('/productOffer',adminAuth,adminController.loadProductOffer)
+adminRoute.post('/addProductOffers',adminController.addProductOffer)
+adminRoute.post('/updateProductOffer/:productId',adminController.updateProductOffer)
+adminRoute.delete('/deleteProductOffer/:productId',adminController.deleteProductOffer)
+
+
+// category offer
+adminRoute.get('/categoryOffer',adminAuth,adminController.loadCategoryOffer)
+adminRoute.post('/saveCategoryOffer',adminController.categoryOfferSaving)
+adminRoute.post('/updateCategoryOffer/:categoryId',adminController.updateCategoryOffer)
+adminRoute.delete('/deleteCategoryOffer/:categoryId',adminController.deleteCategoryOffer)
+
+
+// chart
+adminRoute.get('/chart',adminController.chartPage)
+// sales report
+
+adminRoute.post('/download-sales-report',adminController.downloadSalesReport)
+
+adminRoute.post('/download-excel-report',adminController.salesreportExcell)
+
+
+// load retur n page
+adminRoute.get('/returnManagement',adminAuth,adminController.loadReturManage)
+adminRoute.post('/updateReturnStatus',adminController.updateReturnStatus)
 
 
 module.exports=adminRoute

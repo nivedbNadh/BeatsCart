@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Cart = require('../models/cartModel');
 const Products=require('../models/productModel')
+const ProductOffer=require('../models/productOfferModel')
+const CategoryOffer=require('../models/categoryOfferModel')
 
 
 
@@ -45,22 +47,52 @@ const cart = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-
         let cart = await Cart.findOne({ userId }).populate('products.productId');
-        // console.log("cartcartcartcart", cart);
 
         if (!cart) {
-            cart=new Cart({userId,products:[],totals:{subtotal:0,tax:0,total:0}})
-            await cart.save()
+            cart = new Cart({ userId, products: [], totals: { subtotal: 0, tax: 0, total: 0 } });
+            await cart.save();
         }
 
         let subtotal = 0;
-        cart.products.forEach(product => {
-            product.price = product.productId.price
-            subtotal += product.quantity * product.productId.price;
-        });
+        const currentDate = new Date();
 
-        const taxRate = 0.1; 
+        for (let product of cart.products) {
+            // Fetch any active product offer
+            const productOffer = await ProductOffer.findOne({
+                productId: product.productId._id,
+                startDate: { $lte: currentDate },
+                endDate: { $gte: currentDate }
+            });
+
+            let categoryOffer
+            if(product.productId.categoryId){
+                categoryOffer=await CategoryOffer.findOne({
+                    categoryId:product.productId.categoryId,
+                    startDate:{$lte:currentDate},
+                    endDate:{$gte:currentDate}
+                })
+            }
+
+            if (productOffer) {
+                // Apply the discount if an active offer is found
+                const discount = (product.productId.price * productOffer.discount) / 100;
+                product.discountedPrice = product.productId.price - discount;
+            } else  if (categoryOffer){
+                const discount=(product.productId.price*categoryOffer.discount)/100
+                product.discountedPrice=product.productId.price-discount
+               
+            }else{
+                 // No active offer, use the original price
+                 product.discountedPrice = product.productId.price;
+
+            }
+
+            // Add to subtotal
+            subtotal += product.quantity * product.discountedPrice;
+        }
+
+        const taxRate = 0.1;
         const tax = subtotal * taxRate;
         const total = subtotal + tax;
 
@@ -75,9 +107,6 @@ const cart = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
-
-
-
 
 const cartDelete= async (req,res)=>{
 

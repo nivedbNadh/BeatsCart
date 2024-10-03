@@ -1,5 +1,6 @@
 <%- include('../layouts/user/header') %>
 <%- include('../layouts/user/navbar') %>
+<!-- Bootstrap CSS -->
 
 <style>
   body {
@@ -147,6 +148,27 @@
   .noorder{
     margin-top: 220px;
   }
+
+
+  select.form-select {
+    display: inline-block !important;
+    width: 100% !important;
+    padding: 0.375rem 1.75rem 0.375rem 0.75rem !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+    color: #212529 !important;
+    background-color: #fff !important;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIiBjbGFzcz0iYmlfdGV4dC1kYXJrIj48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMi4wNjguNjY5YS4yMTMuMjEzIDAgMCAwLS4zMDYgMGwtNC4xIDQuMTFhLjIxMy4yMTMgMCAwIDAgMCAuMzA2bDQuMTEgNC4xYTQuMjQyIDAgMCAwIC4zMDYuMzA2LjIxMy4yMTMgMCAwIDAgLjMwNi0uMzA2TDkuNjk5IDggMTIuMzczIDUuMzdhLjIxMy4yMTMgMCAwIDAgMC0uMzA2bC0uMzA1LS4zMDYgMy42MTgtMy42MTlhLjIxMy4yMTMgMCAwIDAgMCAuMzA2bDMuNjE5IDMuNjE5eiI+PC9wYXRoPjwvc3ZnPg==) !important;
+    background-repeat: no-repeat !important;
+    background-position: right 0.75rem center !important;
+    border: 1px solid #ced4da !important;
+    border-radius: 0.25rem !important;
+    appearance: none !important;
+}
+
+select.form-select option {
+    padding: 10px;
+}
 </style>
 <body>
   <section class="container-fluid my-3">
@@ -177,7 +199,7 @@
                           <% if (item.product) { %>
                             <span class="d-block text-capitalize order-detail">Name: <%= item.product.name %></span>
                             <span class="d-block order-detail">Quantity: <%= item.quantity %></span>
-                            <span class="d-block order-detail">Price: $<%= item.product.price %></span>
+                            <!-- <span class="d-block order-detail">Price: <%= item.product.price %></span> -->
                           <% } else { %>
                             <span class="d-block text-capitalize order-detail">Product Not Found</span>
                           <% } %>
@@ -186,22 +208,38 @@
                     </div>
                   <% }); %>
                   <div class="row mt-3">
+                    <a href="/orderDetails/<%=order._id%>" class="order-card-link" style="text-decoration: none;">
+                      <!-- <div class="order-card"> -->
                     <div class="col-md-6">
-                      <span class="d-block order-detail">Total: $<%= order.totals.totalprice %></span>
-                      <span class="d-block order-detail">Order Date: <%= order.orderDate %></span>
-                      <span class="d-block order-detail">Order Time: <%= order.orderTime %></span>
+                      <span class="d-block order-detail">Total: ₹<%= Math.floor(order.totals.totalprice) %></span>
+                      <span class="d-block order-detail">Order Date: <%= new Date(order.orderDate).toLocaleDateString('en-GB') %></span>
+                      <span class="d-block order-detail">Delivery Date: <%= new Date(order.deliveryDate).toLocaleDateString('en-GB') %></span>
+                    <!-- </div> -->
+                    </a>
+                      
                     </div>
                     <div class="col-md-6 text-end-md">
-                      <button class="btn btn-danger cancel-order-btn <%= order.status === 'Cancelled' ? 'cancelled' : '' %>"
-                        onclick="cancelOrder('<%= order._id %>')" <%= order.status === 'Delivered' ? 'disabled' : '' %>>
-                        <% if (order.status === 'Cancelled') { %>
-                          ✖ Order Cancelled
-                        <% } else if (order.status === 'Delivered') { %>
-                          ✔ Delivered
-                        <% } else { %>
-                          Cancel Order
-                        <% } %>
-                      </button>
+                      <% if (order.status === 'delivered') { %>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#returnOrderModal-<%= order._id %>">
+                          Return Order
+                        </button>
+                          <!-- ✔ Return Order -->
+                        </button>
+                      <% } else if(order.status==='returned'){ %>
+
+                        <button class="btn btn-success" disabled>
+                          ✔ Order Returned
+                        </button>
+                        <%}else{%>
+                        <button class="btn btn-danger cancel-order-btn <%= order.status === 'Cancelled' ? 'cancelled' : '' %>" 
+                          onclick="cancelOrder('<%= order._id %>')" <%= order.status === 'Cancelled' ? 'disabled' : '' %>>
+                          <% if (order.status === 'Cancelled') { %>
+                            ✖ Order Cancelled
+                          <% } else { %>
+                            Cancel Order
+                          <% } %>
+                        </button>
+                      <% } %>
                     </div>
                   </div>
                 </div>
@@ -216,6 +254,51 @@
       </div>
     </div>
   </section>
+
+
+<!-- Modal Structure for Return Order -->
+<% orders.forEach(order => { %>
+
+<div class="modal fade" id="returnOrderModal-<%= order._id %>" tabindex="-1" aria-labelledby="returnOrderModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="returnOrderModalLabel">Return Order</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="returnOrderForm-<%= order._id %>">
+          <input type="hidden" id="orderId" value="<%= order._id %>">
+          <label class="form-label">Reason for Return</label>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="reason" value="Product damaged" id="reasonDamaged-<%= order._id %>" required>
+            <label class="form-check-label" for="reasonDamaged-<%= order._id %>">
+              Product damaged
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="reason" value="Color change" id="reasonColorChange-<%= order._id %>">
+            <label class="form-check-label" for="reasonColorChange-<%= order._id %>">
+              Color change 
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="reason" value="I found a new Product" id="reasonNewProduct-<%= order._id %>">
+            <label class="form-check-label" for="reasonNewProduct-<%= order._id %>">
+              I found a new Product
+              </label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary"  onclick="submitReturnOrder('<%= order._id %>')">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<% }); %>
+
 
   <!-- JS Scripts -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -240,7 +323,7 @@
                     showConfirmButton: false,
                     timer: 1500
                 }).then(function() {
-                    location.reload();  // Reload the page after successful cancellation
+                    location.reload();  
                 });
             } else {
                 Swal.fire({
@@ -257,7 +340,7 @@
             Swal.fire({
                 position: 'center',
                 icon: 'error',
-                title: 'Order already delivered and cannot be cancelled',  // Display a generic error message
+                title: 'error canceling order',  
                 showConfirmButton: false,
                 timer: 1500
             });
@@ -266,7 +349,64 @@
 }
 
 </script> 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  function submitReturnOrder(orderId){
+    const form=document.getElementById(`returnOrderForm-${orderId}`)
+    const reason=form.querySelector('input[name="reason"]:checked')
+    console.log(orderId,'orderId')
+    console.log('form',form)
 
+    if(reason){
+      const reasonValue=reason.value
+
+      fetch(`/returnOrder`,{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'X-Requested-With':'XMLHttpRequest'
+        },
+        body:JSON.stringify({orderId,reason:reasonValue})
+      })
+      .then(response=>response.json())
+      .then(data=>{
+        if(data.success){
+          swal.fire({
+            title:'Success!',
+            text:'return request sent successfully',
+            icon:'success',
+            showConfirmButton:'ok'
+          }).then(()=>{
+            location.reload()
+          })
+        } else{
+          Swal.fire({
+            title: 'Error!',
+          text: data.message || 'Something went wrong.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+          })
+        }
+      })
+      .catch(error=>{
+        Swal.fire({
+          title: 'Error!',
+        text: 'Something went wrong.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+        })
+      })
+    } else{
+      Swal.fire({
+        title: 'Error!',
+      text: 'Please select a reason.',
+      icon: 'error',
+      confirmButtonText: 'OK'
+      })
+    }
+
+  }
+</script>
 
 
 

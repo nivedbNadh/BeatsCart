@@ -1,0 +1,158 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Coupon</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="date"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-group input[type="number"].percentage {
+            padding-right: 35px; /* Adjust space for the % icon */
+        }
+        .form-group .percentage-icon {
+            position: absolute;
+            top: 32px;
+            right: 25px;
+            font-size: 16px;
+            color: #555;
+        }
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 15px;
+            }
+            .form-group input[type="text"],
+            .form-group input[type="number"],
+            .form-group input[type="date"] {
+                width: calc(100% - 12px);
+            }
+            .form-group .percentage-icon {
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Edit Coupon</h2>
+        <form id="editCouponForm">
+            <input type="hidden" id="couponId" name="couponId" value="<%= coupon._id %>">
+            <div class="form-group">
+                <label for="couponName">Coupon Name</label>
+                <input type="text" id="couponName" name="couponName" value="<%= coupon.couponName %>" required>
+            </div>
+            <div class="form-group">
+                <label for="couponCode">Coupon Code</label>
+                <input type="text" id="couponCode" name="couponCode" value="<%= coupon.couponCode %>" required>
+            </div>
+            <div class="form-group">
+                <label for="minPurchaseAmount">Minimum Purchase Amount</label>
+                <input type="number" id="minPurchaseAmount" name="minPurchaseAmount" value="<%= coupon.minPurchaseAmount %>" required>
+            </div>
+            <div class="form-group">
+                <label for="discountAmount">Discount Amount</label>
+                <input type="number" id="discountAmount" name="discountAmount" class="percentage" value="<%= coupon.discountAmount %>" required>
+                <span class="percentage-icon">%</span>
+            </div>
+            <div class="form-group">
+                <label for="startDate">Start Date</label>
+                <input type="date" id="startDate" name="startDate" value="<%= new Date(coupon.startDate).toISOString().slice(0,10)%>" required>
+            </div>
+            <div class="form-group">
+                <label for="expiryDate">Expiry Date</label>
+                <input type="date" id="expiryDate" name="expiryDate" value="<%= new Date(coupon.expiryDate).toISOString().slice(0,10)%>" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Update Coupon</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('editCouponForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const couponDatas = {
+        couponId: document.getElementById('couponId').value,
+        couponName: document.getElementById('couponName').value,
+        couponCode: document.getElementById('couponCode').value,
+        minPurchaseAmount: document.getElementById('minPurchaseAmount').value,
+        discountAmount: document.getElementById('discountAmount').value,
+        startDate: document.getElementById('startDate').value,
+        expiryDate: document.getElementById('expiryDate').value
+    };
+
+    try {
+        const response = await fetch(`/updateCoupon/${couponDatas.couponId}`, { // Include couponId in URL
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(couponDatas)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            window.location.href = '/couponList';
+        } else {
+            alert('Failed to update coupon: ' + result.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    }
+});
+
+    </script>
+</body>
+</html>

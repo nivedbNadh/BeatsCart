@@ -1,0 +1,327 @@
+<%-include('../layouts/admin/adminNav')%>
+<div class="container mt-5">
+    <h2>Category Offer</h2>
+    <div class="table-responsive">
+        <table id="usersTable" class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>No</th>
+                    <th>Category Name</th>
+                    <th>Discount</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% category.forEach((cat, index) => { 
+                    let offer = categoryOffer.find(off => off.categoryId && off.categoryId.toString() === cat._id.toString());  
+                %>
+                <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= cat.name %></td>
+                    <td>
+                        <input type="number" class="form-control discount-input" data-category-id="<%= cat._id %>" name="discount" min="0" max="100" placeholder="0" value="<%= offer ? offer.discount : '' %>">
+                    </td>
+                    <td>
+                        <input type="date" class="form-control start-date-input" data-category-id="<%= cat._id %>" value="<%= offer && offer.startDate ? offer.startDate.toISOString().slice(0, 10) : '' %>">
+                    </td>
+                    <td>
+                        <input type="date" class="form-control end-date-input" data-category-id="<%= cat._id %>" value="<%= offer && offer.endDate ? offer.endDate.toISOString().slice(0, 10) : '' %>">
+                    </td>
+                    <td class="d-flex">
+                        <button class="btn   <%=offer ?'btn-update btn-green':'btn-submit'%>" data-category-id="<%= cat._id %>">
+                            <%=offer ? 'Update':'Submit'%>
+                            </button>
+
+                            <button class="btn btn-delete" data-category-id="<%= cat._id %>">Delete</button>
+
+                    </td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<%-include('../layouts/admin/adminfooter')%>
+
+
+<style>
+.container {
+    margin-top: 80px; 
+    margin-left: 223px;
+    padding-right: 20px;
+}
+
+.btn-add-product {
+    margin-bottom: 20px;
+    border: none;
+    background-color: #D2B48C; /* Burlywood color */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.btn-edit {
+    background-color: #007BFF; /* Bootstrap primary color */
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+
+/* Add this to your CSS file */
+.btn-green {
+    background-color: green;
+    color: white;
+    border: 1px solid darkgreen; /* Optional: for a border */
+}
+
+.btn-green:hover {
+    background-color: darkgreen;
+}
+
+.btn-delete {
+    background-color: #DC3545; /* Bootstrap danger color */
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+
+.img-thumbnail {
+    max-width: 40px;
+    max-height: 40px;
+    border-radius: 5px;
+}
+
+/* Style for Submit button */
+.btn-submit {
+    background-color: #28A745; /* Bootstrap success color */
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+</style>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.js"></script>
+
+
+<script>
+
+   // category offer adding to db
+
+   document.querySelectorAll('.btn-submit').forEach(button => {
+    button.addEventListener('click', async (event) => {
+        const categoryId = button.getAttribute('data-category-id');
+        const discount = document.querySelector(`.discount-input[data-category-id="${categoryId}"]`).value;
+        const startDate = document.querySelector(`.start-date-input[data-category-id="${categoryId}"]`).value;
+        const endDate = document.querySelector(`.end-date-input[data-category-id="${categoryId}"]`).value;
+
+        // Validate form fields
+        if (!discount || !startDate || !endDate) {
+            Toastify({
+                text: 'Please fill all fields',
+                duration: 5000,
+                close: true,
+                gravity: 'top',
+                position: 'center',
+                backgroundColor: 'orange',
+            }).showToast();
+            return;
+        }
+
+        const today = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
+        if (startDate < today || endDate < today) {
+            Toastify({
+                text: 'Start and end date cannot be in the past',
+                duration: 5000,
+                close: true,
+                gravity: 'top',
+                position: 'center',
+                backgroundColor: 'red',
+            }).showToast();
+            return;
+        }
+
+        if (endDate < startDate) {
+            Toastify({
+                text: 'End date cannot be earlier than start date',
+                duration: 5000,
+                close: true,
+                gravity: 'top',
+                position: 'center',
+                backgroundColor: 'red',
+            }).showToast();
+            return;
+        }
+
+        try {
+            const response = await fetch('/saveCategoryOffer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ categoryId, discount, startDate, endDate }),
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                Toastify({
+                    text: 'Category offer added successfully',
+                    duration: 4000,
+                    close: true,
+                    gravity: 'top',
+                    position: 'center',
+                    backgroundColor: 'green',
+                }).showToast();
+                setTimeout(() => {
+                    window.location.reload(); 
+                }, 3500);  
+
+            } else {
+                Toastify({
+                    text: `Error: ${result.message}`,
+                    duration: 5000,
+                    close: true,
+                    gravity: 'top',
+                    position: 'center',
+                    backgroundColor: 'red',
+                }).showToast();
+            }
+        } catch (error) {
+            console.error('Error submitting offer', error);
+            Toastify({
+                text: 'An error occurred while submitting the offer',
+                duration: 3000,
+                close: true,
+                gravity: 'top',
+                position: 'center',
+                backgroundColor: 'red',
+            }).showToast();
+            
+        }
+    });
+});
+
+   <!---category updating-->
+
+   document.querySelectorAll('.btn-update').forEach(button=>{
+        button.addEventListener('click',function(){
+            const categoryId=this.getAttribute('data-category-id')
+            const discount=document.querySelector(`.discount-input[data-category-id="${categoryId}"]`).value
+            const startDate=document.querySelector(`.start-date-input[data-category-id="${categoryId}"]`).value
+            const endDate=document.querySelector(`.end-date-input[data-category-id="${categoryId}"]`).value
+
+
+            fetch(`/updateCategoryOffer/${categoryId}`,{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json',
+                
+            },
+            body:JSON.stringify({categoryId,discount,startDate,endDate})
+
+        })
+        .then(response=>response.json())
+        .then(data=>{
+            if(data.success) {
+                Toastify({
+                    text: 'Category offer updated successfully',
+                    duration: 3000,
+                    close: true,
+                    gravity: 'top',
+                    position: 'center',
+                    backgroundColor: 'green',
+                }).showToast();            
+                
+                setTimeout(() => {
+                    window.location.reload(); 
+                }, 3500);  
+
+            } else{
+                alert('An error occured.pleaase try again')
+            }
+        })
+        .catch(error=> console.error('Error:',error))
+            
+        
+
+    })
+
+        })
+    
+
+
+   // categoryOffer deleting
+
+        document.addEventListener('DOMContentLoaded',()=>{
+    document.querySelectorAll('.btn-delete').forEach(button=>{
+        button.addEventListener('click',async function(){
+            const row=this.closest('tr')
+            const categoryId=this.getAttribute('data-category-id')
+
+            // row.querySelector('input[name="discount"]').value=''
+            // row.querySelector('input[name="startDate"]').value=''
+            // row.querySelector('input[name="endDate"]').value=''
+
+            try{
+                const response=await fetch(`/deletecategoryOffer/${categoryId}`,{
+                    method:'DELETE',
+                    headers:{
+                        'Content-Type':'application/json',
+                    },
+                    body:JSON.stringify({categoryId})
+                })
+
+                const data=await response.json()
+
+                if(data.success) {
+                    Toastify({
+                text:'category offer deleted successfully',
+                duration:3000,
+                close:true,
+                gravity:'top',
+                position:'center',
+                backgroundColor:"red",
+        }).showToast()
+
+         setTimeout(() => {
+                    window.location.reload(); 
+                }, 3500); 
+
+                      } else{
+                    alert('Failed to delete product offer')
+                }
+
+            } catch(error){
+                console.error('Error:',error)
+                alert('Error deleting product offer')
+            }
+
+
+
+        })
+    })
+})
+
+
+
+
+
+</script>

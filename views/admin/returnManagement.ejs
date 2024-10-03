@@ -1,0 +1,147 @@
+<%- include('../layouts/admin/adminNav') %>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    margin: 0;
+  }
+
+  .main-content {
+    flex-grow: 1;
+    padding: 20px;
+  }
+
+  table {
+    width: 79%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-left: 240px;
+  }
+
+  th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #34495e;
+    color: white;
+  }
+
+  th:nth-child(1), td:nth-child(1) {
+    width: 22%;
+  }
+
+  th:nth-child(2), td:nth-child(2) {
+    width: 25%;
+  }
+
+  th:nth-child(3), td:nth-child(3) {
+    width: 20%;
+  }
+
+  th:nth-child(4), td:nth-child(4) {
+    width: 13%;
+  }
+
+  th:nth-child(5), td:nth-child(5) {
+    width: 10%;
+  }
+
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  select {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+
+  .submit-btn {
+    padding: 7px 15px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .submit-btn:hover {
+    background-color: #2ecc71;
+  }
+  
+
+</style>
+</head>
+<body>
+    <div class="main-content">
+      <table>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>OrderId</th>
+            <th>Reason</th>
+            <!-- <th>User</th> -->
+            <th>Status</th>
+            <th></th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% returns.forEach((returnItem,index) => { %>
+            <tr>
+                <td><%=index+1%></td>
+              <td><%= returnItem.orderId._id %></td>
+              <td><%= returnItem.reason %></td>
+              <td><%= returnItem.status %></td>
+                    <td>
+                        <select data-return-id="<%= returnItem._id %>">
+                          <option value="pending" <%= returnItem.status === 'pending' ? 'selected' : '' %>>Request for return</option>
+                          <option value="accepted" <%= returnItem.status === 'accepted' ? 'selected' : '' %>>Accept</option>
+                          <option value="rejected" <%= returnItem.status === 'rejected' ? 'selected' : '' %>>Reject</option>
+                        </select>
+                      </td>
+                      
+              <td><button class="submit-btn" onclick="updateStatus('<%= returnItem._id %>', '<%= returnItem.orderId._id %>')">Submit</button></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </body>
+  </html>
+  
+
+  <script>
+    function updateStatus(returnId,orderId){
+        const selectElement=document.querySelector(`select[data-return-id="${returnId}"]`)
+        const selectedStatus=selectElement.value
+        console.log('selectElement',selectElement)
+
+
+        fetch('/updateReturnStatus',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                returnId:returnId,
+                orderId:orderId,
+                status:selectedStatus,
+            }),
+        })
+        .then(response=>response.json())
+        .then(data=>{
+            alert(data.message)
+        })
+        .catch(error=>{
+            console.error('Error:',error)
+        })
+    }
+  </script>
+
+<%- include('../layouts/admin/adminfooter') %>

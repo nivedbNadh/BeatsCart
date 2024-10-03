@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Admin Dashboard</title>
+    <style>
+        /* Sidebar styling */
+        .sidebar {
+            height: 100vh; /* Full height */
+            width: 250px; /* Sidebar width */
+            position: fixed; /* Stay in place */
+            top: 0;
+            left: 0;
+            background-color: #ffffff; /* White background */
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sidebar a {
+            padding: 15px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #333333;
+            display: block;
+        }
+
+        .sidebar a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Dashboard content styling */
+        .dashboard-content {
+            margin-left: 260px; /* Adjust based on sidebar width */
+            padding: 20px;
+        }
+
+        /* Graph container styling */
+        .dashboard-graph-container {
+            width: 75%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-graph-container {
+                width: 95%;
+            }
+        }
+
+        #myChart {
+            width: 100%;
+            height: 50vh;
+            max-height: 400px;
+        }
+
+        /* Footer styling in the sidebar */
+        .sidebar-footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            border-top: 1px solid #f1f1f1;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div>
+            <a href="#dashboard">Dashboard</a>
+            <a href="#orders">Orders</a>
+            <a href="#products">Products</a>
+            <a href="#customers">Customers</a>
+            <a href="#reports">Reports</a>
+            <a href="#settings">Settings</a>
+        </div>
+        <div class="sidebar-footer">
+            &copy; 2024 Admin Dashboard
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="dashboard-content">
+        <div class="dashboard-graph-container">
+            <canvas id="myChart"></canvas>
+            <div class="row mb-3 mt-5">
+                <div class="col-md-12 col-lg-4 mb-3">
+                    <div class="form-group">
+                        <label for="time-interval" class="form-label">Select Time Interval:</label>
+                        <select id="time-interval" class="form-select">
+                            <option value="daily">Daily</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="yearly">Yearly</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let chartInstance;
+
+            // Parse the xValues and yValues passed from the backend
+           
+
+            updateChart('daily');
+
+            // Add event listener for the dropdown
+            document.getElementById('time-interval').addEventListener('change', function () {
+                updateChart(this.value);
+            });
+
+            function updateChart(timeInterval) {
+                let aggregatedData = aggregateData(timeInterval);
+
+                const timeFormat = {
+                    'monthly': { unit: 'month', tooltipFormat: 'MMM YYYY' },
+                    'yearly': { unit: 'year', tooltipFormat: 'YYYY' },
+                    'daily': { unit: 'day', tooltipFormat: 'MMM DD, YYYY' }
+                };
+
+                const { unit, tooltipFormat } = timeFormat[timeInterval];
+
+                const ctx = document.getElementById('myChart').getContext('2d');
+
+                // destroy the previous chart instance if it exists
+                if (chartInstance) {
+                    chartInstance.destroy();
+                }
+
+                chartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: aggregatedData.x,
+                        datasets: [{
+                            label: 'Delivered Orders',
+                            fill: false,
+                            lineTension: 0.3,
+                            backgroundColor: "#15cda8",
+                            borderColor: "#4edd8a",
+                            data: aggregatedData.y,
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#4edd8a',
+                            pointBorderColor: '#ffffff',
+                            pointHoverRadius: 6,
+                            pointHoverBackgroundColor: '#15cda8',
+                            pointHoverBorderColor: '#ffffff',
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: { unit, tooltipFormat },
+                                title: { display: true, text: 'Date', color: '#333', font: { size: 14 } },
+                                grid: { display: false },
+                            },
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: '#333',
+                                    font: { size: 12 }
+                                },
+                                title: { display: true, text: 'Number of Orders', color: '#333', font: { size: 14 } },
+                                grid: { color: '#e9ecef' },
+                            }
+                        },
+                        elements: { point: { radius: 4 } },
+                        plugins: {
+                            tooltip: { intersect: false, mode: 'index' },
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    color: '#333',
+                                    font: { size: 14 }
+                                }
+                            }
+                        },
+                        responsive: true,
+                        maintainAspectRatio: true,
+                    }
+                });
+            }
+
+            function aggregateData(timeInterval) {
+                const aggregatedX = [];
+                const aggregatedY = [];
+                const dataMap = {};
+
+                const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+
+                // aggregate data based on the selected time interval
+                dateValues.forEach((date, index) => {
+                    let key;
+                    if (timeInterval === 'yearly') {
+                        key = date.getFullYear(); // Group by year
+                    } else if (timeInterval === 'monthly') {
+                        key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`; 
+                    } else {
+                        key = date.toISOString().split('T')[0]; 
+
+                        // If the time interval is daily and the date is not today, skip it
+                        if (timeInterval === 'daily' && key !== today) {
+                            return;
+                        }
+                    }
+
+                    if (!dataMap[key]) {
+                        dataMap[key] = 0;
+                    }
+                    dataMap[key] += yValues[index];
+                });
+
+                for (const [key, value] of Object.entries(dataMap)) {
+                    aggregatedX.push(key);
+                    aggregatedY.push(value);
+                }
+
+                return { x: aggregatedX, y: aggregatedY };
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+function placeOrder(orderData) {
+  
+    fetch('/placeorder', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderData)
+        
+      })
+    .then(response=>{
+     
+      if(!response.ok) {
+        throw new Error('network response was not ok')
+      }
+      return response.json()
+  
+    })
+  
+    .then(data=>{
+     
+      if(data.success && orderData.paymentMethod==='razorpay'){
+        const options={
+          key:'<%=RAZORPAY_KEY_ID%>',
+          amount:data.amount *100,
+          currency:data.currency,
+          name:'BeatsCart',
+          description:'Order payment',
+          order_id:data.razorpayOrderId,
+          handler:function (response) {
+  
+            fetch('/verifyPayment',{
+              method:'POST',
+              headers:{
+                'Content-Type':'application/json'
+              },
+              body:JSON.stringify({
+                OrderId:response.razorpay_order_id,
+                paymentId:response.razorpay_payment_id,
+                signature:response.razorpay_signature
+                
+              })
+            })
+          
+            .then(response=>response.json())
+            .then(data=>{
+              if(data.success){
+                // alert("payment successful")
+                window.location.href='/successorder'
+              } else{
+                alert("payment verification failed")
+              }
+            })
+            .catch(error=>{
+              console.error('Error:',error)
+              alert('Failed to verify payment.please try again later')
+            })
+          },
+  
+          prefill:{
+            name:'<%= user.name %>',
+            email:'<%=user.email %>',
+            contact:'<%= user.contact %> '
+          },
+          them:{
+            color:'#3399cc'
+          }
+          
+        }
+        console.log('options',options)
+        const rzp1=new Razorpay(options)
+        rzp1.open()
+      } else if(orderData.paymentMethod==='cashOnDelivery'){
+        alert('order placed successfully')
+        window.location.href='/successorder'
+      } else if(orderData.paymentMethod==='Wallet'){
+        if(data.success){
+        Toastify({
+              text: "order placed successfully",
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: 'center',
+              backgroundColor: "#FF5A5F",
+          }).showToast();
+          window.location.href='/successorder'
+  
+        } else{
+                Toastify({
+              text: data.message || 'Order failed. Please try again later.',
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: 'center',
+              backgroundColor: "#FF5A5F",
+        }).showToast();
+      }
+    }else{
+      alert(data.message || 'Order failed. Please try again later');
+  
+    }
+    })
+    .catch(error=>{
+      console.error('Error:',error)
+      alert('Order failed.please try again later',error)
+    })
+    
+      }
+    
+    this also not working what i need is the wallet amount is less than total price that time the insufficent messae i need to show in frontent 
+  

@@ -1,0 +1,276 @@
+<%- include('../layouts/user/header') %>
+<%- include('../layouts/user/navbar') %>
+
+<!-- Products -->
+<section class="product_list section_padding">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <div class="section_tittle text-center">
+          <h2>Wishlist <span>shop</span></h2>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <% if (products.length > 0) { %>
+          <!-- Products exist, display them -->
+          <div class="single_product_list_slider">
+            <div class="row align-items-center justify-content-start">
+              <% products.forEach(data => { %>
+                <div class="col-lg-3 col-sm-6" id="product">
+                  <div class="single_product_item">
+                    <a href="/productDetails/<%= data._id %>">
+                      <div class="product-card">
+                        <div class="product-tumb">
+                          <img src="/uploads/<%= data.image[0] %>" alt="Headphone">
+                        </div>
+                        <div class="product-details">
+                          <span class="product-catagory"></span>
+                          <h4><a href="#"> <%= data.name %> </a></h4>
+                          <div class="product-bottom-details">
+                            <div class="product-price"><%= data.price %></div>
+                            <div class="product-links">
+                              <div class="wishlist-item" data-id="productId">
+                                <a href="#" class="delete-icon" data-id="<%= data._id %>">
+                                  <i class="fa fa-trash"></i>
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+          </div>
+        <% } else { %>
+          <!-- No products in wishlist -->
+          <div class="no-products text-center">
+            <h3>No products in your wishlist</h3>
+            <p>It looks like you haven't added any products to your wishlist yet.</p>
+            <a href="/products" class="btn btn-primary">Start Shopping</a>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('../layouts/user/footer') %>
+
+<style>
+ @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+}
+
+/* Navbar adjustment */
+.navbar {
+    margin-bottom: 20px;
+}
+
+/* Wishlist Heading */
+.wishlist-heading {
+    text-align: center;
+    margin-top: 75px; 
+    margin-bottom: 20px; 
+}
+
+.wishlist-heading h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+/* Adjusted for Product Cards */
+.product-card {
+    width: 100%; 
+    height: 340px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.badge {
+    position: absolute;
+    left: 10px;
+    top: 10px; 
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 700;
+    background: red;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.product-tumb {
+    height: 200px;
+    overflow: hidden;
+}
+
+.product-tumb img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.5s ease;
+}
+
+.product-tumb img:hover {
+    transform: scale(1.1);
+}
+
+.product-details {
+    padding: 20px;
+}
+
+.product-catagory {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 8px;
+}
+
+.product-details h4 {
+    font-size: 18px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.product-bottom-details {
+    overflow: hidden;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.product-price {
+    font-size: 20px;
+    color: #fbb72c;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: inline-block; 
+}
+
+.product-price small {
+    font-size: 16px;
+    font-weight: 400;
+    text-decoration: line-through;
+    margin-right: 5px;
+}
+
+.product-links {
+    text-align: right;
+    display: inline-block; 
+    float: right; 
+}
+
+.product-links a {
+    display: inline-block;
+    margin-left: 10px;
+    color: #333;
+    transition: 0.3s;
+    font-size: 20px;
+}
+
+.product-links a:hover {
+    color: #fbb72c;
+}
+
+
+@media (min-width: 992px) {
+    .col-lg-3 {
+        width: 25%; 
+    }
+}
+
+@media (max-width: 991px) {
+    .col-lg-4 {
+        width: 50%; 
+    }
+}
+
+@media (max-width: 767px) {
+    .col-lg-4 {
+        width: 100%;
+    }
+}
+
+
+
+@media (max-width: 991px) {
+    .col-lg-4 {
+        width: 50%; 
+    }
+}
+
+@media (max-width: 767px) {
+    .col-lg-4 {
+        width: 100%;
+    }
+}
+
+
+</style>
+
+
+<script>
+  document.querySelectorAll('.delete-icon').forEach(icon=>{
+    icon.addEventListener('click',function(event){
+      event.preventDefault()
+
+
+      const productId=this.getAttribute('data-id')
+      console.log(productId,'productId')
+
+      fetch('/removeFromWishlist/' +productId,{
+        method:'DELETE',
+        headers:{
+          'Content-Type':'application/json'
+        }
+      })
+
+      .then(response=>{
+        if(!response.ok){
+          throw new Error('Network response was not ok'+response.statusText)
+
+        }
+        return response.json()
+
+      })
+      .then(data=>{
+        this.closest('.wishlist-item').remove()
+
+        Toastify({
+          text:"Product removed from Wishlist",
+          duration:3000,
+          close:true,
+          gravity:'top',
+          position:'center',
+          backgroundColor:'red'
+        }).showToast()
+
+        setTimeout(()=>{
+          window.location.reload()
+        },500)
+      })
+      .catch(error=>{
+        console.error('Error:',error)
+      })
+    })
+  })
+</script>

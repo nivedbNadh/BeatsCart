@@ -69,52 +69,6 @@
     </section>
     <!-- banner part start-->
 
-    <!-- Categories part start -->
-    <section class="categories_part section_padding" style="background-color:#ecfdff">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-12">
-                    <div class="section_tittle text-center">
-                        <h2 style="color: black;">Categories</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div id="categoryCarousel" class="carousel slide" data-ride="carousel">
-                        <div class="carousel-inner">
-                            <% for (let i = 0; i < categories.length; i += 6) { %>
-                                <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
-                                    <div class="row justify-content-center">
-                                        <% for (let j = i; j < i + 6 && j < categories.length; j++) { %>
-                                            <div class="col-lg-2 col-md-4 col-sm-6">
-                                                <div class="single_category_item text-center p-3" style=" background-image: linear-gradient(16deg, #0023ad 0%, #f84040 64%, #0023ad 100%);border-radius: 10px;">
-                                                    <h4><a href="#" style="color: #ffffff; font-weight: bold;"> <%= categories[j].name %> </a></h4>
-                                                </div>
-                                                <!-- ff3368 -->
-                                            </div>
-                                        <% } %>
-                                    </div>
-                                </div>
-                            <% } %>
-                        </div>
-                        <a class="carousel-control-prev" href="#categoryCarousel" role="button" data-slide="prev">
-                            <div class="leftsidearow">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </div>
-                        </a>
-                        <a class="carousel-control-next" href="#categoryCarousel" role="button" data-slide="next">
-                            <div class="arocarousel">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
     
     <style>
         .arocarousel {
@@ -175,7 +129,23 @@
                                                 <span class="product-catagory"></span>
                                                 <h4><a href="#"> <%= data.name  %> </a></h4>
                                                 <div class="product-bottom-details">
-                                                    <div class="product-price"><%=data.price%></div>
+                                                    <div class="product-price">
+                                                        <% if(data.hasOffer){%>
+                                                            <span style="text-decoration: line-through; margin-right: 10px;">
+
+
+                                                                <%=Math.round(data.originalPrice)%>
+                                                            </span>
+                                                        <span style="color:goldenrod; font-weight:bold">
+                                                            <%= Math.round(data.discountedPrice)%>
+                                                        </span>
+
+                                                       <% } else{%>
+                                                        <%=Math.round(data.originalPrice)%>
+
+                                                      <% }%>
+
+                                                    </div>
                                                     <div class="product-links">
                                                         <a href="#"><i class="fa fa-heart"></i></a>
                                                         <a href="#"><i class="fa fa-shopping-cart"></i></a>
@@ -238,12 +208,94 @@
 
 <section class="new-arrival-section">
     <div class="container">
-        <!-- <h2 class="new-arrival-heading">New Arrival</h2> -->
+        <h2 class="new-arrival-heading">New Arrivals</h2>
         <div class="new-arrival-image">
-            <img src="/userAssets/img/new earphone pic.webp" alt="New Arrival Image">
+            <div class="single_product_list_slider">
+                <div class="row align-items-center justify-content-between">
+                   
+                <% newArrivals.forEach(data => { %>
+                 
+                
+                    <div class="col-lg-3 col-sm-6 " id="product">
+                        <div class="single_product_item">
+                            <a href="/productDetails/<%= data._id %>">
+
+                                <!-- <button class="badge">Buy Now</button> -->
+                            <div class="product-card">
+                                
+                                 <div class="product-tumb">
+                                    <img src="/uploads/<%= data.image[0]%>" alt="Headphone">
+                                </div>
+                                    <!-- <h1>hello</h1> -->
+                                <div class="product-details">
+                                    <span class="product-catagory"></span>
+                                    <h4><a href="#"> <%= data.name  %> </a></h4>
+                                    <div class="product-bottom-details">
+                                        <div class="product-price">
+                                            ₹<%=data.price%>
+                                                </span>
+                                            <span style="color:goldenrod; font-weight:bold">
+                                            </span>
+                                        </div>
+                                        <div class="product-links">
+                                            <a href="#"><i class="fa fa-heart"></i></a>
+                                            <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>                    
+                    </div>
+                </div>
+            <% }) %>                                       
+        </div>
+    </div>        </div>
+    </div>
+</section>
+
+
+<section class="new-arrival-section">
+    <div class="container">
+        <h2 class="new-arrival-heading">Recently Viewed Products</h2>
+        <div class="new-arrival-image">
+            <div class="single_product_list_slider">
+                <div class="row align-items-center justify-content-between">
+                    <% recentlyViewedProducts.forEach(product => { %>
+                        <div class="col-lg-3 col-sm-6" id="product">
+                            <div class="single_product_item">
+                                <a href="/productDetails/<%= product._id %>">
+                                    <div class="product-card">
+                                        <div class="product-tumb">
+                                            <% if (product.image && product.image.length > 0) { %>
+                                                <img src="/uploads/<%= product.image[0] %>" alt="<%= product.name %>">
+                                            <% } else { %>
+                                                <img src="/path/to/default-image.jpg" alt="Default Image">
+                                            <% } %>
+                                        </div>
+                                        <div class="product-details">
+                                            <span class="product-catagory"></span>
+                                            <h4><a href="/productDetails/<%= product._id %>"><%= product.name %></a></h4>
+                                            <div class="product-bottom-details">
+                                                <div class="product-price">
+                                                    ₹<%= product.price %>
+                                                </div>
+                                                <div class="product-links">
+                                                    <a href="#"><i class="fa fa-heart"></i></a>
+                                                    <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
         </div>
     </div>
 </section>
+
 
 
 

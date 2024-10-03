@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Admin Dashboard</title>
+    <style>
+        /* Sidebar styling */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200px; /* Sidebar width */
+            height: 100%;
+            background-color: #ffffff; /* Same background color */
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 1000;
+        }
+
+        .nav {
+            flex-grow: 1; /* Ensure nav items grow to take available space */
+        }
+
+        .sidebar .nav-item {
+            margin-bottom: 15px;
+            transition: transform 0.2s; /* Add a smooth scaling effect */
+        }
+
+        .sidebar .nav-item a {
+            color: #333;
+            text-decoration: none;
+            font-size: 18px;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s; /* Smooth color transition */
+        }
+
+        .sidebar .nav-item a:hover {
+            background-color: #f1f1f1; /* Light background on hover */
+            color: #007bff; /* Change text color on hover */
+            transform: translateX(5px); /* Slightly move the link to the right */
+        }
+
+        .sidebar .sidebar-footer {
+            margin-top: auto;
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Content area styling */
+        .content {
+            margin-left: 200px; /* Adjust based on sidebar width */
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .dashboard-graph-container {
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .dashboard-graph-container {
+                width: 95%;
+            }
+
+            .sidebar {
+                width: 200px; /* Smaller sidebar on mobile */
+            }
+
+            .content {
+                margin-left: 200px; /* Adjust content margin for smaller sidebar */
+            }
+        }
+
+        #myChart {
+            width: 100%;
+            height: 50vh;
+            max-height: 400px;
+        }
+
+        .form-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 45px; /* Added gap between form items */
+        }
+
+        .form-group {
+            flex: 1;
+            max-width: 200px; /* Reduced max-width for narrower input fields */
+            margin-bottom: 20px; /* Added space between form groups */
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px; /* Reduced font size for labels */
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            max-width: 100%; /* Ensure it doesn't exceed parent width */
+            padding: 6px; /* Reduced padding for smaller input fields */
+            font-size: 14px; /* Reduced font size for smaller input fields */
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: flex-end; /* Aligns items to the right */
+        }
+
+        .button-group button,
+        .button-group select {
+            padding: 8px 15px; /* Reduced padding for smaller buttons */
+            font-size: 14px; /* Reduced font size for buttons */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button-group .btn-pdf {
+            background-color: #28a745;
+            color: #fff;
+            margin-left: 130px;
+            width: 107px;
+            height: 45px;
+        }
+
+        .button-group .form-select {
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+        }
+
+        .custom-select {
+            height: 30px; 
+            font-size: 14px; 
+            padding: 4px 8px; 
+            border-radius: 5px; 
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            width: 150px; 
+            appearance: none; 
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;base64,...'); 
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="nav">
+            <div class="nav-item"><a href="/adminDash">Dashboard</a></div>
+            <div class="nav-item"><a href="/productList">Products</a></div>
+            <div class="nav-item"><a href="/categoryList">Category</a></div>
+            <div class="nav-item"><a href="/userdetails">User</a></div>
+            <div class="nav-item"><a href="/orderMange">Order Manage</a></div>
+            <div class="nav-item"><a href="/brandList">Brand</a></div>
+            <div class="nav-item"><a href="/couponList">Coupon</a></div>
+            <div class="nav-item"><a href="/productOffer">Product Offer</a></div>
+        </div>
+        <div class="sidebar-footer">
+        </div>
+    </div>
+
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+    <!-- kit.fontawesome -->
+    <script src="https://kit.fontawesome.com/0756794e98.js" crossorigin="anonymous"></script>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/userAssets/js/chart.min.js"></script>
+    <script src="/userAssets/js/easing.min.js"></script>
+    <script src="/userAssets/js/waypoints.min.js"></script>
+    <script src="/userAssets/js/owl.carousel.min.js"></script>
+    <script src="/userAssets/js/moment.min.js"></script>
+    <script src="/userAssets/js/moment-timezone.min.js"></script>
+    <script src="/userAssets/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="userAssets/js/admindash.js"></script>
+
+    <!-- Chart.js libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
+</body>
+
+</html>

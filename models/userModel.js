@@ -21,7 +21,19 @@ const UserSchema=new mongoose.Schema({
         default:true,
         type:Boolean
 
-    }
+    },
+    appliedCoupons:{
+        type:[String],
+        default:[]
+    },
+    referralCode: { 
+        type: String,
+        unique: true 
+    },
+
+
+
+
     // number:{
     //     type:Number,
     //     required:true

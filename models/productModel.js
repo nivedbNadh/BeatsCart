@@ -24,15 +24,17 @@ image: {
 price:{
     type:"number",
     required:true
-
-
-
 },
 
 category: {
     type: String,
     required: true
 },
+
+// categoryId: { type: mongoose.Schema.Types.ObjectId,
+//     ref: 'categories'
+//     }, 
+
 brand:{
     type:String,
     required:true
