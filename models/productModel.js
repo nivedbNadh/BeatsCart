@@ -31,9 +31,9 @@ category: {
     required: true
 },
 
-// categoryId: { type: mongoose.Schema.Types.ObjectId,
-//     ref: 'categories'
-//     }, 
+categoryId: { type: mongoose.Schema.Types.ObjectId,
+    ref: 'categories'
+    }, 
 
 brand:{
     type:String,
