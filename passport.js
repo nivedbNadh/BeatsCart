@@ -14,7 +14,7 @@ passport.deserializeUser(function(user,done){
 passport.use(new GoogleStrategy({
     clientID:process.env.CLIENT_ID,
     clientSecret:process.env.CLIENT_SECRET,
-    callbackURL:"http://beatscarts.shop/auth/google/callback",
+    callbackURL:"https://beatscarts.shop/auth/google/callback",
     passReqToCallback:true
 },
 
