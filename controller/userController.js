@@ -355,7 +355,7 @@ const userLoginGoogleSuccess_get = async (req, res) => {
       // Generate  secure random password
       const randomPassword = Math.random().toString(36).slice(-8); 
       const hashedPassword = await bcrypt.hash(randomPassword, 10);
-
+      console.log('11111111111111111111111111');
       const createNewUser = await User.create({
         name: name,
         email: email,
@@ -363,13 +363,14 @@ const userLoginGoogleSuccess_get = async (req, res) => {
         status: true,
         referralCode: '' // Set to undefined or generate a code
       });
-      
+      console.log('222222222222222222222222222222');
 
       req.session.userGoogleLogged = true;
       req.session.name = name;
       req.session.email = email;
       req.session.userId = createNewUser._id;
-      return res.redirect('/');
+      console.log('33333333333333333333333');
+      return res.redirect('/home');
     }
   } catch (error) {
     console.error('Error during Google authentication success handling:', error);
