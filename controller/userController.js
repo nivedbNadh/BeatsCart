@@ -359,9 +359,11 @@ const userLoginGoogleSuccess_get = async (req, res) => {
       const createNewUser = await User.create({
         name: name,
         email: email,
-        password: hashedPassword, 
-        status: true
+        password: hashedPassword,
+        status: true,
+        referralCode: '' // Set to undefined or generate a code
       });
+      
 
       req.session.userGoogleLogged = true;
       req.session.name = name;
