@@ -51,8 +51,10 @@ const { categoryOfferSaving } = require("./adminController");
 
 const loadHome = async (req, res) => {
   try {
+    console.log('44444444444444444');
     const email = req.session.curUser;
     const userId=req.session.userId
+    console.log('555555555555555555',email, userId);
     const products = await Product.find({is_deleted:false});
     const user = await User.findOne({ email: email });
     const categories=await Category.find({is_deleted:false})
@@ -62,7 +64,7 @@ const loadHome = async (req, res) => {
     const newArrivals=arrivals.slice(0,4)
     // console.log(newArrivals,'newArrivals')
 
-
+    console.log('66666666666666666666');
     const currentDate=new Date()
     const productOffers=await ProductOffer.find({
       startDate:{$lte:currentDate},
@@ -70,14 +72,14 @@ const loadHome = async (req, res) => {
     })
 // console.log('productOffershome',productOffers)
 
-
+console.log('7777777777777777777777777');
     const categoryOffers=await CategoryOffer.find({
       startDate:{$lte:currentDate},
       endDate:{$gte:currentDate}
     })
 
 
-
+    console.log('88888888888888888888888');
     const offerMap=new Map()
     // console.log('offerMapofferMap',offerMap)
     productOffers.forEach(offer=>{
@@ -86,7 +88,7 @@ const loadHome = async (req, res) => {
       // console.log('offer.productId',offer.productId)
     })
 
-
+    console.log('99999999999999999999999999999');
 const categoryOfferMap=new Map()
 categoryOffers.forEach(offer=>{
   categoryOfferMap.set(offer.categoryId.toString(),offer)
@@ -153,6 +155,7 @@ categoryOffers.forEach(offer=>{
           hasOffer:false
         }
     })
+    console.log('10101010101010101010');
     // console.log('productsWithOffers',productsWithOffers)
     let recentlyViewedProducts = [];
     if (user) {
@@ -167,6 +170,7 @@ categoryOffers.forEach(offer=>{
         );
       }
     }
+    console.log('11,11,11,11,11,11,11,11,11');
 // console.log('recentProducts',recentProducts)
 
     res.render("home", { error: null, user, products:productsWithOffers,categories,newArrivals,recentlyViewedProducts});
@@ -370,7 +374,7 @@ const userLoginGoogleSuccess_get = async (req, res) => {
       req.session.email = email;
       req.session.userId = createNewUser._id;
       console.log('33333333333333333333333');
-      return res.redirect('/home');
+      return res.redirect('/');
     }
   } catch (error) {
     console.error('Error during Google authentication success handling:', error);
