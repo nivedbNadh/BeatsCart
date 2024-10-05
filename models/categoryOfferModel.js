@@ -17,7 +17,9 @@ startDate:{
 },
 endDate:{
     type:Date,
-    required:true
+    required:true,
+    index: { expireAfterSeconds: 0 },
+
 },
 discount:{
     type:Number,

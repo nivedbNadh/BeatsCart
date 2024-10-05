@@ -29,7 +29,7 @@ const couponSchema=new mongoose.Schema({
     expiryDate:{
             type:Date,
             required:true,
-            // index: { expireAfterSeconds: 0 },
+            index: { expireAfterSeconds: 0 },
 
 
         },
