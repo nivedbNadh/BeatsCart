@@ -64,7 +64,13 @@ userRoute.get("/auth", userController.loadAuth);
 userRoute.get("/auth/google",passport.authenticate("google", {scope: ["email", "profile"],}));
 
 //Auth Callback
-userRoute.get("/auth/google/callback",passport.authenticate("google", {successRedirect: "/auth/success",failureRedirect: "/auth/failure",}));
+userRoute.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    successRedirect: "/auth/success",
+    failureRedirect: "/auth/failure",
+  })
+);
 
 //authentication
 userRoute.get("/auth/success", userController.userLoginGoogleSuccess_get);
