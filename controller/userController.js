@@ -354,6 +354,7 @@ const userLoginGoogleSuccess_get = async (req, res) => {
       req.session.name = name;
       req.session.email = req.user.email;
       req.session.userId = existingUser._id;
+      console.log('hooooooooooooooooooooooooooooooooo');
       return res.redirect('/');
     } else {
       // Generate  secure random password
