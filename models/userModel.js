@@ -26,9 +26,9 @@ const UserSchema=new mongoose.Schema({
         type:[String],
         default:[]
     },
-    // referralCode: { 
-    //     type: String,
-    // },
+    referralCode: { 
+        type: String,
+    },
 
 
 
