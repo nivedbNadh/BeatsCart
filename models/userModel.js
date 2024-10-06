@@ -28,6 +28,7 @@ const UserSchema=new mongoose.Schema({
     },
     referralCode: { 
         type: String,
+        unique: true 
     },
 
 

@@ -52,9 +52,9 @@ const { categoryOfferSaving } = require("./adminController");
 const loadHome = async (req, res) => {
   try {
     console.log('44444444444444444');
-    const email = req.session.email;
+    const email = req.session.curUser;
     const userId=req.session.userId
-    console.log('555555555555555555',email, userId);
+    console.log('555555555555555555',req.session.curUser, userId);
     const products = await Product.find({is_deleted:false});
     const user = await User.findOne({ email: email });
     const categories=await Category.find({is_deleted:false})
