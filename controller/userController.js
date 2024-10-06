@@ -52,9 +52,9 @@ const { categoryOfferSaving } = require("./adminController");
 const loadHome = async (req, res) => {
   try {
     console.log('44444444444444444');
-    const email = req.session.curUser;
+    const email = req.session.email;
     const userId=req.session.userId
-    console.log('555555555555555555',req.session.curUser, userId);
+    console.log('555555555555555555',req.session.email, userId);
     const products = await Product.find({is_deleted:false});
     const user = await User.findOne({ email: email });
     const categories=await Category.find({is_deleted:false})
@@ -369,6 +369,7 @@ const userLoginGoogleSuccess_get = async (req, res) => {
         // referralCode: '' 
       });
       console.log('222222222222222222222222222222');
+      req.session.userlogged = true;
 
       req.session.userGoogleLogged = true;
       req.session.name = name;
