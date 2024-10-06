@@ -1,4 +1,5 @@
 <%- include('../layouts/user/header') %>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <section class="login_part">
     <div class="container">
@@ -55,8 +56,12 @@
                                 <button type="submit" value="submit" class="btn_3">
                                     Sign Up
                                 </button>
-                                <button><a href="/auth/google">Login With Google</a></button>
-
+                                <button class="google-btn">
+                                    <a href="/auth/google">
+                                        <i class="fab fa-google"></i> Login With Google
+                                    </a>
+                                </button>
+                                
 
                                 <div class="d-flex" >
                                     <a class="lost_pass" href="">already have an account?</a>
@@ -178,3 +183,44 @@
         }
     }
 </script>
+
+<style>
+   .google-btn {
+    background-color: transparent;
+    border: none;
+    padding: 10px 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    margin-left: 65px; /* This will move the button to the right */
+}
+
+.google-btn a {
+    background: linear-gradient(to right, #ff004f, #ff4747);
+    color: #fff;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.google-btn i {
+    color: #fff;
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.google-btn:hover a {
+    background-color: #ff85c2f3;
+}
+
+.google-btn:hover i {
+    color: #fff;
+}
+
+
+</style>
