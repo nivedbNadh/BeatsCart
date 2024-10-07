@@ -107,9 +107,12 @@
   })
     .then(response => response.json())
     .then(data => {
+      var amountInPaise=Math.round(data.amount * 100)
+
       var options = {
+      
         key: data.key,
-        amount: data.amount,
+        amount: amountInPaise,
         currency: 'INR',
         name: 'BeatsCart',
         description: 'Order Payment',
