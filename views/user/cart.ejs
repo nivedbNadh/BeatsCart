@@ -22,7 +22,7 @@
                   <% if (product.discountedPrice < product.productId.price) { %>
                       <small>
                           <del>₹<%= product.productId.price.toFixed(2) %></del> 
-                          <span>Offer Price ₹<%= product.discountedPrice.toFixed(2) %></span>
+                          <span>Offer Price ₹<%= Math.round(product.discountedPrice.toFixed(2)) %></span>
                       </small>
                   <% } else { %>
                       <small>Price ₹<%= product.productId.price.toFixed(2) %></small>
