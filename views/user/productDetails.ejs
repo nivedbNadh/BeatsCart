@@ -39,7 +39,7 @@
           <p class="product-price">
             Price: <span>&#8377</span>
             <% if(finalPrice!== product[0].price){%>
-              <span><%=Math.floor(finalPrice)%></span>
+              <span><%=Math.round(finalPrice)%></span>
               <!-- <del>&#8377;<%=product[0].price%></del> -->
 
            <% } else{%>
