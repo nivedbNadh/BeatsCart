@@ -63,9 +63,13 @@
                 <p>Address: <%= order.address.area %>, <%= order.address.city %>, <%= order.address.landmark %>, <%= order.address.pincode %>, <%= order.address.houseName %></p>
                 <p>Phone: <%= order.address.mobile %></p>
             </div>
-            <a href="/orderHistory"><button class="btn btn-success custom-btn">Back</button></a> 
+          </div>
+          <div class="back-button-container">
+            <a href="/orderHistory">
+                <button class="btn btn-success custom-btn">Back</button>
+            </a>
         </div>
-    </div>
+          </div>
   
 </body>
 </html>
@@ -261,18 +265,19 @@ p i {
   margin-right: 5px;
 }
 
-.button-container {
+.back-button-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100px; /* Adjust if necessary */
+    margin-top: 20px; /* Adjust if needed */
+    padding-bottom: 20px; /* To ensure space at the bottom */
 }
 
 .custom-btn {
     font-size: 1.2rem;
-    padding: 3px 16px;
+    padding: 10px 20px;
     background-color: green;
     transform: scale(1.1);
-    /* margin-top: -51px; */
 }
+
 </style>
