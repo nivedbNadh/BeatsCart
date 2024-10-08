@@ -65,8 +65,10 @@
             </div>
         </div>
     </div>
-    <button class="btn btn-success">Back</button>
-
+    <div class="button-container">
+      <button class="btn btn-success custom-btn">Back</button>
+  </div>
+  
 </body>
 </html>
 
@@ -260,4 +262,19 @@ p i {
   color: #007bff;
   margin-right: 5px;
 }
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px; /* Adjust if necessary */
+}
+
+.custom-btn {
+    font-size: 1.2rem; /* Increases text size */
+    padding: 10px 20px; /* Adjust button padding */
+    background-color: green; /* Customize the green shade */
+    transform: scale(1.1); /* Slightly increase the overall size */
+}
+
 </style>
