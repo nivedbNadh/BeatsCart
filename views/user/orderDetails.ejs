@@ -63,11 +63,9 @@
                 <p>Address: <%= order.address.area %>, <%= order.address.city %>, <%= order.address.landmark %>, <%= order.address.pincode %>, <%= order.address.houseName %></p>
                 <p>Phone: <%= order.address.mobile %></p>
             </div>
+            <a href="/orderHistory"><button class="btn btn-success custom-btn">Back</button></a> 
         </div>
     </div>
-    <div class="button-container">
-    <a href="/orderHistory"><button class="btn btn-success custom-btn">Back</button></a> 
-  </div>
   
 </body>
 </html>
@@ -275,6 +273,6 @@ p i {
     padding: 3px 16px;
     background-color: green;
     transform: scale(1.1);
-    margin-top: -51px;
+    /* margin-top: -51px; */
 }
 </style>
