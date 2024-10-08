@@ -283,12 +283,17 @@ const orderCreate = async (req, res) => {
             await Cart.findOneAndDelete({userId})
 
             if (req.session.discount) {
+                console.log('req.session.discount',req.session.discount)
                 const user = await User.findById(userId);
                 if (user && !user.appliedCoupons.includes(req.session.discount.couponCode)) {
                     user.appliedCoupons.push(req.session.discount.couponCode);
                     await user.save();
                 }
             }
+            console.log('user.appliedCoupons',user.appliedCoupons)
+            console.log('useruseruser',user)
+
+
 
             res.status(200).json({ success: true, message: 'Order created successfully' });
 
