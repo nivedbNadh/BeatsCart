@@ -29,9 +29,9 @@ const addAddressCheckout= async(req,res)=>{
     try {
 
         const userId=req.session.userId
-        console.log(userId,"user id in checkout page ")
+        // console.log(userId,"user id in checkout page ")
         const {mobile,pincode,houseName,area,city,landmark,state}=req.body
-        console.log(req.body,"........................ddddddddddddddddddddddddddd")
+        // console.log(req.body,"........................ddddddddddddddddddddddddddd")
         const newAddress=new Address({
             userId,
             mobile,
@@ -283,15 +283,16 @@ const orderCreate = async (req, res) => {
             await Cart.findOneAndDelete({userId})
 
             if (req.session.discount) {
-                console.log('req.session.discount',req.session.discount)
+                // console.log('req.session.discountttttttt',req.session.discount)
                 const user = await User.findById(userId);
+                // console.log('userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr',user)
                 if (user && !user.appliedCoupons.includes(req.session.discount.couponCode)) {
-                    user.appliedCoupons.push(req.session.discount.couponCode);
+                    user.appliedCoupons.push(couponCode);
                     await user.save();
                 }
             }
-            console.log('user.appliedCoupons',user.appliedCoupons)
-            console.log('useruseruser',user)
+            // console.log('user.appliedCoupons',user.appliedCoupons)
+            // console.log('useruseruser',user)
 
 
 
