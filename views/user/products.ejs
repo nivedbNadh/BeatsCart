@@ -125,19 +125,19 @@
         <ul class="pagination">
             <% if (currentPage > 1) { %>
                 <li class="page-item">
-                    <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+                    <a class="page-link" href="?page=<%= currentPage - 1 %>&<%= queryString %>">Previous</a>
                 </li>
             <% } %>
 
             <% for (let i = 1; i <= totalPages; i++) { %>
                 <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                    <a class="page-link" href="?page=<%= i %>&<%= queryString %>"><%= i %></a>
                 </li>
             <% } %>
 
             <% if (currentPage < totalPages) { %>
                 <li class="page-item">
-                    <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+                    <a class="page-link" href="?page=<%= currentPage + 1 %>&<%= queryString %>">Next</a>
                 </li>
             <% } %>
         </ul>
@@ -151,7 +151,7 @@
 </section>
 
 <script>
-    function applyFilters(){
+    function applyFilters(page=1){
         const form=document.getElementById('filter-form')
         const categoryForm=document.getElementById('category-form')
         const brandForm=document.getElementById('brand-form')
@@ -179,6 +179,7 @@
         console.log(selectBrands,'selectBrands')
 
         const filters={
+            page:page,
             price:formData.get('price'),
             category:selectedCategories ,// sending array of categories and brands
             brand:selectBrands,
@@ -187,7 +188,7 @@
         console.log(filters,"filtersfiltersfiltersfilters");
         
 
-        fetch('/filter/',{
+        fetch(`/filter`,{
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
@@ -199,10 +200,49 @@
         .then(data=>{
 
             displayResults(data.products)
+            updatePagination(data.totalPages,data.currentPage,filters)
         })
         .catch(error=>console.error('Error:',error))
 
     }
+
+    // Update pagination
+
+    function updatePagination(totalPages, currentPage, filters) {
+  const paginationContainer = document.querySelector('.pagination-wrapper .pagination');
+  paginationContainer.innerHTML = '';  // Clear existing pagination
+
+  // Build query string for filters
+  const queryString = Object.keys(filters)
+    .map(key => `${key}=${filters[key]}`)
+    .join('&');
+
+  if (currentPage > 1) {
+    const prevPage = currentPage - 1;
+    paginationContainer.innerHTML += `
+      <li class="page-item">
+        <a class="page-link" href="javascript:applyFilters(${prevPage})">Previous</a>
+      </li>`;
+  }
+
+  for (let i = 1; i <= totalPages; i++) {
+    paginationContainer.innerHTML += `
+      <li class="page-item ${i === currentPage ? 'active' : ''}">
+        <a class="page-link" href="javascript:applyFilters(${i})">${i}</a>
+      </li>`;
+  }
+
+  if (currentPage < totalPages) {
+    const nextPage = currentPage + 1;
+    paginationContainer.innerHTML += `
+      <li class="page-item">
+        <a class="page-link" href="javascript:applyFilters(${nextPage})">Next</a>
+      </li>`;
+  }
+}
+
+
+
     function displayResults(products) {
   const container = document.getElementById('products-container');
   container.innerHTML = '';

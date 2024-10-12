@@ -371,7 +371,7 @@ const cancelOrder = async (req, res) => {
             }
 
             //checking if the payment method was razorpay
-            if(orderData.paymentMethod==='razorpay' || orderData.paymentMethod==='Wallet'){
+            if((orderData.paymentMethod==='razorpay' && (orderData.status==='pending '||orderData.status=== 'Processing ' ||orderData.status==='Shipped'))|| orderData.paymentMethod==='Wallet'){
                 // finding wallet
                 let userWallet=await Wallet.findOne({user:userId})
                 if(!userWallet){

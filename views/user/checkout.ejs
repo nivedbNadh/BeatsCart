@@ -425,7 +425,6 @@ function placeOrder(orderData) {
             })
           })
           
-
         
           .then(response=>response.json())
           .then(data=>{
@@ -438,8 +437,9 @@ function placeOrder(orderData) {
           .catch(error=>{
             console.error('Error:',error)
             alert('Failed to verify payment.please try again later')
-          })
+          }).finally()
         },
+
 
         prefill:{
           name:'<%= user.name %>',
