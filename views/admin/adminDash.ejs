@@ -127,6 +127,159 @@
     </div>
 </div>
 
+
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Dropdown to select the time interval -->
+    <div style="text-align: center; margin: 20px;">
+        <label for="timeInterval">Select Time Interval: </label>
+        <select id="timeInterval">
+            <option value="daily">Daily</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+        </select>
+    </div>
+    
+    <!-- Chart container -->
+    <div style="width: 860px; padding-left: 290px;  height: 450px;" >
+        <canvas id="myBarChart"></canvas>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let chartInstance;
+    
+            const categoryData = JSON.parse('<%- categoryData %>');
+            console.log('categoryData', categoryData);
+    
+            const validCategoryData = categoryData.filter(item =>
+                typeof item === 'object' && item.date && item.category && typeof item.totalQuantity === 'number'
+            );
+    
+            console.log('Filtered valid data:', validCategoryData);
+    
+            document.getElementById('timeInterval').addEventListener('change', updateChart);
+    
+            updateChart();
+    
+            function updateChart() {
+                const selectedInterval = document.getElementById('timeInterval').value; 
+    
+                const filteredData = filterDataByTimeInterval(selectedInterval);
+    
+                console.log('Filtered Data:', filteredData);
+    
+                if (chartInstance) {
+                    chartInstance.destroy();
+                }
+    
+                const ctx = document.getElementById('myBarChart').getContext('2d');
+                chartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: filteredData.labels, 
+                        datasets: [{
+                            label: `Most Sold Product Category for ${selectedInterval.charAt(0).toUpperCase() + selectedInterval.slice(1)}`,
+                            backgroundColor: "#4edd8a",
+                            borderColor: "#333",
+                            data: filteredData.counts, 
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                title: { display: true, text: 'Category', color: '#333', font: { size: 14 } },
+                                grid: { display: false }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                ticks: { color: '#333', font: { size: 12 } },
+                                title: { display: true, text: 'Sales Count', color: '#333', font: { size: 14 } },
+                                grid: { color: '#e9ecef' }
+                            }
+                        },
+                        plugins: {
+                            tooltip: { intersect: false, mode: 'index' },
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: { color: '#333', font: { size: 14 } }
+                            }
+                        },
+                        responsive: true,
+                        maintainAspectRatio: false,
+                    }
+                });
+            }
+    
+            function filterDataByTimeInterval(timeInterval) {
+                const dataMap = {};
+                const today = new Date();
+                const currentYear = today.getFullYear();
+                const currentMonth = today.getMonth() + 1;
+                const currentDay = today.getDate();
+    
+                validCategoryData.forEach(item => {
+                    const itemDate = new Date(item.date);
+                    const year = itemDate.getFullYear();
+                    const month = itemDate.getMonth() + 1;
+                    const day = itemDate.getDate();
+    
+                    let periodKey;
+                    if (timeInterval === 'yearly') {
+                        periodKey = year; 
+                    } else if (timeInterval === 'monthly' && year === currentYear) {
+                        periodKey = `${year}-${month}`; 
+                    } else if (timeInterval === 'daily' && year === currentYear && month === currentMonth && day === currentDay) {
+                        periodKey = `${year}-${month}-${day}`; 
+                    }
+    
+                    if (periodKey) {
+                        if (!dataMap[periodKey]) {
+                            dataMap[periodKey] = {};
+                        }
+                        if (!dataMap[periodKey][item.category]) {
+                            dataMap[periodKey][item.category] = 0;
+                        }
+                        dataMap[periodKey][item.category] += item.totalQuantity;
+                    }
+                });
+    
+                console.log("DataMap:", dataMap);
+    
+                const labels = [];
+                const counts = [];
+                Object.keys(dataMap).forEach(periodKey => {
+                    let mostSoldCategory = null;
+                    let maxCount = 0;
+    
+                    for (const [category, count] of Object.entries(dataMap[periodKey])) {
+                        if (count > maxCount) {
+                            mostSoldCategory = category;
+                            maxCount = count;
+                        }
+                    }
+    
+                    labels.push(mostSoldCategory); 
+                    counts.push(maxCount);  
+                });
+    
+                return { labels, counts };
+            }
+        });
+    </script>
+            
+    
+    
+        
+</body>
+</html>
+
+
+
 <!-- <style>
 .dashboard-graph-container {
     text-align: center;

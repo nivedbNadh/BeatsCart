@@ -73,6 +73,43 @@ const adminDashBoard = async (req, res) => {
             { $sort: { date: 1 } }
         ]).exec();
 
+
+
+
+        const deliveredProductsByCategoryAndDate = await Order.aggregate([
+            { $match: { status: 'delivered' } },
+            { $unwind: "$products" },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'products.product',
+                    foreignField: '_id',
+                    as: 'productDetails'
+                }
+            },
+            { $unwind: '$productDetails' },
+            {
+                $group: {
+                    _id: {
+                        date: { $dateToString: { format: timeFormat, date: "$orderDate", timezone: "+0530" } },
+                        category: '$productDetails.category'
+                    },
+                    totalQuantity: { $sum: '$products.quantity' }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    date: '$_id.date',
+                    category: '$_id.category',
+                    totalQuantity: 1
+                }
+            },
+            { $sort: { date: 1, totalQuantity: -1 } } // Sort by date and quantity
+        ]).exec();
+
+
+
         // console.log('Orders with Date:', ordersWithDate); 
 
         // top selling products 
@@ -191,7 +228,28 @@ const adminDashBoard = async (req, res) => {
         console.log('xValues:', xValues); 
         console.log('yValues:', yValues); 
 
-        res.render('adminDash', { xValues: JSON.stringify(xValues), yValues ,topSellingProducts,topSellingCategories,topSellingBrands});
+
+        const categoryCounts = deliveredProductsByCategoryAndDate.reduce((acc, item) => {
+            const key = `${item.date}_${item.category}`; // Create a unique key for each category on each date
+            acc[key] = (acc[key] || 0) + item.totalQuantity; // Accumulate quantities
+            return acc;
+        }, {});
+
+
+        const categoryData = Object.keys(categoryCounts).map(key => {
+            const [date, category] = key.split('_'); // Split the key back into date and category
+            return { date, category, totalQuantity: categoryCounts[key] };
+        });
+
+        console.log('categoryCountscategoryCountscategoryCounts',categoryCounts);
+
+        console.log('categoryDatacategoryDatacategoryData',categoryData)
+
+
+
+
+
+        res.render('adminDash', { xValues: JSON.stringify(xValues), yValues ,topSellingProducts,topSellingCategories,topSellingBrands,categoryData: JSON.stringify(categoryData)});
     } catch (error) {
         console.log("error occurred", error);
         res.status(500).send("Internal server error");

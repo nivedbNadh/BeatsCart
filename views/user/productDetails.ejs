@@ -485,16 +485,19 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     })
     .then(response => {
+      console.log('Response received:', response);
       if (!response.ok) {
+        console.error('Response not OK:', response);
         throw new Error('Network response was not ok ' + response.statusText);
+        console.log('response',response);
+        
       }
       return response.json();
     })
     .then(data => {
       console.log('Success:', data);
-
       // Redirect to the same page
-      window.location.href = window.location.href; // This will reload the page
+      window.location.redirect = window.location.href; // this will reload the page
      
 
   })
