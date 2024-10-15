@@ -164,9 +164,11 @@ const orderCreate = async (req, res) => {
         let totalPriceWithTax = totalPrice + tax;
 
         let discount = 0;
+        let couponCode=null
         if (req.session.discount) {
             discount = req.session.discount.discountAmount;
             totalPriceWithTax = req.session.discount.newTotal;
+            couponCode=req.session.discount.couponCode
         }
 
         const newOrderData = {
@@ -184,6 +186,19 @@ const orderCreate = async (req, res) => {
             deliveryDate,
             paymentMethod,
         };
+
+
+        const saveCouponToUser = async () => {
+            if (couponCode) {
+                const user = await User.findById(userId);
+                if (user && !user.appliedCoupons.includes(couponCode)) {
+                    user.appliedCoupons.push(couponCode);
+                    await user.save();
+                }
+            }
+        };
+        saveCouponToUser()
+
 
         if (paymentMethod === 'razorpay') {
             try {
@@ -211,11 +226,14 @@ const orderCreate = async (req, res) => {
                     }
                 }
 
+                
+                
                 const newOrder = new Order(newOrderData);
                 await newOrder.save();
                 console.log('newOrder',newOrder)
-                 await Cart.findOneAndDelete({ userId });
-                 req.session.discount = null;
+                await Cart.findOneAndDelete({ userId });
+                req.session.discount = null;
+                saveCouponToUser()
 
             return res.status(200).json({
                     success: true,    
@@ -246,10 +264,13 @@ const orderCreate = async (req, res) => {
                 }
             }
 
+            
+            
             const newOrder = new Order(newOrderData);
             await newOrder.save();
-        const newCart= await Cart.findOneAndDelete({ userId });
-            console.log('newCartnewCartnewCartnewCart',newCart)
+            const newCart= await Cart.findOneAndDelete({ userId });
+            // console.log('newCartnewCartnewCartnewCart',newCart)
+            saveCouponToUser()
 
             return res.status(200).json({ success: true, message: 'Order placed successfully' });
 
@@ -268,6 +289,8 @@ const orderCreate = async (req, res) => {
             })
             await wallet.save()
 
+          
+
             for(const item of cartItems){
                 const product=await Products.findById(item.product._id)
                 if(product.quantity>=item.quantity){
@@ -278,23 +301,17 @@ const orderCreate = async (req, res) => {
                 }
             }
 
+
+           
             const newOrder=new Order(newOrderData)
             await newOrder.save()
             await Cart.findOneAndDelete({userId})
+            req.session.discount=null
 
-            if (req.session.discount) {
-                // console.log('req.session.discountttttttt',req.session.discount)
-                const user = await User.findById(userId);
-                // console.log('userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr',user)
-                if (user && !user.appliedCoupons.includes(req.session.discount.couponCode)) {
-                    user.appliedCoupons.push(couponCode);
-                    await user.save();
-                }
-            }
-            // console.log('user.appliedCoupons',user.appliedCoupons)
-            // console.log('useruseruser',user)
+            saveCouponToUser()
 
 
+           
 
             res.status(200).json({ success: true, message: 'Order created successfully' });
 
