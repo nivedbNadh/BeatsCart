@@ -53,28 +53,25 @@ const loadHome = async (req, res) => {
     const email = req.session.email;
     const userId = req.session.userId;
     // console.log("555555555555555555", req.session.email, userId);
-    const products = await Product.find({ is_deleted: false });
-    const user = await User.findOne({ email: email });
-    const categories = await Category.find({ is_deleted: false });
-
-    const arrivals = await Product.find({ is_deleted: false }).sort({
-      createdAt: -1,
-    });
+    // Run queries in parallel
+    const [products, user, categories, productOffers, categoryOffers, arrivals] = await Promise.all([
+      Product.find({ is_deleted: false }),
+      User.findOne({ email: email }),
+      Category.find({ is_deleted: false }),
+      ProductOffer.find({
+        startDate: { $lte: currentDate },
+        endDate: { $gte: currentDate }
+      }),
+      CategoryOffer.find({
+        startDate: { $lte: currentDate },
+        endDate: { $gte: currentDate }
+      }),
+      Product.find({ is_deleted: false }).sort({ createdAt: -1 })
+    ]);
 
     const newArrivals = arrivals.slice(0, 4);
-    // console.log(newArrivals,'newArrivals')
 
-    const currentDate = new Date();
-    const productOffers = await ProductOffer.find({
-      startDate: { $lte: currentDate },
-      endDate: { $gte: currentDate },
-    });
-    // console.log('productOffershome',productOffers)
 
-    const categoryOffers = await CategoryOffer.find({
-      startDate: { $lte: currentDate },
-      endDate: { $gte: currentDate },
-    });
 
     const offerMap = new Map();
     // console.log('offerMapofferMap',offerMap)
