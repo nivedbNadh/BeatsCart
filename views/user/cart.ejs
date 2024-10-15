@@ -297,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (quantity > 1) {
                             input.value = --quantity;
                             updateCartTotals();
-                            // location.reload(); // Add this line to refresh the page
+                            location.reload(); // Add this line to refresh the page
                         }
                     }
                 } else {
@@ -334,7 +334,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             this.disabled=true
                           }
                         }
-                        // location.reload(); // refresh page 
+                        location.reload(); // refresh page 
                        
                         } else{
                           alert(data.message)
