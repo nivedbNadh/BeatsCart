@@ -470,9 +470,12 @@ const addAdminCategory = async (req, res) => {
         if (typeof categoryName !== 'string') {
             return res.status(400).json({ error: 'Invalid category name' });
         }
-        const existingCategory = await Category.findOne({ name: categoryName });
+
+        const convertLowercase=categoryName.trim().toLowerCase()
+        // console.log('convertLowercase',convertLowercase)
+        const existingCategory = await Category.findOne({ name:{$regex:`^${convertLowercase}$`,$options:'i' } });
         if (existingCategory) {
-            console.log(existingCategory, "existingCategory");
+            // console.log(existingCategory, "existingCategory");
             return res.status(400).json({ error: 'Category already exists' });
         }
 
