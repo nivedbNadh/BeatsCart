@@ -735,6 +735,15 @@ const loadAdminManage = async (req, res) => {
         },
         { $unwind: '$customerDetails' },
         {
+        $lookup: {
+            from: 'addresses', 
+            localField: 'customerDetails._id',
+            foreignField: 'userId',
+            as: 'addressDetails'
+          }
+        },
+        { $unwind: '$addressDetails' },
+        {
           $addFields: {
             totalPrice: {
               $multiply: ['$productDetails.price', '$products.quantity'] 
@@ -742,23 +751,31 @@ const loadAdminManage = async (req, res) => {
           }
         },
         {
-          $project: {
-            _id: 1,
-            orderDate: 1,
-            'products.quantity': 1, 
-            'productDetails.name': 1,
-            'productDetails.price': 1,
-            'productDetails.description': 1,
-            'customerDetails.name': 1,
-            'customerDetails.email': 1,
-            paymentMethod: 1,
-            totalPrice: 1, 
-            status: 1 
-          }
-        }
-      ]);
+            $project: {
+                _id: 1,
+                orderDate: 1,
+                'products.quantity': 1,
+                'productDetails.name': 1,
+                'productDetails.price': 1,
+                'productDetails.description': 1,
+                'customerDetails.name': 1,
+                'customerDetails.email': 1,
+                paymentMethod: 1,
+                totalPrice: 1,
+                status: 1,
+                'addressDetails.mobile': 1,
+                'addressDetails.email': 1,
+                'addressDetails.pincode': 1,
+                'addressDetails.houseName': 1,
+                'addressDetails.area': 1,
+                'addressDetails.landmark': 1,
+                'addressDetails.city': 1,
+                'addressDetails.state': 1
+              }
+            }
+          ]);
   
-      console.log(orders, "orders in adminController page after aggregation");
+    //   console.log(orders, "orders in adminController page after aggregation");
       return res.render('orderManage', { orders });
     } catch (error) {
       console.error('error occurred', error);
@@ -824,10 +841,18 @@ const couponListPage= async (req,res)=>{
 
 const addCouponToDB=async (req,res)=>{
     try {
-        console.log('hiiiiiiiiiiiiiiiiiii')
+        // console.log('hiiiiiiiiiiiiiiiiiii')
         const {couponName,couponCode,minPurchaseAmount,discountAmount,maxDiscountAmount,startDate,expiryDate}=req.body
         // console.log('couponName,',couponName,couponCode,minPurchaseAmount,discountAmount,startDate,expiryDate)
 
+
+
+        const existingCoupon = await Coupon.findOne({ couponCode });
+        if (existingCoupon) {
+          return res.status(400).json({ message: 'Coupon code already exists' });
+        }
+
+        
         const newCoupon=new Coupon({
             couponName,
             couponCode,

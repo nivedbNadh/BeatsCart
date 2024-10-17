@@ -73,8 +73,9 @@
                         <td><%=data.couponCode%></td>
                         <td><%=data.minPurchaseAmount%></td>
                         <td><%=data.discountAmount%></td>
-                        <td><%=data.startDate%></td>
-                        <td><%=data.expiryDate%></td>
+                        <td><%= new Date(data.startDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) %></td>
+                        <td><%= new Date(data.expiryDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) %></td>
+
                         <td><%=data.status%></td>
                         <td class="d-flex">
                             <a href="/editCoupon/<%=data._id%>">

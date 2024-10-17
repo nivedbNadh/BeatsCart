@@ -123,6 +123,7 @@
                   <th>Product</th>
                   <th>quantity</th>
                   <th>Price</th>
+                  <th>Address</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -139,6 +140,15 @@
                     <h6><%= order.productDetails.name %></h6>
                     <td><%= order.products.quantity %></td>
                     <td><p class="card-text">₹<%= order.totalPrice %></p></td>
+                    <td>
+                      <h6 style="font-size: 12px;">
+                        <%= order.addressDetails.mobile %>, <%= order.addressDetails.pincode %>, 
+                        <%= order.addressDetails.houseName %>, <%= order.addressDetails.area %>, 
+                        <%= order.addressDetails.landmark %>, <%= order.addressDetails.city %>, 
+                        <%= order.addressDetails.state %>
+                      </h6>
+                    </td>
+                    
                   </td>
                   </td>
                   <td class="status text-capitalize"><%= order.status %></td>

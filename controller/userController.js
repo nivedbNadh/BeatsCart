@@ -68,6 +68,7 @@ const loadHome = async (req, res) => {
     const productOffers = await ProductOffer.find({
       startDate: { $lte: currentDate },
       endDate: { $gte: currentDate },
+        
     });
     // console.log('productOffershome',productOffers)
 

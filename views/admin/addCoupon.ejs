@@ -220,11 +220,16 @@
                 body: JSON.stringify(couponData)
             });
 
+            const result = await response.json();
+
+
             if (response.ok) {
                 window.location.href = '/couponList';
-            } else {
-                alert('Failed to create coupon. Please try again.');
-            }
+            } else if (response.status === 400 && result.message === 'Coupon code already exists') {
+        showError('couponCodeError', result.message);  
+    } else {
+        alert('Failed to create coupon. Please try again.');
+    }
         } catch (error) {
             console.error('Error', error);
             alert('An error occurred. Please try again.');
