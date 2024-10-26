@@ -72,7 +72,10 @@
         </div>
 
         <div class="filter_option">
-            <button class="apply-btn" onclick="applyFilters()">Apply</button>
+            <button class="apply-btn"  id="applyButton" onclick="applyFilters()">Apply</button>
+            <button class="remove-btn" onclick="removeFilters()" id="removeButton" style="display: none;">Remove Filter</button>
+
+            
         </div>
     </div>
 </div>
@@ -201,10 +204,20 @@
 
             displayResults(data.products)
             updatePagination(data.totalPages,data.currentPage,filters)
+            
+                    document.getElementById('applyButton').style.display = 'none';
+                    document.getElementById('removeButton').style.display = 'inline-block';
         })
         .catch(error=>console.error('Error:',error))
 
+        
     }
+    function removeFilters() {
+    document.getElementById('applyButton').style.display = 'inline-block';
+    document.getElementById('removeButton').style.display = 'none';
+    location.reload();
+}
+
 
     // Update pagination
 
@@ -707,8 +720,23 @@ html, body {
     border-color: #007bff;
 }
 
+.remove-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background-color: red;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
-
+.remove-btn:hover {
+    background-color: #b30000;
+}
 </style>
 
 
