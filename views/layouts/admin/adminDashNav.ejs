@@ -1,188 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <title>Admin Dashboard</title>
     <style>
-        /* Sidebar styling */
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
-            width: 200px; /* Sidebar width */
+            width: 200px;
             height: 100%;
-            background-color: #ffffff; /* Same background color */
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            font-family: "Heebo", sans-serif;
+            font-size: 20px;
+            font-weight: 500;
+            background-color: #f3f6f9 !important;
+            background: #ffffff;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            padding: 7px 20px;
+            padding-left: 30px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            z-index: 1000;
+            overflow-y: auto; 
         }
 
-        .nav {
-            flex-grow: 1; /* Ensure nav items grow to take available space */
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
         }
 
-        .sidebar .nav-item {
-            margin-bottom: 15px;
-            transition: transform 0.2s; /* Add a smooth scaling effect */
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: #888; 
+            border-radius: 4px;
         }
 
-        .sidebar .nav-item a {
-            color: #333;
-            text-decoration: none;
-            font-size: 18px;
-            display: block;
-            padding: 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s; /* Smooth color transition */
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background-color: #555; 
         }
 
-        .sidebar .nav-item a:hover {
-            background-color: #f1f1f1; /* Light background on hover */
-            color: #007bff; /* Change text color on hover */
-            transform: translateX(5px); /* Slightly move the link to the right */
+        .admin-header {
+            padding-top:2.3125rem;
+            color: #009cff !important;
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            font-family: "Heebo", sans-serif;
         }
 
-        .sidebar .sidebar-footer {
-            margin-top: auto;
-            font-size: 14px;
-            color: #666;
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
         }
 
-        /* Content area styling */
-        .content {
-            margin-left: 200px; /* Adjust based on sidebar width */
-            padding: 20px;
-            background-color: #f8f9fa;
+        .profile-image-container {
+            position: relative;
+            width: 40px;
+            height: 40px;
         }
 
-        .dashboard-graph-container {
+        .profile-image {
             width: 100%;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
-        /* Responsive styles */
+        .online-indicator {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            background: #22c55e;
+            border: 2px solid white;
+            border-radius: 50%;
+        }
+
+        .admin-info h2 {
+            font-size: 0.95rem;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .admin-info p {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: black;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-item:hover {
+    color: #0d6efd; 
+}
+
+.nav-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: white;
+    border-radius: 0 25px 25px 0; 
+    z-index: -1;
+    transition: transform 0.2s ease;
+    transform: scaleX(0); 
+    transform-origin: left;
+}
+
+.nav-item:hover::before {
+    transform: scaleX(1); 
+}
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .nav-item span {
+            font-weight: 900px;
+            font-size: 0.95rem;
+        }
+
+        .active {
+            background: #eff6ff;
+            color: #0d6efd;
+        }
+
+        .content {
+            margin-left: 200px; 
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
         @media (max-width: 768px) {
             .dashboard-graph-container {
                 width: 95%;
             }
 
             .sidebar {
-                width: 200px; /* Smaller sidebar on mobile */
+                width: 200px; 
             }
 
             .content {
-                margin-left: 200px; /* Adjust content margin for smaller sidebar */
+                margin-left: 200px; 
             }
         }
 
-        #myChart {
-            width: 100%;
-            height: 50vh;
-            max-height: 400px;
-        }
-
-        .form-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 45px; /* Added gap between form items */
-        }
-
-        .form-group {
-            flex: 1;
-            max-width: 200px; /* Reduced max-width for narrower input fields */
-            margin-bottom: 20px; /* Added space between form groups */
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px; /* Reduced font size for labels */
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            max-width: 100%; /* Ensure it doesn't exceed parent width */
-            padding: 6px; /* Reduced padding for smaller input fields */
-            font-size: 14px; /* Reduced font size for smaller input fields */
-        }
-
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            justify-content: flex-end; /* Aligns items to the right */
-        }
-
-        .button-group button,
-        .button-group select {
-            padding: 8px 15px; /* Reduced padding for smaller buttons */
-            font-size: 14px; /* Reduced font size for buttons */
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .button-group .btn-pdf {
-            background-color: #28a745;
-            color: #fff;
-            margin-left: 130px;
-            width: 107px;
-            height: 45px;
-        }
-
-        .button-group .form-select {
-            background-color: #f1f1f1;
-            border: 1px solid #ddd;
-        }
-
-        .custom-select {
-            height: 30px; 
-            font-size: 14px; 
-            padding: 4px 8px; 
-            border-radius: 5px; 
-            border: 1px solid #ccc;
-            background-color: #f9f9f9;
-            width: 150px; 
-            appearance: none; 
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background-image: url('data:image/svg+xml;base64,...'); 
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 12px;
-        }
     </style>
 </head>
 
 <body>
-
     <!-- Sidebar -->
     <div class="sidebar">
-        <div class="nav">
-            <div class="nav-item"><a href="/adminDash">Dashboard</a></div>
-            <div class="nav-item"><a href="/productList">Products</a></div>
-            <div class="nav-item"><a href="/categoryList">Category</a></div>
-            <div class="nav-item"><a href="/userdetails">User</a></div>
-            <div class="nav-item"><a href="/orderMange">Order Manage</a></div>
-            <div class="nav-item"><a href="/returnManagement">Return Manage</a></div>
-            <div class="nav-item"><a href="/brandList">Brand</a></div>
-            <div class="nav-item"><a href="/couponList">Coupon</a></div>
-            <div class="nav-item"><a href="/productOffer">Product Offer</a></div>
-            <div class="nav-item"><a href="/categoryOffer">Category Offer</a></div>
+        <!-- Admin Header -->
+        <div class="admin-header" style="font-size: 1.75rem;"># DASHMIN</div>
 
+        <!-- Admin Profile -->
+        <div class="admin-profile">
+            <div class="profile-image-container">
+                <img src="/userAssets/img/download (1).jpeg" alt="Admin" class="profile-image">
+                <div class="online-indicator"></div>
+            </div>
+            <div class="admin-info">
+                <h2>Nived</h2>
+                <p>Admin</p>
+            </div>
         </div>
-        <div class="sidebar-footer">
-        </div>
+
+        <!-- Navigation Links -->
+        <nav class="nav-links">
+            <a href="/adminDash" class="nav-item active">
+                <i class="fas fa-chart-pie"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/productList" class="nav-item">
+                <i class="fas fa-box"></i>
+                <span>Products</span>
+            </a>
+            <a href="/categoryList" class="nav-item">
+                <i class="fas fa-list"></i>
+                <span>Category</span>
+            </a>
+            <a href="/userdetails" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>User</span>
+            </a>
+            <a href="/orderMange" class="nav-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Orders</span>
+            </a>
+            <a href="/returnManagement" class="nav-item">
+                <i class="fas fa-undo"></i>
+                <span>Return</span>
+            </a>
+            <a href="/brandList" class="nav-item">
+                <i class="fas fa-tag"></i>
+                <span>Brand</span>
+            </a>
+            <a href="/couponList" class="nav-item">
+                <i class="fas fa-ticket-alt"></i>
+                <span>Coupon</span>
+            </a>
+            <a href="/productOffer" class="nav-item">
+                <i class="fas fa-percent"></i>
+
+                <span>Product Offer</span>
+            </a>
+            <a href="/categoryOffer" class="nav-item">
+                <i class="fas fa-tags"></i>
+
+                <span>Category Offer</span>
+            </a>
+        </nav>
     </div>
+
+    <!-- Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+    <!-- kit.fontawesome -->
+    <script src="https://kit.fontawesome.com/0756794e98.js" crossorigin="anonymous"></script>
 
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 

@@ -106,14 +106,14 @@ hr {
   <div class="wallet bg-light">
     <div class="right-trans bg-white p-3">
       <h1>Current Balance:</h1>
-      <h4 id="balance"><span>&#8377;</span> <%= wallet.balance.toFixed(2) %></h4>
+      <h4 id="balance"><span>&#8377;</span> <%= Math.round(wallet.balance.toFixed(2)) %></h4>
     </div>
     <hr style="width: 90%; border: 1px solid #000; margin: auto;">
     <div class="row header mt-3">
       <div class="col-sm-5"><p class="fw-bold text-center">Description</p></div>
       <div class="col-sm-3"><p class="fw-bold text-center">Date</p></div>
       <div class="col-sm-2"><p class="fw-bold text-center">Transaction Type</p></div>
-      <!-- <div class="col-sm-2"><p class="fw-bold text-center">Amount</p></div> -->
+      <div class="col-sm-2"><p class="fw-bold text-center">Amount</p></div>
     </div>
 
     <div class="wallet-history mt-4">
@@ -130,6 +130,9 @@ hr {
               <p class="mb-0 text-center"><%= data.transactionType %></p>
             </div>
             <div class="col-sm-2">
+              <!-- <div class="col-sm-5"> -->
+                <p class="mb-0 text-center"><%= Math.round(data.amount) %></p>
+              <!-- </div> -->
             </div>
           </div>
           <hr>

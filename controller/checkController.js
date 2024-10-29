@@ -368,6 +368,7 @@ const cancelOrder = async (req, res) => {
         }
 
         const orderData = await Order.findById(orderId);
+        console.log('orderData',orderData)
         if (!orderData) {
             return res.status(404).json({ success: false, message: 'Order not found' });
         }
@@ -388,7 +389,7 @@ const cancelOrder = async (req, res) => {
             }
 
             //checking if the payment method was razorpay
-            if((orderData.paymentMethod==='razorpay' && (orderData.status==='pending '||orderData.status=== 'Processing ' ||orderData.status==='Shipped'))|| orderData.paymentMethod==='Wallet'){
+            if(orderData.paymentMethod==='razorpay' || orderData.paymentMethod==='Wallet'){
                 // finding wallet
                 let userWallet=await Wallet.findOne({user:userId})
                 if(!userWallet){
@@ -406,7 +407,8 @@ const cancelOrder = async (req, res) => {
                userWallet.transaction.push({
                 transactionType:'credit',
                 description:'Cancel order',
-                timestamp:new Date()
+                timestamp:new Date(),
+                amount:orderData.totals.totalprice
 
                })
                await userWallet.save()

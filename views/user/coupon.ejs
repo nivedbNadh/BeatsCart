@@ -144,7 +144,8 @@ body {
                 <h3><%= data.discountAmount %>% off all products minimum purchase amount <%= data.minPurchaseAmount %><br>Apply below coupon code</h3>
                 <div class="coupon-row">
                     <span class="cpnCode"><%= data.couponCode %></span>
-                    <span class="cpnBtn">Copy Code</span>
+                    <span class="cpnBtn <%= appliedCoupons.includes(data.couponCode) ? 'disabled' : '' %>">
+                        <%= appliedCoupons.includes(data.couponCode) ? 'Already Applied' : 'Copy Code' %>
                 </div>
                 <p>Valid Till: <%= new Date(data.expiryDate).toISOString().slice(0,10) %></p>
                 <div class="circle1"></div>
@@ -162,6 +163,8 @@ body {
     var copyButtons = document.querySelectorAll('.cpnBtn');
 
     copyButtons.forEach(function(button) {
+        if (button.classList.contains('disabled')) return;
+
         button.addEventListener('click', function() {
             var couponCode = this.previousElementSibling.innerText;
 

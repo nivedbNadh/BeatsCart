@@ -1075,10 +1075,14 @@ const filterProducts = async (req, res) => {
 const loadCoupon = async (req, res) => {
   try {
     const coupons = await Coupon.find({ status: true });
-    console.log("couponDatacouponDatacouponDatacouponDatacouponData", coupons);
-    res.render("coupon", { coupons });
+    const userId=req.session.userId
+    const user = await User.findById(userId);
+    const appliedCoupons = user ? user.appliedCoupons : [];
+
+    // console.log("couponDatacouponDatacouponDatacouponDatacouponData", coupons);
+    res.render("coupon", { coupons ,appliedCoupons});
   } catch (error) {
-    console.error("error occured");
+    console.error("error occured",error);
     res.status(500).json({ message: "internal server error" });
   }
 };

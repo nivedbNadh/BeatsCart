@@ -77,7 +77,7 @@ userRoute.get("/auth/success", userController.userLoginGoogleSuccess_get);
 userRoute.get("/auth/failure", userController.userLoginGoogleFailed_get);
 
 // userProfile route 
-userRoute.get("/userProfile",userAuth.authentication,userController.loadUserProfile)
+userRoute.get("/userProfile",userAuth.authentication,userAuth.userBlock,userController.loadUserProfile)
 userRoute.post("/change-password",userAuth.authentication,userController.userPasswordChange)
 userRoute.post("/save-address",userAuth.authentication,userController.saveAddress)
 userRoute.delete('/delete-address/:id', userController.deleteAddress);

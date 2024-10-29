@@ -77,7 +77,7 @@ adminRoute.delete('/deleteCategoryOffer/:categoryId',adminController.deleteCateg
 
 
 // chart
-adminRoute.get('/chart',adminController.chartPage)
+adminRoute.get('/chart',adminAuth,adminController.chartPage)
 // sales report
 
 adminRoute.post('/download-sales-report',adminController.downloadSalesReport)
