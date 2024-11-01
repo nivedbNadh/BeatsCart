@@ -231,14 +231,17 @@ select.form-select option {
                           ✔ Order Returned
                         </button>
                         <%}else{%>
-                        <button class="btn btn-danger cancel-order-btn <%= order.status === 'Cancelled' ? 'cancelled' : '' %>" 
-                          onclick="cancelOrder('<%= order._id %>')" <%= order.status === 'Cancelled' ? 'disabled' : '' %>>
-                          <% if (order.status === 'Cancelled') { %>
-                            ✖ Order Cancelled
-                          <% } else { %>
-                            Cancel Order
-                          <% } %>
-                        </button>
+                          <button class="btn btn-danger cancel-order-btn <%= order.status === 'Cancelled' || order.status === 'PaymentFailed' ? 'cancelled' : '' %>" 
+                            onclick="cancelOrder('<%= order._id %>')" 
+                            <%= order.status === 'Cancelled' || order.status === 'PaymentFailed' ? 'disabled' : '' %>>
+                            <% if (order.status === 'Cancelled') { %>
+                              ✖ Order Cancelled
+                            <% } else if (order.status === 'PaymentFailed') { %>
+                              Order Cancel
+                            <% } else { %>
+                              Cancel Order
+                            <% } %>
+                          </button>
                       <% } %>
                     </div>
                   </div>
